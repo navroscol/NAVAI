@@ -241,3 +241,16 @@ def test_cache_kv_igual_al_forward_completo():
             nxt = int(m(torch.tensor([seq])).argmax(-1)[0, -1])
         assert nxt == t
         seq.append(t)
+
+
+def test_sesion_interactiva_igual_que_generate():
+    """La sesión con caché viva (feed + stream) produce lo mismo que generate() en modo voraz."""
+    from navros.generate import Sesion, generate
+    torch.manual_seed(0)
+    m = Navros(NavrosConfig(vocab=64, d=32, n_heads=4, n_pre=2, n_core=0, causal=True, rope=True)).double().eval()
+    ids = [0] + torch.randint(1, 64, (9,)).tolist()
+    esperado = generate(m, ids, n_new=12, temperatures=(0.0,))[0]
+    ses = Sesion(m)
+    ses.feed(ids[:5])
+    ses.feed(ids[5:])                      # alimentar en dos trozos no cambia el resultado
+    assert list(ses.stream(n_new=12, temperature=0.0)) == esperado
