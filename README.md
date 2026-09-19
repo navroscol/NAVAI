@@ -8,10 +8,70 @@ modesto (Kaggle: 2×T4 o TPU v5e-8), escritos dos veces:
 - **`navros/pt/`** — PyTorch, verificado contra el oráculo (mismos pesos, misma entrada:
   pérdida, todos los gradientes y la trayectoria de entrenamiento).
 
-> **Estado: en construcción.** Las verificaciones de corrección están hechas y pasan.
-> Los experimentos (razonador y optimizadores) se ejecutan en Kaggle; sus resultados, y la
-> sección *Lo que esto NO demuestra*, se añadirán aquí cuando existan. No hay aún ninguna
-> afirmación de rendimiento.
+> **Estado: en construcción.** Las verificaciones de corrección están hechas y pasan. Los
+> primeros experimentos (razonador y optimizadores) ya tienen resultados, más abajo, incluidos
+> los que contradicen hipótesis de partida. El modelo de lenguaje de 1B aún no está entrenado.
+
+## Resultados medidos (Kaggle, 2×T4; 3 semillas; media ± desv. típica)
+
+Todos los números salen de `results/kaggle/`. El learning rate se barre para cada modelo y se
+elige solo con validación en distribución; la prueba de longitud no se toca hasta el final.
+
+### Razonador: bucle recurrente contra referencia fija de mismo cómputo
+
+Entrenado con 8 dígitos / 8 operadores. «Bucle»: 1 capa iterada r̄=8 veces (~211K parámetros).
+«Fijo»: 8 capas distintas con el mismo grafo (~1,6M parámetros, 7,7×), mismo cómputo de forward.
+
+**Suma, sin RoPE (solo ábaco)** — exactitud de secuencia completa:
+
+| longitud | bucle | fijo | bucle entrenado con r fijo |
+|---|---|---|---|
+| 8 (1×) | 100,0 ± 0,0 | 99,7 ± 0,2 | 100,0 ± 0,1 |
+| 16 (2×) | 83,0 ± 9,2 | **94,6 ± 1,7** | 91,6 ± 7,4 |
+| 24 (3×) | 75,5 ± 12,1 | **81,8 ± 2,9** | 83,1 ± 9,2 |
+| 32 (4×) | 60,2 ± 7,6 | **67,8 ± 1,9** | 70,6 ± 9,5 |
+
+**Con RoPE + ábaco** (primera versión), los dos se derrumban: 10,2 % (bucle) y 5,6 % (fijo) a 2×.
+Lo que da la generalización de longitud en la suma es el ábaco sin RoPE, **no** la recurrencia.
+
+**Expresiones mod 10 con RoPE** — en distribución (8 operadores), secuencia completa:
+bucle **93,9 ± 2,2** contra fijo 46,5 ± 6,9, con 7,6× menos parámetros y 0,65× el cómputo de
+entrenamiento. Es el resultado más favorable a la recurrencia. Fuera de distribución, ambos ≈ 0.
+
+**r aleatorio frente a r fijo en entrenamiento** (expresiones, 8 operadores, secuencia según r):
+
+| r en evaluación | 4 | 6 | 8 | 16 | 64 |
+|---|---|---|---|---|---|
+| entrenado con r fijo = 8 | 0,8 | 20,5 | **75,7** | 25,1 | 20,2 |
+| entrenado con r aleatorio (r̄ = 8) | 33,2 | 84,1 | **93,9** | 91,5 | 90,4 |
+
+Con r fijo, el modelo aprende «aplica exactamente 8 pasos». Con r aleatorio, iterar más no
+lo rompe. Pero **tampoco lo mejora**: en ningún caso medido, pensar más allá de r̄ aumentó la
+exactitud fuera de distribución.
+
+**Ancho del bucle** (suma sin RoPE, secuencia completa):
+
+| ancho | parámetros | 2× | 3× | 4× |
+|---|---|---|---|---|
+| 64 | 52K | 16,4 | 0,6 | 0,0 |
+| 128 | 211K | 90,8 | 78,0 | 61,2 |
+| 256 | 799K | **98,3** | **86,0** | **81,8** |
+
+Aquí, más ancho generaliza mejor, no peor.
+
+### Muon contra AdamW (modelo de bytes sobre FineWeb-Edu, mejor contra mejor)
+
+| ancho | pasos | AdamW | Muon | pasos que necesita Muon para igualar el final de AdamW |
+|---|---|---|---|---|
+| 128 | 250 | 2,071 ± 0,035 | **1,778 ± 0,008** | 120 (2,1×) |
+| 128 | 1000 | 1,539 ± 0,004 | **1,490 ± 0,002** | 750 (1,3×) |
+| 256 | 250 | 2,002 ± 0,025 | **1,642 ± 0,009** | 108 (2,3×) |
+| 256 | 1000 | 1,492 ± 0,005 | **1,417 ± 0,008** | 650 (1,5×) |
+| 512 | 250 | 1,938 ± 0,026 | **1,586 ± 0,003** | 108 (2,3×) |
+| 512 | 1000 | 1,458 ± 0,007 | **1,371 ± 0,001** | 600 (1,7×) |
+
+Muon gana en todos los anchos, también en C=128. La ventaja crece con el ancho y **se reduce
+con el horizonte**. El coste por paso no se midió de forma válida (dos procesos compartían GPU).
 
 ## Arquitectura
 
