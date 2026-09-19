@@ -183,6 +183,8 @@ class LMRun:
     grad_ckpt: bool = False         # recomputar activaciones por capa en el backward
     xla_cache: str = ""             # caché persistente de grafos compilados (TPU)
     synthetic: bool = False         # tokens aleatorios (benchmark de velocidad/memoria)
+    spmd: bool = True               # XLA: repartir entre chips (False para un solo chip, p. ej. v5e-1)
+    muon_buf: str = "fp32"          # precisión del momento de Muon: fp32 | bf16
     time_budget_s: float = 1e12
     log_every: int = 50
     tag: str = ""
@@ -300,7 +302,7 @@ def step_r(rc: LMRun, cfg: NavrosConfig, step: int, be):
 def train(rc: LMRun, log=print) -> dict:
     t_start = time.time()
     from .backend import Backend
-    be = Backend(rc.device, rc.precision, xla_cache=rc.xla_cache or None)
+    be = Backend(rc.device, rc.precision, xla_cache=rc.xla_cache or None, spmd=rc.spmd)
     data = make_data(rc)
     cfg = lm_preset(rc.preset, data.vocab)
     torch.manual_seed(rc.seed)
@@ -311,7 +313,8 @@ def train(rc: LMRun, log=print) -> dict:
         model.ckpt_fn = be.ckpt_fn()
     named = list(model.named_parameters())
     opt = Muon(named, lr_muon=rc.lr_muon, lr_adam=rc.lr_adam, wd_muon=rc.wd, tensor_scalars=be.is_xla,
-               state_hook=be.shard_like, ns_dtype=torch.bfloat16 if be.is_xla else None)
+               state_hook=be.shard_like, ns_dtype=torch.bfloat16 if be.is_xla else None,
+               buf_dtype=torch.bfloat16 if rc.muon_buf == "bf16" else None)
     scaler = torch.amp.GradScaler("cuda") if (rc.precision == "fp16" and be.device.type == "cuda") else None
     evals = {l: data.eval_set(l, "val", rc.eval_seq) for l in rc.langs}
     step, history, extra = 0, [], {}
@@ -412,11 +415,11 @@ def lm_brief(res):
 
 
 def benchmark(preset, device="cpu", precision="fp32", T=1024, micro=8, n_micro=1, steps=10, warmup=3, r=None,
-              grad_ckpt=False, vocab=32768, log=print):
+              grad_ckpt=False, vocab=32768, spmd=True, muon_buf="fp32", log=print):
     """Velocidad y memoria con tokens sintéticos (no necesita corpus). r fijo (por defecto r̄)
     para medir el régimen estable; el primer paso incluye la compilación en XLA."""
     from .backend import Backend
-    be = Backend(device, precision)
+    be = Backend(device, precision, spmd=spmd)
     cfg = lm_preset(preset, vocab)
     torch.manual_seed(0)
     model = Navros(cfg).to(be.device)
@@ -425,7 +428,8 @@ def benchmark(preset, device="cpu", precision="fp32", T=1024, micro=8, n_micro=1
     if grad_ckpt:
         model.ckpt_fn = be.ckpt_fn()
     opt = Muon(list(model.named_parameters()), tensor_scalars=be.is_xla, state_hook=be.shard_like,
-               ns_dtype=torch.bfloat16 if be.is_xla else None)
+               ns_dtype=torch.bfloat16 if be.is_xla else None,
+               buf_dtype=torch.bfloat16 if muon_buf == "bf16" else None)
     if cfg.recurrent:
         r = r or round(cfg.r_mean)
         k = min(cfg.k_bptt, r)
@@ -455,7 +459,7 @@ def benchmark(preset, device="cpu", precision="fp32", T=1024, micro=8, n_micro=1
     steady = float(np.median(times[warmup:]))
     tok = micro * n_micro * T
     res = dict(preset=preset, params=sum(p.numel() for p in model.parameters()), T=T, micro=micro, n_micro=n_micro,
-               r=r, k=k, grad_ckpt=grad_ckpt, first_step_s=times[0], step_s=steady, tok_s=tok / steady,
+               r=r, k=k, grad_ckpt=grad_ckpt, muon_buf=muon_buf, first_step_s=times[0], step_s=steady, tok_s=tok / steady,
                tflops=tok * flops / steady / 1e12, flops_per_token=flops, loss=lv, n_dev=be.n_dev)
     if be.is_xla:
         try:

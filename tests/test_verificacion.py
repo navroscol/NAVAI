@@ -210,3 +210,16 @@ def test_reparto_por_duenos_equilibrado_y_determinista():
     o2, _ = partition(list(reversed(named)), 2)
     assert o1 == o2 and set(o1.values()) == {0, 1}
     assert max(loads) / sum(loads) < 0.6
+
+
+def test_momento_bf16_cerca_de_fp32():
+    """El momento en bf16 no es idéntico, pero la trayectoria debe quedar cerca en pocos pasos."""
+    from navros.pt.optim import Muon
+    out = []
+    for bd in (None, torch.bfloat16):
+        torch.manual_seed(0)
+        m = Navros(CFG).double()
+        opt = Muon(m.named_parameters(), buf_dtype=bd)
+        out.append(_train_steps(m, opt, np.random.default_rng(0)))
+    err = max(float((out[0][n] - out[1][n]).abs().max() / out[0][n].abs().max()) for n in out[0])
+    assert 1e-9 < err < 0.05, err

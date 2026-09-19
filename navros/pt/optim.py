@@ -42,7 +42,7 @@ class Muon(torch.optim.Optimizer):
 
     def __init__(self, named_params, lr_muon=0.02, lr_adam=3e-3, momentum=0.95, nesterov=True,
                  ns_steps=5, wd_muon=0.0, wd_adam=0.0, betas=(0.9, 0.95), eps=1e-8,
-                 use_muon=True, ns_dtype=None, tensor_scalars=False, state_hook=None):
+                 use_muon=True, ns_dtype=None, tensor_scalars=False, state_hook=None, buf_dtype=None):
         named = [(n, p) for n, p in named_params if p.requires_grad]
         muon = [p for n, p in named if use_muon and is_muon_param(n, p)]
         adam = [p for n, p in named if not (use_muon and is_muon_param(n, p))]
@@ -54,10 +54,10 @@ class Muon(torch.optim.Optimizer):
         super().__init__(groups, dict(momentum=momentum, nesterov=nesterov, ns_steps=ns_steps,
                                       betas=betas, eps=eps, ns_dtype=ns_dtype))
         self.t = 0
-        self.tensor_scalars, self.state_hook = tensor_scalars, state_hook
+        self.tensor_scalars, self.state_hook, self.buf_dtype = tensor_scalars, state_hook, buf_dtype
 
-    def _new_state(self, p):
-        z = torch.zeros_like(p)
+    def _new_state(self, p, dtype=None):
+        z = torch.zeros_like(p, dtype=dtype)
         if self.state_hook is not None:
             self.state_hook(z, p)
         return z
@@ -77,10 +77,11 @@ class Muon(torch.optim.Optimizer):
                     g = p.grad
                     st = self.state[p]
                     if "buf" not in st:
-                        st["buf"] = self._new_state(p)
+                        st["buf"] = self._new_state(p, self.buf_dtype)
                     buf = st["buf"]
-                    buf.lerp_(g, 1.0 - beta)
-                    u = torch.lerp(g, buf, beta) if group["nesterov"] else buf
+                    buf.lerp_(g.to(buf.dtype), 1.0 - beta)
+                    bg = buf.to(g.dtype)
+                    u = torch.lerp(g, bg, beta) if group["nesterov"] else bg
                     O = newton_schulz5(u, group["ns_steps"], dtype=group["ns_dtype"])
                     O = O * max(1.0, u.shape[0] / u.shape[1]) ** 0.5
                     p.mul_(1.0 - lr * group["wd"])
@@ -121,10 +122,11 @@ class Muon(torch.optim.Optimizer):
                     g = p.grad
                     st = self.state[p]
                     if "buf" not in st:
-                        st["buf"] = self._new_state(p)
+                        st["buf"] = self._new_state(p, self.buf_dtype)
                     buf = st["buf"]
-                    buf.lerp_(g, 1.0 - beta)
-                    u = torch.lerp(g, buf, beta) if group["nesterov"] else buf
+                    buf.lerp_(g.to(buf.dtype), 1.0 - beta)
+                    bg = buf.to(g.dtype)
+                    u = torch.lerp(g, bg, beta) if group["nesterov"] else bg
                     O = newton_schulz5(u, group["ns_steps"], dtype=group["ns_dtype"])
                     O = O * max(1.0, u.shape[0] / u.shape[1]) ** 0.5
                     p.mul_((1.0 - lr * group["wd"]).to(p.dtype))
