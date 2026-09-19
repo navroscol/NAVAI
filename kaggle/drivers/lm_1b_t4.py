@@ -11,9 +11,15 @@ if __name__ == "__main__":
     dirs = find_data_dirs()
     print("datos:", dirs, "| checkpoints adjuntos:", sorted(__import__("glob").glob("/kaggle/input/**/latest.json", recursive=True)), flush=True)
     assert dirs, "adjunta la salida de navros-datos-p0"
-    cfg = dict(preset=PRESET, data_dirs=dirs, T=1024, batch=256, micro=2, tokens=TOTAL_TOKENS,
-               lr_muon=0.02, lr_adam=1e-3, warmup=100, decay_frac=0.2, precision="fp16", device="cuda", grad_ckpt=True,
+    t0 = time.time()
+    cfg = dict(preset=PRESET, data_dirs=dirs, T=1024, batch=256, tokens=TOTAL_TOKENS, muon_buf="bf16",
+               lr_muon=0.02, lr_adam=1e-3, warmup=100, decay_frac=0.2, precision="fp16", device="cuda",
                eval_every=100, eval_seq=64, r_eval=[1, 2, 3, 4, 6, 8], log_every=5,
-               ckpt_dir="/kaggle/working/ckpt", ckpt_every_min=60, time_budget_s=11 * 3600, tag=PRESET + "-v1")
-    code = launch(cfg, f"{OUT}/lm_1b.json", nproc=2, root=ROOT)
-    print("salida", code, flush=True)
+               ckpt_dir="/kaggle/working/ckpt", ckpt_every_min=45, tag=PRESET + "-v1")
+    # 1.º sin recomputación (≈30 % más rápido si cabe); si se queda sin memoria, reanuda con recomputación.
+    for extra in (dict(micro=1, grad_ckpt=False), dict(micro=2, grad_ckpt=True)):
+        budget = 11 * 3600 - (time.time() - t0)
+        code = launch(cfg | extra | dict(time_budget_s=budget), f"{OUT}/lm_1b.json", nproc=2, root=ROOT)
+        print("salida", code, extra, flush=True)
+        if code == 0:
+            break
