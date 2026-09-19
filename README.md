@@ -150,6 +150,18 @@ coda:      capas de coda → logits = rmsnorm(h) @ embᵀ / √d     (pesos atad
   cómputo de forward que el bucle a su r medio.
 - **Optimizador**: Muon (Newton-Schulz) para matrices; AdamW para `emb`, `abaco` y ganancias.
 
+## Usar el modelo entrenado
+
+Descarga `pesos_bf16.pt` de la [última release](https://github.com/navroscol/navros-ai/releases) y:
+
+```bash
+python scripts/08_conversar.py --pesos pesos_bf16.pt   # interactivo: escribe un comienzo, lo continúa
+python scripts/07_generar.py  --pesos pesos_bf16.pt    # frases de prueba fijas → results/generacion/
+```
+
+Detecta solo CUDA, MPS o CPU (`--device`, `--dtype`). En un MacBook Air M2, con MPS y fp32, va a
+≈ 18 tokens/s. La generación usa caché KV, verificada contra el forward completo en cada arranque.
+
 ## Verificación (reproducible en cualquier CPU)
 
 ```bash

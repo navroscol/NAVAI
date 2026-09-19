@@ -105,6 +105,58 @@ def generate(model: Navros, prompt_ids, n_new=120, temperatures=(0.0, 0.8, 0.8),
     return [o[:-1] if o and o[-1] == EOT else o for o in out]
 
 
+class Sesion:
+    """Contexto vivo para generación interactiva: mantiene la caché KV entre turnos.
+
+    feed() procesa tokens nuevos (el comienzo que escribe la persona o lo ya generado) y
+    stream() produce los siguientes de uno en uno, para poder imprimirlos según salen.
+    """
+
+    def __init__(self, model: Navros, max_len=1024):
+        self.model, self.max_len = model, max_len
+        self.reset()
+
+    def reset(self):
+        n = len(self.model.pre) + len(self.model.coda)
+        self.caches = [dict() for _ in range(n)]
+        self.pos, self.ids, self.logits = 0, [], None
+
+    @property
+    def libre(self):
+        """Tokens que caben antes de salir de la ventana con la que se entrenó."""
+        return self.max_len - self.pos
+
+    @torch.no_grad()
+    def feed(self, ids):
+        if not ids:
+            return
+        assert self.libre >= len(ids), "contexto lleno"
+        x = torch.tensor([list(ids)], device=self.model.emb.device)
+        self.logits = step(self.model, x, self.caches, self.pos)[:, -1]
+        self.pos += len(ids)
+        self.ids += list(ids)
+
+    @torch.no_grad()
+    def stream(self, n_new=120, temperature=0.8, top_p=0.95, seed=0, repetition_penalty=1.0):
+        """Itera los ids generados; se detiene en <|eot|> o al llenarse el contexto."""
+        assert self.logits is not None, "primero hay que dar un comienzo con feed()"
+        gen = torch.Generator(device=self.model.emb.device).manual_seed(seed)
+        for _ in range(min(n_new, self.libre)):
+            l = self.logits.clone()
+            if repetition_penalty != 1.0 and self.ids:
+                idx = torch.tensor(sorted(set(self.ids)), device=l.device)
+                v = l[0, idx]
+                l[0, idx] = torch.where(v > 0, v / repetition_penalty, v * repetition_penalty)
+            nxt = int(_sample(l, temperature, top_p, gen)[0])
+            if nxt == EOT:
+                return
+            yield nxt
+            self.ids.append(nxt)
+            x = torch.tensor([[nxt]], device=l.device)
+            self.logits = step(self.model, x, self.caches, self.pos)[:, -1]
+            self.pos += 1
+
+
 @torch.no_grad()
 def verify_cache(model: Navros, ids):
     """Máximo |Δlogits| entre la caché KV (prefijo en bloque + resto token a token) y el forward completo."""
