@@ -60,11 +60,16 @@ class Layer(nn.Module):
         q, k, v = split(u @ self.wq.T), split(u @ self.wk.T), split(u @ self.wv.T)
         if rope is not None:
             q, k = apply_rope(q, *rope), apply_rope(k, *rope)
+        causal = isinstance(mask, str)  # "causal": máscara triangular implícita (kernels eficientes)
         if manual:
             s = (q @ k.transpose(-1, -2)) / math.sqrt(d // H)
-            if mask is not None:
+            if causal:
+                s = s.masked_fill(~torch.ones(T, T, dtype=torch.bool, device=u.device).tril(), float("-inf"))
+            elif mask is not None:
                 s = s.masked_fill(~mask, float("-inf"))
             o = torch.softmax(s, dim=-1) @ v
+        elif causal:
+            o = F.scaled_dot_product_attention(q, k, v, is_causal=True)
         else:
             o = F.scaled_dot_product_attention(q, k, v, attn_mask=mask)
         return o.transpose(1, 2).reshape(B, T, d) @ self.wo.T
@@ -116,6 +121,8 @@ class Navros(nn.Module):
 
     # ------------------------------------------------------------------ forward
     def _mask(self, B, T, valid, device):
+        if self.cfg.causal and valid is None:
+            return "causal"
         m = None
         if self.cfg.causal:
             m = torch.ones(T, T, dtype=torch.bool, device=device).tril()[None, None]

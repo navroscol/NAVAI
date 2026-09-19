@@ -188,3 +188,25 @@ def test_hook_de_estado_se_llama():
     n_muon = sum(1 for n, p in m.named_parameters() if p.ndim == 2 and n not in ("emb", "abaco"))
     n_adam = sum(1 for n, p in m.named_parameters()) - n_muon
     assert len(seen) == n_muon + 2 * n_adam and all(seen)
+
+
+def test_escalador_salta_y_reduce_con_inf():
+    from navros.lm_ddp import LossScaler
+    p = torch.nn.Parameter(torch.ones(3))
+    p.grad = torch.tensor([1.0, float("inf"), 0.0])
+    sc = LossScaler(init=1024.0)
+    ok, _ = sc.unscale_clip([p], 1.0)
+    assert not ok and sc.scale == 512.0 and sc.skipped == 1
+    p.grad = torch.tensor([512.0 * 3, 512.0 * 4, 0.0])  # gradiente real (3,4,0) escalado ×512 → norma 5
+    ok, norm = sc.unscale_clip([p], 1.0)
+    assert ok and abs(norm - 5.0) < 1e-5 and torch.allclose(p.grad, torch.tensor([0.6, 0.8, 0.0]), atol=1e-6)
+
+
+def test_reparto_por_duenos_equilibrado_y_determinista():
+    from navros.lm_ddp import partition
+    m = Navros(NavrosConfig(vocab=50, d=32, n_heads=2, n_pre=2, n_core=0, causal=True))
+    named = list(m.named_parameters())
+    o1, loads = partition(named, 2)
+    o2, _ = partition(list(reversed(named)), 2)
+    assert o1 == o2 and set(o1.values()) == {0, 1}
+    assert max(loads) / sum(loads) < 0.6
