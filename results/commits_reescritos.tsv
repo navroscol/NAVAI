@@ -1,0 +1,26 @@
+# Commits reescritos el 2026-09-19 (se quitó una línea de atribución del mensaje).
+# El contenido de cada commit es idéntico (mismo árbol); solo cambia el identificador.
+# Los notebooks de Kaggle y los resultados anteriores citan el identificador antiguo.
+antiguo	nuevo	mensaje
+741893ef26d325a3828f4a85a77dcf106a3b9030	fe01e170b1e839602e6b32e4b4730790ca3493fb	NAVROS: oráculo NumPy, port PyTorch verificado, tareas y estudios para Kaggle
+11d03748b34bd1d3cca723c5a66504d83d17ea87	d1fb5c8bca7681cd3792b417cc6ba8059609adc1	kaggle: la cabecera no toca git en los procesos hijos
+377433a666ca1b833d2bff9a8e2d712109159aa7	f164590ab208f5c0c51130406ac084c68f10f3db	datos: tokenizador BPE bilingüe desde cero y corpus pretokenizado por particiones
+d0f1c9b859205069c155f2d05a7c680795eb44d0	0db5c921bfd448da46caaf0ff12590c494fff873	lm: entrenador del LM (datos reanudables, WSD, fp16, checkpoints, curva de pérdida por r)
+8f68111449ad939fa128b6c9237e37e42797dac7	511cd544f32941b560fa55d702ff9062770ab6ac	razonador v2: variante sin RoPE (posición absoluta con desplazamiento en expr), barrido de ancho, estudio LM pequeño
+a7918293299ab37769db37a8daef826015ef873f	c54e4c20b3a5986eb9b97353206ea2452e8ebd6e	resultados v1 de Kaggle: razonador (con RoPE) y Muon vs AdamW
+e4dfc38ba48c21f9dc1d47a1f9b0b17c1980a25d	15a7df5b1e06b29baf51d302958304316c47d2d9	tpu: backend XLA/SPMD, Muon con escalares-tensor, recomputación de activaciones, benchmark sintético
+4af7a52d35e9ec14b67b274d67833a82dd89215f	412acab02eebe316676ae94cb5a7a029442391d1	tpu_bench: no inicializar el runtime XLA antes de SPMD
+75de2df95fc98101fb26c76169841211c30aee73	97e23b34513e233cece873905ae0ef97ba88888e	resultados v2: sin RoPE la suma generaliza (fijo ≥ bucle); expr empeora sin posiciones relativas; más ancho generaliza mejor
+616eade4d37665f39958ecac1c6ee9145428fad6	af01cc02f6c3fae10f74158a1d2ae12fc5234840	lm_ddp: entrenador multi-GPU (DDP + Muon repartido por dueño + fp16 con escalado dinámico)
+4ea40ec843308f52997b5b22b35430c37af5e923	e816a0fb902302b579cf9d3576679e1316e09eba	README: resultados medidos del razonador y de Muon vs AdamW; driver del 1B en T4
+9909ce50fbc3003a3c404b0a9237a54b5f85626b	de544499aa50bf4ebdf2ef3dc4171f137c7836e2	colab: benchmark para TPU v5e-1 (momento de Muon en bf16, SPMD opcional)
+b49786fb51b31c90a637ef755e9c47561a4e6e7d	e022a89b26ca0ea8489df2c2061362e6fe7d77ad	colab: fijar commit del benchmark
+bfb0c9615d85be2877305826c25cd47203438f6e	3091fff3a185b055ae7f6666f265c5ebb424098a	lm_ddp: modelo fp16 + maestros fp32 por dueño + reducción al dueño (sin DDP)
+2a2b26220f1f8eff0e1fda032df6a08f17645b21	c5f1b2f15a05e68bb916f35a67ab276ffd5900cd	benchmark NAVROS-1B en T4×2: ~2,2K tok/s recurrente, ~3,2K fijo, 9-10 GB por GPU
+b73b643eb7bd0d413493ef030d9d62a5193a4671	9ba7f85075ec503a20b0225489d554f73ee96f3a	RoPE con posiciones arbitrarias (aleatorizadas) en oráculo y port, verificado; razonador v3
+19be61968f92be061183ab4d55eda2f3bcab5c3c	5cec759e3a8034804412e468015df2dcff517c7b	estudio LM pequeño con el mismo entrenador que el 1B; driver 1B con reserva ante falta de memoria
+4f05440b5a8eb17f20dc4e879da3355ddb3efc52	2e3de4a63ec51e7cd30c9d46b102d350a51a0e1d	estudio LM: 100M tokens por modelo, barrido de 2 LR (cuota semanal)
+1b2d381b92c6408739c24a526a6764b76523460c	9466c9db810f5d19b46f4f1c00c767912ce169a6	Modal: app (bench, datos, entrenar) y benchmark H100: 1B recurrente 31,8K tok/s, fijo 49,1K
+119b9f8b39effb8d754dc40b6c203a1c1fd7bc3f	62999ebe743ee454d35a19d98fba8513c6206bd1	tokenizador BPE 32k (entrenado en Kaggle) en el repo; datos_cpu: tokenizador fijo y salida limpia
+9885ee310916edfa3f9e7c44cab07555dc56dbeb	57d0ec9e0f5debd14b5a5e3ae6be2e7b6540be77	Modal datos: 1,5B tokens por idioma y 16 GB (presupuesto de 30 $/mes)
+87c9ef4fc950525dbde0bd244fbd32728c58bed0	013fb98cd979c906a7932269d5616caf5a10715d	Modal: estudio_lm en H100 (bf16); arreglo de ns_dtype en train_ddp_run
