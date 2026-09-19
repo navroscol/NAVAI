@@ -70,12 +70,12 @@ def bench(configs_json: str = ""):
     return dict(env=info, results=out)
 
 
-@app.function(cpu=8, memory=32768, timeout=24 * 3600, volumes={"/data": data_vol})
-def datos(tokens_per_lang: int = 3_000_000_000, part: int = 0, n_parts: int = 4):
+@app.function(cpu=8, memory=16384, timeout=24 * 3600, volumes={"/data": data_vol})
+def datos(tokens_per_lang: int = 1_500_000_000, part: int = 0, n_parts: int = 4):
     """Corpus bilingüe con el tokenizador de Kaggle (subido a /data/tokenizer_kaggle.json)."""
     _setup()
     from navros.dataprep import prepare
-    tok = "/data/tokenizer_kaggle.json"
+    tok = "/data/tokenizer_kaggle.json"  # idéntico a navros/assets/tokenizer_navros_32k.json
     out = "/data/navros_data" if part == 0 else f"/data/navros_data_p{part}"
     m = prepare(out, target_tokens_per_lang=tokens_per_lang, time_budget_s=22 * 3600, part=(part, n_parts),
                 tokenizer_path=tok if os.path.exists(tok) else None, log=lambda s: print(s, flush=True))
