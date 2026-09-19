@@ -136,3 +136,55 @@ def test_expr_ejemplo():
     lab = expr.python_labels(s)
     # '+' raíz: 3+4*(-5) = -17 → 3 ; '*' : -20 → 0 ; '-' : -5 → 5 ; ')' : 5 ; '=' : 3
     assert lab == {1: 3, 3: 0, 6: 5, 8: 5, 9: 3}
+
+
+# --- Caminos para TPU: deben dar lo mismo que los verificados ---------------------
+
+def _train_steps(model, opt, rng, steps=5, r=4, k=2):
+    for step in range(steps):
+        b = batch(rng)
+        opt.zero_grad(set_to_none=True)
+        logits = model(torch.from_numpy(b["tokens"]), torch.from_numpy(b["abacus"]), r=r, k=k)
+        weighted_xent(logits, torch.from_numpy(b["targets"]), torch.from_numpy(b["weights"])).backward()
+        opt.step(1.0 - step / steps)
+    return {n: p.detach().clone() for n, p in model.named_parameters()}
+
+
+def test_muon_escalares_tensor_igual_que_float():
+    from navros.pt.optim import Muon
+    out = []
+    for ts in (False, True):
+        torch.manual_seed(0)
+        m = Navros(CFG).double()
+        opt = Muon(m.named_parameters(), wd_muon=0.01, wd_adam=0.01, tensor_scalars=ts)
+        out.append(_train_steps(m, opt, np.random.default_rng(0)))
+    err = max(float((out[0][n] - out[1][n]).abs().max() / out[0][n].abs().max()) for n in out[0])
+    assert err < 1e-6, err  # float32 en los escalares del camino tensor
+
+
+def test_checkpointing_mismos_gradientes():
+    import torch.utils.checkpoint as ckpt
+    rng = np.random.default_rng(0)
+    b = batch(rng)
+    grads = []
+    for use in (False, True):
+        torch.manual_seed(0)
+        m = Navros(CFG).double()
+        if use:
+            m.ckpt_fn = lambda f, *a: ckpt.checkpoint(f, *a, use_reentrant=False)
+        logits = m(torch.from_numpy(b["tokens"]), torch.from_numpy(b["abacus"]), r=5, k=3)
+        weighted_xent(logits, torch.from_numpy(b["targets"]), torch.from_numpy(b["weights"])).backward()
+        grads.append({n: p.grad.clone() for n, p in m.named_parameters()})
+    err = max(float((grads[0][n] - grads[1][n]).abs().max()) for n in grads[0])
+    assert err < 1e-12, err
+
+
+def test_hook_de_estado_se_llama():
+    from navros.pt.optim import Muon
+    seen = []
+    m = Navros(CFG).double()
+    opt = Muon(m.named_parameters(), state_hook=lambda z, p: seen.append(z.shape == p.shape))
+    _train_steps(m, opt, np.random.default_rng(0), steps=1)
+    n_muon = sum(1 for n, p in m.named_parameters() if p.ndim == 2 and n not in ("emb", "abaco"))
+    n_adam = sum(1 for n, p in m.named_parameters()) - n_muon
+    assert len(seen) == n_muon + 2 * n_adam and all(seen)

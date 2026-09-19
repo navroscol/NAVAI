@@ -89,7 +89,13 @@ class Navros(nn.Module):
         self.coda = nn.ModuleList(Layer(cfg, cfg.scale_stack) for _ in range(cfg.n_coda))
         self.norm_f = nn.Parameter(torch.ones(cfg.d))
         self.manual_attn = False
+        self.ckpt_fn = None   # p. ej. torch.utils.checkpoint.checkpoint: recomputa cada capa en el backward
         self.reset_parameters()
+
+    def _layer(self, layer, x, rope, mask):
+        if self.ckpt_fn is not None and torch.is_grad_enabled():
+            return self.ckpt_fn(layer, x, rope, mask, self.manual_attn)
+        return layer(x, rope, mask, self.manual_attn)
 
     @torch.no_grad()
     def reset_parameters(self, generator=None):
@@ -121,7 +127,7 @@ class Navros(nn.Module):
     def _iter(self, h, x0, t, rope, mask):
         u = h + x0
         for layer in (self.core[0] if self.cfg.recurrent else self.core[t]):
-            u = layer(u, rope, mask, self.manual_attn)
+            u = self._layer(layer, u, rope, mask)
         return rmsnorm(u, None, self.cfg.norm_eps)
 
     def prelude(self, tokens, abacus=None, valid=None):
@@ -133,12 +139,12 @@ class Navros(nn.Module):
         rope = rope_tables(T, cfg.head_dim, cfg.rope_theta, x.device, x.dtype) if cfg.rope else None
         mask = self._mask(B, T, valid, x.device)
         for layer in self.pre:
-            x = layer(x, rope, mask, self.manual_attn)
+            x = self._layer(layer, x, rope, mask)
         return x, rope, mask
 
     def coda_logits(self, h, rope, mask):
         for layer in self.coda:
-            h = layer(h, rope, mask, self.manual_attn)
+            h = self._layer(layer, h, rope, mask)
         return (rmsnorm(h, self.norm_f, self.cfg.norm_eps) @ self.emb.T) * self.cfg.logit_scale
 
     def forward(self, tokens, abacus=None, valid=None, r=None, k=None, h_start=None, return_state=False):
