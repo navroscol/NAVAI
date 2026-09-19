@@ -1,0 +1,116 @@
+{
+ "meta": {
+  "step": 3623,
+  "preset": "navros-1b-fix",
+  "tag": "navros-1b-fix-v1",
+  "vocab": 32768,
+  "cache_check": {
+   "max_abs_diff": 9.644031524658203e-05,
+   "max_abs_logit": 18.230918884277344
+  },
+  "device": "cuda",
+  "dtype": "fp32",
+  "seconds": 37.44889044761658
+ },
+ "rows": [
+  {
+   "lang": "es",
+   "prompt": "La receta tradicional de la paella valenciana lleva",
+   "greedy": " el nombre de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de la región de",
+   "samples": [
+    " su nombre de la deidad del agua de los manantiales de la región del municipio de El Zulia de Garay. En esta región de la región de la provincia de Salta se sitúa una gran cantidad de vino tinto. El vino tinto que se cultivaba en las zonas altas y altas de la provincia se ha utilizado como ingrediente en la cocina de la zona, en especial en el campo.\nCaracterísticas del vino tinto\nEl vino tinto se produce en las zonas más elevadas de la región, en las zonas más altas, ya que allí se localiza una",
+    " el nombre de la lavandera Suzuki Suzuki, la cual se encuentra decorada con tostadas saladas y heladas y que está hecha de vidrio.\nDe hecho, la cocina tradicional de la paella valenciana es hecha de vidrio y tiene un montón de tostadas.\nEn el interior, la paella es extraída de la paella. El proceso de cocción suele ser ligero, con un poco de humedad y un poco de sal.\nEn la actualidad, el proceso de cocción más simple es el de la paella valenciana"
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "El sistema solar está formado por",
+   "greedy": " una serie de planetas que orbitan alrededor de la estrella, que se encuentran en la constelación de Leo.\nEl sistema solar está formado por una serie de planetas que orbitan alrededor de la estrella, que orbitan alrededor de la estrella, que se encuentra en la constelación de Leo.\nEl sistema solar está formado por una serie de planetas que orbitan alrededor de la estrella, que orbitan alrededor de la estrella, que se encuentra en la constelación de Leo.\nEl sistema solar está formado por una serie de planetas que orbitan alrededor de la estrella, que orbitan alrededor de",
+   "samples": [
+    " una masa de aire, polvo y gas, que dan vida a planetas gaseosos. Se estima que el 90% de la energía solar en el mundo procede de la biomasa. El término está compuesto por la energía que los seres vivos producen en forma de luz, calor, luz o calor.\nEl primer tipo de energía es la solar, que se produce con la radiación solar, que se libera en forma de partículas cargadas. Su energía es la que incide sobre la superficie solar. La energía que llega al Sol es la que se produce con la radiación solar y la que llega",
+    " una esfera cargada de partículas subatómicas llamadas fotones (o partículas alfa).\nA lo largo de millones de años, la materia del Universo fue siendo absorbida por las partículas subatómicas llamadas fotones, y hoy es más fácil para los científicos ver este tipo de fotones en sus satélites, estos últimos convertidos en fotones.\nTambién se sabe que los fotones de 2004 están siendo absorbidos por las partículas alfa que se encuentran en el cielo.\nPor eso se dice que los rayos cósmicos pueden ser expuestos a la radiación electromagnética como"
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "Había una vez, en un pequeño pueblo de montaña,",
+   "greedy": " un hombre que se llamaba Dora, que era un hombre de unos treinta años, que vivía en una casa de madera, y que era un hombre de unos cuarenta años, que vivía en una casa de madera, y que era un hombre de unos cuarenta años, que vivía en una casa de madera, y que era un hombre de unos cuarenta años, que vivía en una casa de madera, y que era un hombre de unos cuarenta años, que vivía en una casa de madera, y que era un hombre de unos cuarenta años, que vivía en una casa de madera, y que era un hombre",
+   "samples": [
+    " una tortuga con el pico de montaña como el pueblo de Apolo, y una tortuga.\nElla era una tortuga. Los peces eran tan pequeños que las tortugas tenían el pico de montaña. Esta tortuga era un pequeño, el cual era grande, que a pesar de su pequeño tamaño, tenía un pico enorme.\nA la tortuga le gustaba la tortuga, la cual se encontraba entre las 500 y 1200 metros de largo.\nHacia el final del día, la tortuga comenzó a enamorarse de ella.\nLuego de",
+    " una granja donde unos vecinos vinieron a ayudarme. Algunos vecinos, mientras les servían la leche, se fueron a comer a la tierra de los mismos, donde, en unas sillas de descanso, les enseño un \"Almacenamiento Lógico\". Al día siguiente, un día de juerga, un hombre cayó enfermo.\nSe presentó un hombre a su casa, y sin embargo, se puso muy contento y sacó su piel del fuego.\nLuego, se puso a practicar un caldo de pollo y todos comenzaron a cocinar con el caldo.\nSe fue a su"
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "Para aprender a programar en Python, lo primero que",
+   "greedy": " debe hacer es crear un archivo .csv.\nPara ello, se debe crear un archivo .csv.\nPara ello, se debe crear un archivo .csv.\nPara ello, se debe crear un archivo .csv.\nPara ello, se debe crear un archivo .csv.\nPara ello, se debe crear un archivo .csv.\nPara ello, se debe crear un archivo .csv.\nPara ello, se debe crear un archivo .csv.\nPara ello, se debe crear un archivo .csv.\nPara ello, se debe",
+   "samples": [
+    " necesita es una versión del lenguaje VKML3.es. Usando un lenguaje VKML3, con un formato de 32 bits, podemos programar en VKML3.es, donde usamos un modelo de bajo nivel 32 bits (no se si le conviene). Este modelo nos permite montar en la línea de comandos desde un programa de extensión.\nPara empezar, primero debe entender el lenguaje VKML3.es, y luego conocer el modelo de VKML3.es.\nVKML3.es es una librería de programación que",
+    " hay que hacer es ir al menú y seleccionar la pestaña \"Install\" con el botón derecho del ratón.\nDespués en la barra de herramientas que desees usar, simplemente presiona o clic en el botón \"Install\" y pulsa la tecla CTRL + F."
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "La Revolución Francesa comenzó en",
+   "greedy": " 1789, cuando el gobierno de Napoleón Bonaparte, que había sido derrotado por Napoleón Bonaparte, se convirtió en el primer gobierno de la historia de Francia.\nLa Revolución Francesa fue un periodo de gran inestabilidad política, económica y social, que se caracterizó por la aparición de una serie de gobiernos que se enfrentaron a la monarquía y a la monarquía.\nLa Revolución Francesa fue un periodo de gran inestabilidad política, social y económica, que se caracterizó por la aparición de una serie de gobiernos que se enfrentaron a la monarquía y a la monarquía.\nLa Revolución Francesa fue",
+   "samples": [
+    " el año 1789, con la derrota de los Estados Pontificiales en la guerra de la Independencia, la rebelión de los esclavos, y la creación del primer pueblo cristiano, en Francia.\nFue uno de los más importantes exponentes de la Revolución Francesa. A mediados de la década de 1780, la revolución se inició con el golpe de estado de 1789, que provoco un cambio en la concepción de la nación de Francia. Fue una revolución que hizo retroceder las limitaciones del capitalismo y a partir de esa época el capitalismo fue una de",
+    " 1775 con la disolución de la monarquía absoluta de Luis XVI y los Reyes Católicos tras la derrota de Napoleón. El Gobierno español, basado en la intervención directa de la monarquía hispánica, la tomó en 1782 y la puso en marcha en 1801, a fines de ese mismo año, con la intención de poner fin a la política expansionista de la corona española. El último intento del príncipe de Gales, de dominar el comercio de la corona, terminó en 1794.\nLa soberanía de la Corona Española se vio comprometida"
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "Pregunta: ¿Cuál es la capital de Colombia?\nRespuesta:",
+   "greedy": " La capital de Colombia es la ciudad de Bogotá.\nPregunta: ¿Cuál es la capital de Colombia?\nRespuesta: La capital de Colombia es Bogotá.\nPregunta: ¿Cuál es la capital de Colombia?\nRespuesta: La capital de Colombia es Bogotá.\nPregunta: ¿Cuál es la capital de Colombia?\nRespuesta: La capital de Colombia es Bogotá.\nPregunta: ¿Cuál es la capital de Colombia?\nRespuesta: La capital de Colombia es Bogotá.\nPregunta: ¿Cuál es la capital de Colombia?\nRespuesta: La capital de Colombia es Bogotá.\nPregunta: ¿Cuál",
+   "samples": [
+    " Cinco años.\nRespuesta: 11 años,\nPregunta: Hoy en día la mayoría de las personas del mundo lo consideran un estado de excepción. En Colombia, las personas viven una vida solitaria y vigilante, una vida totalmente normal, de una gran riqueza y libertad.\n¿Cuál es la capital de Colombia?\nRespuesta: Ihagué el 2011. Se cuenta con casi 32 millones de habitantes, de los cuales 31 millones son dominicanos, 24 millones de colombianos, 25 millones de venezolanos, 25",
+    " Las estadísticas sobre el PIB.\nPregunta: En Colombia la ciudad capital se ubica entre los 60 y 70 años de vida. El PIB nacional ha crecido a la par de los índices de la UNESCO y la UNESCO. Por tanto, la población es cada vez mayor.\nPregunta: ¿Cuáles son las provincias de Colombia y de Colombia?\nRespuesta: Las provincias de Colombia y de Colombia son la parte oriental de Colombia y el centro del país.\nPregunta: ¿Cuál es la capital de Colombia?\nRespuesta: El porcentaje de población es bastante alto.\nPregunta: ¿Cuál"
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "The theory of evolution by natural selection",
+   "greedy": " is that the universe is composed of many different elements, and that the universe is composed of many different elements. The theory of evolution is a theory of evolution, and it is a theory of evolution.\nThe theory of evolution is a theory of evolution, and it is a theory of evolution.\nThe theory of evolution is a theory of evolution, and it is a theory of evolution.\nThe theory of evolution is a theory of evolution, and it is a theory of evolution.\nThe theory of evolution is a theory of evolution, and it is a theory of evolution, and it is a",
+   "samples": [
+    "\nCharles Darwin published the famous work of Charles Darwin. The theory of evolution was based on the belief that natural selection created a natural organism and then destroyed its natural habitat. Darwin proposed that this is the natural process of evolution. In his book, Darwin published the theory of evolution by natural selection. This theory of evolution was based on the belief that the natural environment made a natural organism and then destroyed its natural habitat. Darwin also published the theory of evolution by natural selection.\nThe theory of evolution was also developed from the beliefs that the natural environment created a natural organism and that natural selection created natural populations",
+    " is that all organisms have evolved independently on a process of evolution, i.e. that life on Earth could have evolved through photosynthesis. The idea was developed in the 19th century, at the University of Massachusetts, Amherst.\nMetadataShow full item record\nThis article is part of an upcoming issue of The Earth Scientist.\nOn July 11, 2010, the International Astronomical Union (IAU) launched the first Solar-Wave Observations of the Solar System (SOHO) mission.\nThe mission is aimed"
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "Once upon a time, in a small village,",
+   "greedy": " a man named John was walking in the street. He was walking in the street, and he was walking in the street.\nThe man was walking in the street, and he was walking in the street.\nThe man was walking in the street, and he was walking in the street.\nThe man was walking in the street, and he was walking in the street.\nThe man was walking in the street, and he was walking in the street.\nThe man was walking in the street, and he was walking in the street.\nThe man was walking in the street, and",
+   "samples": [
+    " a young girl came to a party, and asked her about what to do to make a difference. She was so excited that this was an opportunity to meet her mother. When she said, “Won't you take a bite at the pool!”\n“Mrs. Mangoes” is a similar phrase, in that she wants to talk about the importance of making a difference. She, like all women, is the one who will make a difference.\nPicture above: Emily Kaneshin\nImages: Emily Kaneshin",
+    " a group of small children shared some strange friends. The boys, some of whom had recently reached the village, knew of the children’s thoughtfulness as the other children were crying.\nThe little boy was so shocked by the boys’ smiling music that they passed away, though he could no longer remember his feelings.\n“I have been doing this for four years, and now, I am not trying to stop it,” said one of the girls.\n“The teachers, having been in touch with my children, he has made some changes. He has made some very nice treats"
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "To make a good cup of coffee, you",
+   "greedy": " need to make a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe cup of coffee is a cup of coffee.\nThe",
+   "samples": [
+    " have to drink coffee in a glass, to make an ice cream (a tasty treat!).\nHow to make a cup of coffee in a glass:\n- 1 cup of coffee\n- 1 cup of coffee\n- 1 cup of coffee\n- 1 cup of water\n- 1 cup of water\n- 1 cup of coffee, and 1 cup of coffee,\n- 2 cups of coffee\n- 2 cups of water\n- 1 cup of water\n- 1 cup of water\n- 2 cups of water\n- ",
+    " have to make sure that you are eating 300-600 mg of coffee daily. If you’re just starting out on a coffee-focused kick-start, then you’re probably already a good cup of coffee to become a cup of tea.\nWhen it comes to drinking coffee, you’re probably looking for a cup of coffee. But, first, there are several ingredients to choose from when you drink coffee.\nBuy a cup of coffee, and you’ll have a few options for your coffee.\n- Sweet Potato ("
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "The main causes of World War I were",
+   "greedy": " the war in Europe, the war in Europe, and the war in Europe. The war was a result of the war, and the war was a result of the war. The war was a result of the war, and the war was a result of the war.\nThe war was a result of the war, and the war was a result of the war. The war was a result of the war, and the war was a result of the war.\nThe war was a result of the war, and the war was a result of the war. The war was a result of the",
+   "samples": [
+    " political, social, economic, and natural. They were that the\nwar economy was a decade-long process of preserving and improving the way people worked and\nflexible in living conditions. The war economy was a time of peace and prosperity and\nlowers the rate of unemployment, housing, and wealth. It was a period of prosperity, which took place during\nthe period of the 1930s and 1940s, when the economy was a fragile\nand unstable process. In the 1950s, the economy grew in size and was",
+    ":\n- The refuges of refugees from many parts of the world.\n- The war in Italy.\n- The war of independence.\n- The Second World War.\n- The first World War.\n- The First World War.\n- The Second World War.\n- The Second World War.\n- The First World War.\n- The Second World War.\n- The Second World War.\n- The Third World War.\n- The Third World War.\n- The Second World War.\n- The Second World War.\n- The First World War."
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "Question: What is the capital of France?\nAnswer:",
+   "greedy": " The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer: The capital of France is Paris.\nAnswer:",
+   "samples": [
+    " 10.000.000.\nQuestion: What is the capital of France?\nAnswer: 10.000.000.\nQuestion: How can you calculate the capital of France?\nAnswer: 10.000.000.\nQuestion: How do you calculate the capital of France?\nAnswer: 10.000.000.\nQuestion: How is the capital of France affected by the global financial crisis?\nAns",
+    " The capital of the Kingdom of France.\nAnswer: The capital of the Kingdom of France.\nAnswer: The capital of the Kingdom of France.\nAnswer: The capital of France.\nQuestion: The capital of the Kingdom of France is the city of Paris, located on the banks of the River Seine.\nAnswer: The capital of the Kingdom of France is Paris, located on the banks of the River Seine.\nAnswer: The capital of the Kingdom of France is Paris.\nAnswer: The capital of the"
+   ]
+  }
+ ]
+}
