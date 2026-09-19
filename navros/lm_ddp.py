@@ -294,5 +294,6 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print, on_save=None)
 
 def train_ddp_run(kw):
     """Punto de entrada para experiments.run_grid (un proceso por GPU, world = 1)."""
-    return train_ddp(LMRun(**kw), ns_dtype=kw.pop("ns_dtype", "fp16") if "ns_dtype" in kw else "fp16",
-                     log=lambda s: print(s, flush=True))
+    kw = dict(kw)
+    ns_dtype = kw.pop("ns_dtype", "fp16")
+    return train_ddp(LMRun(**kw), ns_dtype=ns_dtype, log=lambda s: print(s, flush=True))
