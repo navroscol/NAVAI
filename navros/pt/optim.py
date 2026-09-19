@@ -49,7 +49,8 @@ class Muon(torch.optim.Optimizer):
         groups = []
         if muon:
             groups.append(dict(params=muon, kind="muon", lr=lr_muon, wd=wd_muon))
-        groups.append(dict(params=adam, kind="adam", lr=lr_adam, wd=wd_adam))
+        if adam:
+            groups.append(dict(params=adam, kind="adam", lr=lr_adam, wd=wd_adam))
         super().__init__(groups, dict(momentum=momentum, nesterov=nesterov, ns_steps=ns_steps,
                                       betas=betas, eps=eps, ns_dtype=ns_dtype))
         self.t = 0

@@ -121,6 +121,40 @@ class TokenData:
         self.cursor.update(st["cursor"])
 
 
+class SyntheticData:
+    """Tokens aleatorios con la misma interfaz que TokenData: para medir velocidad y memoria
+    sin corpus. Determinista por cursor (reanudable)."""
+
+    def __init__(self, vocab, langs, T, seed=0):
+        self.vocab, self.langs, self.T, self.seed = vocab, langs, T, seed
+        self.cursor = {l: 0 for l in langs}
+
+    def batch(self, B):
+        c = self.cursor[next(iter(self.langs))]
+        x = np.random.default_rng([self.seed, c]).integers(0, self.vocab, (B, self.T + 1))
+        for l in self.langs:
+            self.cursor[l] += B
+        x = torch.from_numpy(x.astype(np.int64))
+        return x[:, :-1], x[:, 1:]
+
+    def eval_set(self, lang, split, n_seq):
+        x = np.random.default_rng([self.seed, 999, zlib.crc32((lang + split).encode())]).integers(0, self.vocab, (n_seq, self.T + 1))
+        x = torch.from_numpy(x.astype(np.int64))
+        return x[:, :-1], x[:, 1:]
+
+    def state(self):
+        return dict(cursor=dict(self.cursor))
+
+    def load_state(self, st):
+        self.cursor.update(st["cursor"])
+
+
+def make_data(rc):
+    if rc.synthetic:
+        return SyntheticData(32768, rc.langs, rc.T, rc.seed)
+    return TokenData(rc.data_dirs or find_data_dirs(), rc.langs, rc.T, rc.seed)
+
+
 # ---------------------------------------------------------------------- configuración
 @dataclass
 class LMRun:
@@ -148,6 +182,7 @@ class LMRun:
     ckpt_every_min: float = 30.0
     grad_ckpt: bool = False         # recomputar activaciones por capa en el backward
     xla_cache: str = ""             # caché persistente de grafos compilados (TPU)
+    synthetic: bool = False         # tokens aleatorios (benchmark de velocidad/memoria)
     time_budget_s: float = 1e12
     log_every: int = 50
     tag: str = ""
@@ -266,7 +301,7 @@ def train(rc: LMRun, log=print) -> dict:
     t_start = time.time()
     from .backend import Backend
     be = Backend(rc.device, rc.precision, xla_cache=rc.xla_cache or None)
-    data = TokenData(rc.data_dirs or find_data_dirs(), rc.langs, rc.T, rc.seed)
+    data = make_data(rc)
     cfg = lm_preset(rc.preset, data.vocab)
     torch.manual_seed(rc.seed)
     model = Navros(cfg).to(be.device)
