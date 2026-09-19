@@ -106,8 +106,21 @@ def make_example(rng, n_ops, verify=True) -> Example:
     return Example(tokens, np.maximum(lab, 0), (lab >= 0).astype(np.float64), None)
 
 
-def build_pool(rng, lengths, per_len, verify=True) -> Pool:
-    return Pool({n: [make_example(rng, n, verify) for _ in range(per_len)] for n in lengths}, PAD)
+def build_pool(rng, lengths, per_len, verify=True, abacus_size=0, train=True) -> Pool:
+    """abacus_size > 0: cada token recibe su posición 1..T como índice de ábaco, más un
+    desplazamiento aleatorio en entrenamiento (0 en evaluación). Es la alternativa a RoPE
+    para que índices mayores que la longitud entrenada tengan embedding entrenado."""
+    by_len = {}
+    for n in lengths:
+        exs = [make_example(rng, n, verify) for _ in range(per_len)]
+        if abacus_size:
+            for e in exs:
+                T = len(e.tokens)
+                assert T + 1 <= abacus_size, f"ábaco de {abacus_size} demasiado pequeño para T={T}"
+                off = int(rng.integers(0, abacus_size - T)) if train else 0
+                e.abacus = np.arange(1, T + 1) + off
+        by_len[n] = exs
+    return Pool(by_len, PAD)
 
 
 def to_str(tokens) -> str:

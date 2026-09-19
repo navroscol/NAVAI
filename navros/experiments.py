@@ -127,6 +127,27 @@ def reasoner_study(task, out_dir, L=8, steps=3000, lrs=(0.005, 0.01, 0.02, 0.04)
     return summary
 
 
+def width_study(task, out_dir, widths=(64, 128, 256), seeds=(0, 1, 2), lr=0.01, adam_ratio=0.15, per_gpu=2, base=None):
+    """Tensión ancho–generalización: el bucle a varios anchos, mismo protocolo y LR."""
+    base = dict(task=task, arch="bucle", lr_muon=lr, lr_adam=adam_ratio * lr) | (base or {})
+    out_dir = Path(out_dir) / f"{task}_ancho"
+    runs = {f"bucle-d{w}_lr{lr}_s{s}": base | dict(d=w, heads=max(1, w // 32), seed=s) for w in widths for s in seeds}
+    res = run_grid(runs, out_dir, per_gpu)
+    groups = {f"bucle-d{w}": [r for n, r in res.items() if n.startswith(f"bucle-d{w}_")] for w in widths}
+    summary = summarize(groups, base.get("L", 8))
+    (out_dir / "summary.json").write_text(json.dumps(summary, indent=1, default=float))
+    L = [f"## {task}: barrido de ancho del bucle (secuencia / posición a r̄, media de {len(seeds)} semillas)", "",
+         "| ancho | params | " + " | ".join(f"L={m}" for m in next(iter(summary.values()))["test"]) + " |",
+         "|---|---|" + "---|" * len(next(iter(summary.values()))["test"])]
+    for g, v in summary.items():
+        cells = [f"{100*r['same_compute']['seq']['mean']:.1f} / {100*r['same_compute']['pos']['mean']:.1f}" for r in v["test"].values()]
+        L.append(f"| {g} | {v['params']:,} | " + " | ".join(cells) + " |")
+    md = "\n".join(L) + "\n"
+    (out_dir / "summary.md").write_text(md)
+    print(md, flush=True)
+    return summary
+
+
 def _ms(xs):
     xs = np.asarray(xs, dtype=float)
     return dict(mean=float(xs.mean()), std=float(xs.std(ddof=1)) if len(xs) > 1 else 0.0, n=len(xs), vals=xs.tolist())
@@ -183,3 +204,63 @@ def to_markdown(s, task):
                      f(s["bucle-rfijo"]["test"][m]["same_compute"][met]) if "bucle-rfijo" in s else "—"]
             lines.append(f"| {m} | {'secuencia' if met == 'seq' else 'posición'} | " + " | ".join(cells) + " |")
     return "\n".join(lines) + "\n"
+
+
+# ------------------------------------------------------------------ LM pequeño
+def lm_study(out_dir, data_dirs, presets=("rec-s", "fix20-s", "fix8-s"), sweep_lrs=(0.01, 0.02, 0.04),
+             sweep_tokens=20_000_000, full_tokens=200_000_000, adam_ratio=0.15, base=None, per_gpu=1):
+    """¿Ayuda la recurrencia a un LM a igualdad de cómputo?
+
+    1. Barrido corto de LR (sweep_tokens) para cada arquitectura; se elige por pérdida de
+       validación media (es+en) al final del barrido.
+    2. Corrida completa (full_tokens) de cada arquitectura con su mejor LR.
+    rec-s: 2+4×r̄+2 capas (r̄=4, pesos del núcleo compartidos); fix20-s: 20 capas distintas
+    (mismo cómputo de forward a r̄); fix8-s: 8 capas (mismos parámetros únicos).
+    """
+    out_dir = Path(out_dir)
+    base = dict(data_dirs=list(data_dirs), T=1024, batch=64, micro=8, precision="fp16", eval_seq=64) | (base or {})
+    g = dict(fn="navros.lm:train_lm_run", brief="navros.lm:lm_brief")
+    lr_kw = lambda lr: dict(lr_muon=lr, lr_adam=adam_ratio * lr)
+    runs = {f"{p}_lr{lr}_barrido": base | dict(preset=p, tokens=sweep_tokens, warmup=50, eval_every=10**9,
+                                                decay_frac=0.2, tag=f"barrido-{lr}") | lr_kw(lr)
+            for p in presets for lr in sweep_lrs}
+    res = run_grid(runs, out_dir, per_gpu, **g)
+    best, sweep = {}, {}
+    for p in presets:
+        c = {lr: res.get(f"{p}_lr{lr}_barrido") for lr in sweep_lrs}
+        c = {lr: np.mean(list(r["val"].values())) for lr, r in c.items() if r and r.get("finished")}
+        sweep[p] = c
+        best[p] = min(c, key=c.get)
+    runs = {f"{p}_lr{best[p]}_completo": base | dict(preset=p, tokens=full_tokens, warmup=200, eval_every=500,
+                                                     ckpt_dir=f"/kaggle/working/ckpt/{p}", tag="completo") | lr_kw(best[p])
+            for p in presets}
+    res = run_grid(runs, out_dir, per_gpu, **g)
+    summary = dict(sweep=sweep, best_lr=best, runs={})
+    for name, r in res.items():
+        p = name.split("_lr")[0]
+        summary["runs"][p] = dict(params=r["params"], flops_per_token=r["flops_per_token"], finished=r["finished"],
+                                  val=r.get("val"), test=r.get("test"), recurrence=r.get("recurrence"),
+                                  seconds=r["seconds"], tok_s=np.median([h["tok_s"] for h in r["history"] if "tok_s" in h]))
+    (out_dir / "summary.json").write_text(json.dumps(summary, indent=1, default=float))
+    md = lm_markdown(summary)
+    (out_dir / "summary.md").write_text(md)
+    print(md, flush=True)
+    return summary
+
+
+def lm_markdown(s):
+    L = ["## LM pequeño: recurrente contra pilas fijas (pérdida de prueba, nats/token)", "",
+         "| modelo | params | GFLOP/token entreno | LR Muon | test es | test en | tok/s |", "|---|---|---|---|---|---|---|"]
+    for p, r in s["runs"].items():
+        t = r["test"] or {}
+        L.append(f"| {p} | {r['params']:,} | {r['flops_per_token']/1e9:.2f} | {s['best_lr'][p]} | "
+                 f"{t.get('es', float('nan')):.4f} | {t.get('en', float('nan')):.4f} | {r['tok_s']/1e3:.1f}K |")
+    rec = s["runs"].get("rec-s", {}).get("recurrence")
+    if rec:
+        L += ["", "Pérdida de validación del recurrente según r (r̄ de entrenamiento = 4):", "",
+              "| idioma | " + " | ".join(f"r={k}" for k in next(iter(rec.values()))["curve"]) + " | adaptativo |",
+              "|---|" + "---|" * (len(next(iter(rec.values()))["curve"]) + 1)]
+        for lang, d in rec.items():
+            L.append(f"| {lang} | " + " | ".join(f"{v:.4f}" for v in d["curve"].values())
+                     + f" | {d['adaptive']['loss']:.4f} (r̄={d['adaptive']['mean_r']:.1f}) |")
+    return "\n".join(L) + "\n"
