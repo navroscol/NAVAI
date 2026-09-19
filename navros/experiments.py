@@ -208,7 +208,8 @@ def to_markdown(s, task):
 
 # ------------------------------------------------------------------ LM pequeño
 def lm_study(out_dir, data_dirs, presets=("rec-s", "fix20-s", "fix8-s"), sweep_lrs=(0.01, 0.02, 0.04),
-             sweep_tokens=20_000_000, full_tokens=200_000_000, adam_ratio=0.15, base=None, per_gpu=1):
+             sweep_tokens=20_000_000, full_tokens=200_000_000, adam_ratio=0.15, base=None, per_gpu=1,
+             ckpt_root="/kaggle/working/ckpt"):
     """¿Ayuda la recurrencia a un LM a igualdad de cómputo?
 
     1. Barrido corto de LR (sweep_tokens) para cada arquitectura; se elige por pérdida de
@@ -218,8 +219,9 @@ def lm_study(out_dir, data_dirs, presets=("rec-s", "fix20-s", "fix8-s"), sweep_l
     (mismo cómputo de forward a r̄); fix8-s: 8 capas (mismos parámetros únicos).
     """
     out_dir = Path(out_dir)
-    base = dict(data_dirs=list(data_dirs), T=1024, batch=64, micro=8, precision="fp16", eval_seq=64) | (base or {})
-    g = dict(fn="navros.lm:train_lm_run", brief="navros.lm:lm_brief")
+    base = dict(data_dirs=list(data_dirs), T=1024, batch=64, micro=8, precision="fp16", eval_seq=64,
+                muon_buf="bf16") | (base or {})
+    g = dict(fn="navros.lm_ddp:train_ddp_run", brief="navros.lm:lm_brief")  # mismo entrenador que el 1B
     lr_kw = lambda lr: dict(lr_muon=lr, lr_adam=adam_ratio * lr)
     runs = {f"{p}_lr{lr}_barrido": base | dict(preset=p, tokens=sweep_tokens, warmup=50, eval_every=10**9,
                                                 decay_frac=0.2, tag=f"barrido-{lr}") | lr_kw(lr)
@@ -232,7 +234,7 @@ def lm_study(out_dir, data_dirs, presets=("rec-s", "fix20-s", "fix8-s"), sweep_l
         sweep[p] = c
         best[p] = min(c, key=c.get)
     runs = {f"{p}_lr{best[p]}_completo": base | dict(preset=p, tokens=full_tokens, warmup=200, eval_every=500,
-                                                     ckpt_dir=f"/kaggle/working/ckpt/{p}", tag="completo") | lr_kw(best[p])
+                                                     ckpt_dir=f"{ckpt_root}/{p}", tag="completo") | lr_kw(best[p])
             for p in presets}
     res = run_grid(runs, out_dir, per_gpu, **g)
     summary = dict(sweep=sweep, best_lr=best, runs={})

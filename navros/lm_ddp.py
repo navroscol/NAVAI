@@ -105,9 +105,12 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
     if world > 1 and not dist.is_initialized():
         from datetime import timedelta
         dist.init_process_group("nccl" if use_cuda else "gloo", timeout=timedelta(hours=1))
+    if world == 1 and use_cuda and ":" in rc.device:   # un solo proceso en una GPU concreta (rejillas)
+        device = torch.device(rc.device)
+    else:
+        device = torch.device(f"cuda:{local}" if use_cuda else "cpu")
     if use_cuda:
-        torch.cuda.set_device(local)
-    device = torch.device(f"cuda:{local}" if use_cuda else "cpu")
+        torch.cuda.set_device(device)
     say = log if rank == 0 else (lambda s: None)
     be = Backend(str(device), rc.precision)
     low = {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}[rc.precision]
@@ -284,3 +287,9 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
     if world > 1:
         dist.barrier()
     return res
+
+
+def train_ddp_run(kw):
+    """Punto de entrada para experiments.run_grid (un proceso por GPU, world = 1)."""
+    return train_ddp(LMRun(**kw), ns_dtype=kw.pop("ns_dtype", "fp16") if "ns_dtype" in kw else "fp16",
+                     log=lambda s: print(s, flush=True))
