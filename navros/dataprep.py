@@ -108,14 +108,16 @@ def prepare(out_dir, target_tokens_per_lang=2_000_000_000, tok_bytes=150_000_000
     streams, heads, manifest = {}, {}, dict(sources={}, langs={}, part=list(part))
     for lang in SOURCES:
         streams[lang], manifest["sources"][lang] = open_stream(lang, part)
-        heads[lang] = take_bytes(streams[lang], tok_bytes) if first else []
+        heads[lang] = take_bytes(streams[lang], tok_bytes) if first else []  # también entrenan el LM
         log(f"[{lang}] fuente {manifest['sources'][lang]} (partición {part[0]}/{part[1]}) ({time.time()-t0:.0f}s)")
 
-    if first:
+    if tokenizer_path is None:
+        assert first, "las particiones > 0 necesitan el tokenizador de la partición 0"
         tok = train_tokenizer((t for lang in SOURCES for t in heads[lang]), vocab_size=vocab_size)
         log(f"tokenizador entrenado ({time.time()-t0:.0f}s)")
     else:
         tok = Tokenizer.from_file(str(tokenizer_path))
+        log(f"tokenizador reutilizado: {tokenizer_path}")
     tok.save(str(out / "tokenizer.json"))
     for lang in SOURCES:
         held = list(islice(streams[lang], 2000))
