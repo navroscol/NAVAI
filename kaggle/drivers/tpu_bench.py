@@ -9,9 +9,8 @@ if __name__ == "__main__":
     pip = subprocess.run([sys.executable, "-m", "pip", "list"], capture_output=True, text=True).stdout
     info["pkgs"] = [l for l in pip.splitlines() if any(s in l.lower() for s in ("torch", "jax", "xla", "libtpu"))]
     try:
-        import torch_xla, torch_xla.runtime as xr
+        import torch_xla  # solo la versión: no inicializar el runtime antes de activar SPMD
         info["torch_xla"] = torch_xla.__version__
-        info["n_dev"] = xr.global_runtime_device_count()
     except Exception as e:
         info["torch_xla_error"] = repr(e)[:400]
     print(json.dumps(info, indent=1), flush=True)
