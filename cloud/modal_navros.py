@@ -109,6 +109,29 @@ def entrenar(horas: float = 3.0, preset: str = "navros-1b", total_tokens: int = 
     return dict(step=res["step"], finished=res["finished"], last=res["history"][-3:])
 
 
+@app.function(gpu="H100", cpu=8, memory=65536, timeout=90 * 60, volumes={"/data": data_vol, "/ckpt": ckpt_vol})
+def estudio_lm(shards_per_lang: int = 2, sweep_tokens: int = 10_000_000, full_tokens: int = 100_000_000):
+    """Estudio pequeño del LM (rec-s contra fix20-s y fix8-s) en una H100, en secuencia.
+    Usa solo los primeros `shards_per_lang` shards de entrenamiento por idioma (copia local)."""
+    _setup()
+    src, dst = Path("/data/navros_data"), Path("/tmp/navros_small")
+    m = json.loads((src / "manifest.json").read_text())
+    for lang, v in m["langs"].items():
+        (dst / lang).mkdir(parents=True, exist_ok=True)
+        v["train"]["shards"] = v["train"]["shards"][:shards_per_lang]
+        v["train"]["tokens"] = sum(x["tokens"] for x in v["train"]["shards"])
+        for x in v["train"]["shards"] + [v["val"], v["test"]]:
+            shutil.copy(src / x["file"], dst / x["file"])
+    shutil.copy(src / "tokenizer.json", dst / "tokenizer.json")
+    (dst / "manifest.json").write_text(json.dumps(m))
+    from navros.experiments import lm_study
+    s = lm_study("/ckpt/lm_estudio", [str(dst)], sweep_lrs=(0.01, 0.02), sweep_tokens=sweep_tokens,
+                 full_tokens=full_tokens, ckpt_root="/tmp/ckpt",
+                 base=dict(precision="bf16", muon_buf="fp32", micro=32, ns_dtype="bf16"))
+    ckpt_vol.commit()
+    return s
+
+
 @app.local_entrypoint()
 def main():
     print(bench.remote())
