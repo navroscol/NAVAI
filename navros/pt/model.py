@@ -16,7 +16,10 @@ from ..config import NavrosConfig
 
 
 def rmsnorm(x, g, eps):
-    y = x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps)
+    """En fp16/bf16 se calcula en float32 (x² desborda fp16 por encima de ~256)."""
+    xf = x.float() if x.dtype in (torch.float16, torch.bfloat16) else x
+    y = xf * torch.rsqrt(xf.pow(2).mean(-1, keepdim=True) + eps)
+    y = y.to(x.dtype)
     return y * g if g is not None else y
 
 
