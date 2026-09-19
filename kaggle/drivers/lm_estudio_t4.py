@@ -9,5 +9,5 @@ if __name__ == "__main__":
     print("datos:", dirs, flush=True)
     assert dirs, "adjunta navros-datos-p0 como entrada"
     t = time.time()
-    lm_study(f"{OUT}/lm_estudio", dirs)
+    lm_study(f"{OUT}/lm_estudio", dirs, sweep_lrs=(0.01, 0.02), sweep_tokens=10_000_000, full_tokens=100_000_000)
     print(f"== terminado en {(time.time()-t)/60:.1f} min", flush=True)
