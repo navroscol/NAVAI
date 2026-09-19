@@ -223,3 +223,21 @@ def test_momento_bf16_cerca_de_fp32():
         out.append(_train_steps(m, opt, np.random.default_rng(0)))
     err = max(float((out[0][n] - out[1][n]).abs().max() / out[0][n].abs().max()) for n in out[0])
     assert 1e-9 < err < 0.05, err
+
+
+def test_cache_kv_igual_al_forward_completo():
+    """La generación incremental (caché KV) reproduce los logits del forward completo, y la
+    decodificación voraz coincide con el argmax recalculado desde cero en cada paso."""
+    from navros.generate import generate, verify_cache
+    torch.manual_seed(0)
+    m = Navros(NavrosConfig(vocab=64, d=32, n_heads=4, n_pre=3, n_core=0, causal=True, rope=True)).double().eval()
+    ids = [0] + torch.randint(1, 64, (20,)).tolist()
+    diff, scale = verify_cache(m, ids)
+    assert diff < 1e-10 * max(1.0, scale), diff
+    out = generate(m, ids[:7], n_new=10, temperatures=(0.0,))[0]
+    seq = ids[:7]
+    for t in out:
+        with torch.no_grad():
+            nxt = int(m(torch.tensor([seq])).argmax(-1)[0, -1])
+        assert nxt == t
+        seq.append(t)
