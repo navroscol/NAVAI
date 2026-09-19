@@ -22,7 +22,7 @@ import ast
 
 import numpy as np
 
-from .common import Example, Pool
+from .common import Example, Pool, random_positions
 
 SYMBOLS = "0123456789+-*()=_"
 TOK = {c: i for i, c in enumerate(SYMBOLS)}
@@ -106,7 +106,7 @@ def make_example(rng, n_ops, verify=True) -> Example:
     return Example(tokens, np.maximum(lab, 0), (lab >= 0).astype(np.float64), None)
 
 
-def build_pool(rng, lengths, per_len, verify=True, abacus_size=0, train=True) -> Pool:
+def build_pool(rng, lengths, per_len, verify=True, abacus_size=0, train=True, rope_range=0) -> Pool:
     """abacus_size > 0: cada token recibe su posición 1..T como índice de ábaco, más un
     desplazamiento aleatorio en entrenamiento (0 en evaluación). Es la alternativa a RoPE
     para que índices mayores que la longitud entrenada tengan embedding entrenado."""
@@ -119,6 +119,9 @@ def build_pool(rng, lengths, per_len, verify=True, abacus_size=0, train=True) ->
                 assert T + 1 <= abacus_size, f"ábaco de {abacus_size} demasiado pequeño para T={T}"
                 off = int(rng.integers(0, abacus_size - T)) if train else 0
                 e.abacus = np.arange(1, T + 1) + off
+        if rope_range:
+            for e in exs:
+                e.pos = random_positions(rng, len(e.tokens), rope_range)
         by_len[n] = exs
     return Pool(by_len, PAD)
 

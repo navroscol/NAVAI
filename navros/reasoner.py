@@ -45,6 +45,7 @@ class RunCfg:
     k_bptt: int = 4
     blocks: int = 0                # fijo: 0 → round(r_mean)
     rope: bool = True
+    rope_range: int = 0            # >0: posiciones RoPE aleatorizadas, subconjunto ordenado de [0, rope_range)
     abacus: int = 0                # 0 → 8L+2 en suma; en expr 16L+8 si rope=False (posición absoluta + desplazamiento)
     steps: int = 3000
     batch: int = 128
@@ -88,13 +89,15 @@ def build_pools(rc: RunCfg, mcfg: NavrosConfig):
     lengths = list(range(1, rc.L + 1))
     test_lens = [m * rc.L for m in rc.eval_mult]
     if rc.task == "suma":
-        tr = t.build_pool(rng_tr, lengths, rc.pool_per_len, mcfg.abacus, train=True)
-        va = t.build_pool(rng_va, [rc.L], rc.n_eval, mcfg.abacus, train=False)
-        te = t.build_pool(rng_te, test_lens, rc.n_eval, mcfg.abacus, train=False)
+        rr = rc.rope_range
+        tr = t.build_pool(rng_tr, lengths, rc.pool_per_len, mcfg.abacus, train=True, rope_range=rr)
+        va = t.build_pool(rng_va, [rc.L], rc.n_eval, mcfg.abacus, train=False, rope_range=rr)
+        te = t.build_pool(rng_te, test_lens, rc.n_eval, mcfg.abacus, train=False, rope_range=rr)
     else:
-        tr = t.build_pool(rng_tr, lengths, rc.pool_per_len, abacus_size=mcfg.abacus, train=True)
-        va = t.build_pool(rng_va, [rc.L], rc.n_eval, abacus_size=mcfg.abacus, train=False)
-        te = t.build_pool(rng_te, test_lens, rc.n_eval, abacus_size=mcfg.abacus, train=False)
+        rr = rc.rope_range
+        tr = t.build_pool(rng_tr, lengths, rc.pool_per_len, abacus_size=mcfg.abacus, train=True, rope_range=rr)
+        va = t.build_pool(rng_va, [rc.L], rc.n_eval, abacus_size=mcfg.abacus, train=False, rope_range=rr)
+        te = t.build_pool(rng_te, test_lens, rc.n_eval, abacus_size=mcfg.abacus, train=False, rope_range=rr)
     train_keys = tr.keys()
     dropped = {n: te.drop(n, train_keys) for n in test_lens} | {"val": va.drop(rc.L, train_keys)}
     return tr, va, te, dropped
@@ -138,14 +141,14 @@ def evaluate(model: Navros, pool, n, rc: RunCfg, device, eval_bs=250):
         acc = Acc()
         for b in pool.iter_batches(n, eval_bs):
             b = to_dev(b, device)
-            acc.add(model(b["tokens"], b.get("abacus"), b.get("valid")), b)
+            acc.add(model(b["tokens"], b.get("abacus"), b.get("valid"), pos=b.get("pos")), b)
         model.train()
         return dict(fixed=acc.get())
     accs = [Acc() for _ in range(rc.r_eval_max)]
     ada, used, delta_curve = Acc(), [], np.zeros(rc.r_eval_max)
     for b in pool.iter_batches(n, eval_bs):
         b = to_dev(b, device)
-        x0, rope, mask = model.prelude(b["tokens"], b.get("abacus"), b.get("valid"))
+        x0, rope, mask = model.prelude(b["tokens"], b.get("abacus"), b.get("valid"), b.get("pos"))
         h = torch.zeros_like(x0)
         B = x0.shape[0]
         done = torch.zeros(B, dtype=torch.bool, device=device)
@@ -198,7 +201,7 @@ def train(rc: RunCfg, verbose=True) -> dict:
             k = min(rc.k_bptt, r)
         else:
             r = k = mcfg.n_blocks
-        logits = model(b["tokens"], b.get("abacus"), b.get("valid"), r=r, k=k)
+        logits = model(b["tokens"], b.get("abacus"), b.get("valid"), r=r, k=k, pos=b.get("pos"))
         loss = weighted_xent(logits, b["targets"], b["weights"])
         opt.zero_grad(set_to_none=True)
         loss.backward()

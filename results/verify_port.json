@@ -146,6 +146,30 @@
    "traj_adamw": 1.917258550794232e-09,
    "traj_adamw_worst": "core.0.0.w2",
    "ok": true
+  },
+  {
+   "case": "rope_posiciones_aleatorias",
+   "params": 13952,
+   "f64_manual": {
+    "loss_diff": 1.7482801687089894e-16,
+    "grad_err": 6.041521035639034e-16,
+    "worst_tensor": "core.0.0.wq"
+   },
+   "f64_sdpa": {
+    "loss_diff": 1.7482801687089894e-16,
+    "grad_err": 7.539235699062757e-16,
+    "worst_tensor": "core.0.0.g1"
+   },
+   "f32_sdpa": {
+    "loss_diff": 8.87653055772816e-08,
+    "grad_err": 3.0350889687165436e-07,
+    "worst_tensor": "core.0.0.wq"
+   },
+   "traj_muon": 5.1155769324125264e-09,
+   "traj_muon_worst": "core.0.0.w1",
+   "traj_adamw": 2.3947121039890373e-09,
+   "traj_adamw_worst": "core.0.0.w1",
+   "ok": true
   }
  ]
 }

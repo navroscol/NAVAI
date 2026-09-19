@@ -28,6 +28,7 @@ CASES = [
     ("referencia_fija_3_bloques", NavrosConfig(vocab=13, d=16, n_heads=4, ffn=24, n_core=2, n_blocks=3, abacus=11), 2, 6, 3, None, True),
     ("lm_recurrente_preludio_coda", NavrosConfig(vocab=19, d=16, n_heads=2, ffn=24, n_pre=1, n_core=2, n_coda=1, causal=True), 2, 8, 4, 2, False),
     ("sin_rope_con_ábaco", NavrosConfig(vocab=13, d=12, n_heads=3, ffn=20, n_core=1, rope=False, abacus=9), 3, 5, 3, None, False),
+    ("rope_posiciones_aleatorias", NavrosConfig(vocab=13, d=16, n_heads=2, ffn=24, n_core=1), 3, 6, 4, 2, "pos"),
 ]
 
 
@@ -40,7 +41,9 @@ def make_batch(cfg, B, T, rng, pad):
     batch["weights"][0, 0] = 1.0
     if cfg.abacus:
         batch["abacus"] = rng.integers(0, cfg.abacus, (B, T))
-    if pad:
+    if pad == "pos":
+        batch["pos"] = np.stack([np.sort(rng.choice(40, T, replace=False)) for _ in range(B)])
+    elif pad:
         valid = np.ones((B, T), dtype=bool)
         valid[0, -2:] = False
         valid[-1, -1:] = False
