@@ -96,7 +96,8 @@ def find_checkpoint(rc: LMRun):
     return max(cands)[1] if cands else None
 
 
-def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
+def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print, on_save=None) -> dict:
+    """on_save(): se llama tras cada checkpoint (p. ej. para confirmar un Volume de Modal)."""
     t_start = time.time()
     world = int(os.environ.get("WORLD_SIZE", 1))
     rank = int(os.environ.get("RANK", 0))
@@ -192,6 +193,8 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
         if rank == 0:
             (d / "latest.json").write_text(json.dumps(dict(step=tag_step, preset=rc.preset, tag=rc.tag, kind="ddp",
                                                            world=world, time=time.time())))
+            if on_save is not None:
+                on_save()
 
     last_ck, t_log, tok_log, run, n_run = time.time(), time.time(), 0, 0.0, 0
     flag = torch.zeros(1, device=device)
