@@ -83,12 +83,15 @@ def datos(tokens_per_lang: int = 1_500_000_000, part: int = 0, n_parts: int = 4)
     return {l: v["train"]["tokens"] for l, v in m["langs"].items()}
 
 
-@app.function(gpu="H100", cpu=8, memory=65536, timeout=24 * 3600, volumes={"/data": data_vol, "/ckpt": ckpt_vol},
+# CPU y memoria se cobran aparte según lo reservado (8 núcleos + 64 GiB ≈ +0,89 $/h; 4 + 32 GiB ≈ +0,45 $/h)
+@app.function(gpu="H100", cpu=4, memory=32768, timeout=24 * 3600, volumes={"/data": data_vol, "/ckpt": ckpt_vol},
               retries=modal.Retries(max_retries=3, initial_delay=10.0))
-def entrenar(horas: float = 3.0, preset: str = "navros-1b", total_tokens: int = 10_000_000_000,
-             micro: int = 8, tag: str = "navros-1b-v1"):
+def entrenar(horas: float = 3.0, preset: str = "navros-1b-fix", total_tokens: int = 900_000_000,
+             micro: int = 8, tag: str = "navros-1b-fix-v1"):
     """Un tramo de entrenamiento de `horas`. Reanuda del último checkpoint de /ckpt/<tag>.
-    Si Modal interrumpe la máquina, el reintento reanuda desde el último checkpoint confirmado."""
+    Si Modal interrumpe la máquina, el reintento reanuda desde el último checkpoint confirmado.
+    WSD: el LR es constante hasta el 80 % de total_tokens, así que total_tokens puede ajustarse
+    entre tramos mientras no se haya llegado al decaimiento."""
     _setup()
     from navros.lm import LMRun
     from navros.lm_ddp import train_ddp
@@ -101,7 +104,7 @@ def entrenar(horas: float = 3.0, preset: str = "navros-1b", total_tokens: int = 
     rc = LMRun(preset=preset, data_dirs=[local], T=1024, batch=256, micro=micro, tokens=total_tokens,
                lr_muon=0.02, lr_adam=1e-3, warmup=200, decay_frac=0.2, precision="bf16", device="cuda",
                grad_ckpt=False, muon_buf="fp32", eval_every=200, eval_seq=64, r_eval=(1, 2, 3, 4, 6, 8, 12, 16),
-               log_every=10, ckpt_dir=f"/ckpt/{tag}", ckpt_every_min=20, time_budget_s=horas * 3600, tag=tag)
+               log_every=10, ckpt_dir=f"/ckpt/{tag}", ckpt_every_min=30, time_budget_s=horas * 3600, tag=tag)
     res = train_ddp(rc, ns_dtype="bf16", log=lambda s: print(s, flush=True), on_save=ckpt_vol.commit)
     Path(f"/ckpt/{tag}/resultados").mkdir(parents=True, exist_ok=True)
     Path(f"/ckpt/{tag}/resultados/tramo_{int(time.time())}.json").write_text(json.dumps(res, default=float))
