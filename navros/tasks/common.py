@@ -17,6 +17,7 @@ class Example:
     targets: np.ndarray   # (T,)  etiqueta (0 donde no se supervisa)
     weights: np.ndarray   # (T,)  1 donde se supervisa
     abacus: np.ndarray | None = None
+    pos: np.ndarray | None = None      # posiciones de RoPE (None = 0..T−1)
 
 
 def collate(examples: list[Example], pad: int) -> dict:
@@ -26,16 +27,19 @@ def collate(examples: list[Example], pad: int) -> dict:
     tgt = np.zeros((B, T), dtype=np.int64)
     w = np.zeros((B, T), dtype=np.float64)
     valid = np.zeros((B, T), dtype=bool)
-    ab = np.zeros((B, T), dtype=np.int64) if examples[0].abacus is not None else None
+    extra = {f: np.zeros((B, T), dtype=np.int64) for f in ("abacus", "pos") if getattr(examples[0], f) is not None}
     for i, e in enumerate(examples):
         n = len(e.tokens)
         tok[i, :n], tgt[i, :n], w[i, :n], valid[i, :n] = e.tokens, e.targets, e.weights, True
-        if ab is not None:
-            ab[i, :n] = e.abacus
-    out = dict(tokens=tok, targets=tgt, weights=w, valid=valid)
-    if ab is not None:
-        out["abacus"] = ab
-    return out
+        for f, arr in extra.items():
+            arr[i, :n] = getattr(e, f)
+    return dict(tokens=tok, targets=tgt, weights=w, valid=valid) | extra
+
+
+def random_positions(rng, T, rope_range):
+    """Posiciones aleatorizadas (Ruoss et al., 2023): subconjunto ordenado de [0, rope_range)."""
+    assert T <= rope_range, f"rope_range {rope_range} < T {T}"
+    return np.sort(rng.choice(rope_range, size=T, replace=False))
 
 
 class Pool:

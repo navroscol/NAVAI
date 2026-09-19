@@ -32,6 +32,7 @@ CASES = [
     ("referencia_fija", NavrosConfig(vocab=13, d=32, n_heads=2, n_core=1, n_blocks=6, abacus=40), 4, 10, None, None, True),
     ("lm_recurrente", NavrosConfig(vocab=29, d=32, n_heads=4, n_pre=1, n_core=2, n_coda=1, causal=True, r_mean=3, k_bptt=2), 3, 11, 4, 2, False),
     ("sin_rope", NavrosConfig(vocab=13, d=24, n_heads=3, n_core=1, rope=False, abacus=20, r_mean=3, k_bptt=2), 4, 8, 3, 2, True),
+    ("rope_posiciones_aleatorias", NavrosConfig(vocab=17, d=32, n_heads=4, n_core=1, r_mean=4, k_bptt=2), 4, 9, 5, 2, "pos"),
 ]
 
 
@@ -41,7 +42,9 @@ def make_batch(cfg, B, T, rng, pad):
     b["weights"][0, 0] = 1.0
     if cfg.abacus:
         b["abacus"] = rng.integers(0, cfg.abacus, (B, T))
-    if pad:
+    if pad == "pos":
+        b["pos"] = np.stack([np.sort(rng.choice(64, T, replace=False)) for _ in range(B)])
+    elif pad:
         valid = np.ones((B, T), dtype=bool)
         valid[0, -3:] = False
         valid[1, -1:] = False
@@ -55,12 +58,13 @@ def to_torch(b, dtype, device="cpu"):
                weights=torch.from_numpy(b["weights"]).to(dtype))
     out["abacus"] = torch.from_numpy(b["abacus"]) if "abacus" in b else None
     out["valid"] = torch.from_numpy(b["valid"]) if "valid" in b else None
+    out["pos"] = torch.from_numpy(b["pos"]) if "pos" in b else None
     return {k: (v.to(device) if v is not None else None) for k, v in out.items()}
 
 
 def pt_loss_grads(model, tb, r, k):
     model.zero_grad(set_to_none=True)
-    logits = model(tb["tokens"], tb["abacus"], tb["valid"], r=r, k=k)
+    logits = model(tb["tokens"], tb["abacus"], tb["valid"], r=r, k=k, pos=tb["pos"])
     loss = weighted_xent(logits, tb["targets"], tb["weights"])
     loss.backward()
     return float(loss.detach()), {n: p.grad.detach().double().cpu().numpy() for n, p in model.named_parameters()}

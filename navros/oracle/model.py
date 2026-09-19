@@ -13,7 +13,7 @@ from __future__ import annotations
 import numpy as np
 
 from ..config import NavrosConfig
-from .layers import LAYER_KEYS, layer_bwd, layer_fwd, rmsnorm_bwd, rmsnorm_fwd, rope_tables
+from .layers import LAYER_KEYS, layer_bwd, layer_fwd, rmsnorm_bwd, rmsnorm_fwd, rope_tables, rope_tables_pos
 
 
 def layer_prefixes(cfg: NavrosConfig):
@@ -80,7 +80,8 @@ class NavrosNP:
         return h, ((caches, cn) if keep else None)
 
     def forward(self, batch, r=None, k=None, h_start=None, keep=True):
-        """Devuelve (loss, cache). batch: tokens, targets, weights (B,T); opcionales abacus, valid.
+        """Devuelve (loss, cache). batch: tokens, targets, weights (B,T); opcionales abacus, valid, pos
+        (posiciones de RoPE por token; por defecto 0..T−1).
 
         r: iteraciones (obligatorio si hay núcleo recurrente; la referencia fija usa n_blocks).
         k: iteraciones con gradiente (None → todas). h_start: estado que entra en la primera
@@ -93,7 +94,12 @@ class NavrosNP:
         x = P["emb"][tok]
         if cfg.abacus:
             x = x + P["abaco"][batch["abacus"]]
-        rope = rope_tables(T, cfg.head_dim, cfg.rope_theta, dt) if cfg.rope else None
+        if not cfg.rope:
+            rope = None
+        elif batch.get("pos") is not None:
+            rope = rope_tables_pos(batch["pos"], cfg.head_dim, cfg.rope_theta, dt)
+        else:
+            rope = rope_tables(T, cfg.head_dim, cfg.rope_theta, dt)
         allowed = attention_mask(B, T, cfg.causal, batch.get("valid"))
 
         c_pre = []

@@ -40,6 +40,14 @@ def rope_tables(T, head_dim, theta, dtype):
     return np.cos(ang).astype(dtype), np.sin(ang).astype(dtype)
 
 
+def rope_tables_pos(pos, head_dim, theta, dtype):
+    """pos: (B,T) enteros arbitrarios (p. ej. subconjunto ordenado al azar). Devuelve (B,1,T,hd/2)."""
+    half = head_dim // 2
+    freqs = theta ** (-np.arange(half, dtype=np.float64) / half)
+    ang = pos[..., None].astype(np.float64) * freqs
+    return np.cos(ang)[:, None].astype(dtype), np.sin(ang)[:, None].astype(dtype)
+
+
 def rope_fwd(x, cos, sin):
     """x: (B,H,T,hd). Rotación por mitades (convención Llama)."""
     half = x.shape[-1] // 2

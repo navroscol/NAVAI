@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from .common import Example, Pool
+from .common import Example, Pool, random_positions
 
 PLUS, EQ, PAD = 10, 11, 12
 VOCAB = 13
@@ -56,12 +56,14 @@ def verify(tokens, targets, n):
             raise AssertionError(f"etiqueta errónea: {A}+{B}≠{S}")
 
 
-def build_pool(rng, lengths, per_len, abacus_size, train=True) -> Pool:
+def build_pool(rng, lengths, per_len, abacus_size, train=True, rope_range=0) -> Pool:
     by_len = {}
     for n in lengths:
         tok, tgt, w, ab = generate(rng, per_len, n, abacus_size, train)
         verify(tok, tgt, n)
-        by_len[n] = [Example(tok[i], tgt[i], w[i], ab[i]) for i in range(per_len)]
+        by_len[n] = [Example(tok[i], tgt[i], w[i], ab[i],
+                             random_positions(rng, tok.shape[1], rope_range) if rope_range else None)
+                     for i in range(per_len)]
     return Pool(by_len, PAD)
 
 

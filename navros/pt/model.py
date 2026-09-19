@@ -30,6 +30,14 @@ def rope_tables(T, head_dim, theta, device, dtype, offset=0):
     return ang.cos().to(device, dtype), ang.sin().to(device, dtype)
 
 
+def rope_tables_pos(pos, head_dim, theta, dtype):
+    """pos: (B,T) enteros. Devuelve cos, sin de forma (B,1,T,hd/2)."""
+    half = head_dim // 2
+    freqs = (theta ** (-torch.arange(half, dtype=torch.float64) / half)).to(pos.device)
+    ang = pos[..., None].double() * freqs
+    return ang.cos()[:, None].to(dtype), ang.sin()[:, None].to(dtype)
+
+
 def apply_rope(x, cos, sin):
     half = x.shape[-1] // 2
     x1, x2 = x[..., :half], x[..., half:]
@@ -137,13 +145,18 @@ class Navros(nn.Module):
             u = self._layer(layer, u, rope, mask)
         return rmsnorm(u, None, self.cfg.norm_eps)
 
-    def prelude(self, tokens, abacus=None, valid=None):
+    def prelude(self, tokens, abacus=None, valid=None, pos=None):
         cfg = self.cfg
         B, T = tokens.shape
         x = self.emb[tokens]
         if cfg.abacus:
             x = x + self.abaco[abacus]
-        rope = rope_tables(T, cfg.head_dim, cfg.rope_theta, x.device, x.dtype) if cfg.rope else None
+        if not cfg.rope:
+            rope = None
+        elif pos is not None:
+            rope = rope_tables_pos(pos, cfg.head_dim, cfg.rope_theta, x.dtype)
+        else:
+            rope = rope_tables(T, cfg.head_dim, cfg.rope_theta, x.device, x.dtype)
         mask = self._mask(B, T, valid, x.device)
         for layer in self.pre:
             x = self._layer(layer, x, rope, mask)
@@ -154,10 +167,10 @@ class Navros(nn.Module):
             h = self._layer(layer, h, rope, mask)
         return (rmsnorm(h, self.norm_f, self.cfg.norm_eps) @ self.emb.T) * self.cfg.logit_scale
 
-    def forward(self, tokens, abacus=None, valid=None, r=None, k=None, h_start=None, return_state=False):
+    def forward(self, tokens, abacus=None, valid=None, r=None, k=None, h_start=None, return_state=False, pos=None):
         """Devuelve logits (B,T,V). Las primeras r−k iteraciones corren sin gradiente."""
         cfg = self.cfg
-        x0, rope, mask = self.prelude(tokens, abacus, valid)
+        x0, rope, mask = self.prelude(tokens, abacus, valid, pos)
         h_entry = None
         if cfg.n_core:
             if not cfg.recurrent:
