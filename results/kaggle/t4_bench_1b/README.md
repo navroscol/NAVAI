@@ -1,6 +1,6 @@
 # NAVROS-1B en Kaggle T4×2 — benchmark (tokens sintéticos), 2026-09-19
 
-Commit `bfb0c96`. Entrenador `navros/lm_ddp.py`: modelo fp16 en cada GPU, maestros fp32 y estado de
+Commit `3091fff` (antes `bfb0c96`, ver `results/commits_reescritos.tsv`). Entrenador `navros/lm_ddp.py`: modelo fp16 en cada GPU, maestros fp32 y estado de
 Muon (bf16) repartidos por dueño, reducción del gradiente al dueño, recomputación de activaciones.
 T=1024, lote de 64 secuencias (65.536 tokens) por paso, 6 pasos por configuración.
 
