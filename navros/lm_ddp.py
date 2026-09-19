@@ -122,7 +122,8 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
     owner, loads = partition(named, world)
     mine = [(n, p) for n, p in named if owner[n] == rank]
     nsd = {"fp16": torch.float16, "bf16": torch.bfloat16, None: None, "fp32": None}[ns_dtype]
-    opt = Muon(mine, lr_muon=rc.lr_muon, lr_adam=rc.lr_adam, wd_muon=rc.wd, ns_dtype=nsd if use_cuda else None)
+    opt = Muon(mine, lr_muon=rc.lr_muon, lr_adam=rc.lr_adam, wd_muon=rc.wd, ns_dtype=nsd if use_cuda else None,
+               buf_dtype=torch.bfloat16 if rc.muon_buf == "bf16" else None)
     ddp = DDP(model, device_ids=[local] if use_cuda else None, gradient_as_bucket_view=True,
               broadcast_buffers=False) if world > 1 else model
     scaler = LossScaler() if fp16 else None
