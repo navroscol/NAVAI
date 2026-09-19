@@ -1,0 +1,56 @@
+[navros-1b-fix-v1] paso 160/3433 loss 5.9588 |g| 0.19 49.60K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 170/3433 loss 5.8222 |g| 0.16 49.62K tok/s 323.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 180/3433 loss 5.6882 |g| 0.16 49.59K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 190/3433 loss 5.5605 |g| 0.15 49.62K tok/s 323.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 200/3433 loss 5.4349 |g| 0.16 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 200 val es 5.3463 en 5.5857
+[navros-1b-fix-v1] paso 210/3433 loss 5.3272 |g| 0.15 48.81K tok/s 318.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 220/3433 loss 5.2106 |g| 0.13 49.60K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 230/3433 loss 5.1062 |g| 0.17 49.56K tok/s 323.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 240/3433 loss 5.0212 |g| 0.16 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 250/3433 loss 4.9403 |g| 0.13 49.57K tok/s 323.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 260/3433 loss 4.8450 |g| 0.14 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 270/3433 loss 4.7778 |g| 0.13 49.60K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 280/3433 loss 4.6954 |g| 0.14 49.56K tok/s 323.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 290/3433 loss 4.6366 |g| 0.14 49.53K tok/s 322.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 300/3433 loss 4.5786 |g| 0.15 49.48K tok/s 322.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 310/3433 loss 4.5390 |g| 0.15 49.57K tok/s 323.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 320/3433 loss 4.4733 |g| 0.15 49.54K tok/s 322.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 330/3433 loss 4.4133 |g| 0.15 49.49K tok/s 322.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 340/3433 loss 4.3745 |g| 0.14 49.41K tok/s 322.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 350/3433 loss 4.3265 |g| 0.16 27.76K tok/s 180.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 360/3433 loss 4.2927 |g| 0.18 49.45K tok/s 322.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 370/3433 loss 4.2564 |g| 0.15 49.54K tok/s 322.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 380/3433 loss 4.2274 |g| 0.17 49.58K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 390/3433 loss 4.1946 |g| 0.17 49.58K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 400/3433 loss 4.1691 |g| 0.18 49.60K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 400 val es 4.0197 en 4.4407
+[navros-1b-fix-v1] paso 410/3433 loss 4.1392 |g| 0.19 48.82K tok/s 318.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 420/3433 loss 4.1082 |g| 0.19 49.60K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 430/3433 loss 4.0709 |g| 0.17 49.57K tok/s 323.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 440/3433 loss 4.0690 |g| 0.22 49.56K tok/s 323.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 450/3433 loss 4.0511 |g| 0.20 49.62K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 460/3433 loss 4.0152 |g| 0.20 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 470/3433 loss 3.9957 |g| 0.21 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 480/3433 loss 3.9777 |g| 0.22 49.62K tok/s 323.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 490/3433 loss 3.9714 |g| 0.23 49.65K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 500/3433 loss 3.9450 |g| 0.22 49.65K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 510/3433 loss 3.9518 |g| 0.23 49.65K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 520/3433 loss 3.9238 |g| 0.23 49.65K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 530/3433 loss 3.9096 |g| 0.22 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 540/3433 loss 3.9104 |g| 0.22 49.60K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 550/3433 loss 3.8749 |g| 0.22 49.45K tok/s 322.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 560/3433 loss 3.8878 |g| 0.26 49.61K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 570/3433 loss 3.8814 |g| 0.26 49.58K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 580/3433 loss 3.8443 |g| 0.22 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 590/3433 loss 3.8432 |g| 0.24 49.58K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 600/3433 loss 3.8286 |g| 0.23 49.60K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 600 val es 3.6857 en 4.1474
+[navros-1b-fix-v1] paso 610/3433 loss 3.8247 |g| 0.24 48.81K tok/s 318.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 620/3433 loss 3.8185 |g| 0.23 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 630/3433 loss 3.7984 |g| 0.25 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 640/3433 loss 3.7897 |g| 0.23 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 650/3433 loss 3.7940 |g| 0.24 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 660/3433 loss 3.7860 |g| 0.21 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 670/3433 loss 3.7741 |g| 0.23 49.65K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+presupuesto de tiempo agotado: checkpoint y salida
