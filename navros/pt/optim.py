@@ -32,11 +32,17 @@ class Muon(torch.optim.Optimizer):
 
     params: iterable de (nombre, tensor), p. ej. model.named_parameters().
     step(lr_mult) escala ambos learning rates (para el schedule).
+
+    tensor_scalars=True (XLA/TPU): el LR y las correcciones de sesgo, que cambian en cada
+    paso, se pasan como tensores del dispositivo. Con floats de Python quedarían incrustados
+    como constantes y XLA recompilaría el grafo del optimizador en cada paso.
+    state_hook(estado, parámetro): se llama al crear cada tensor de estado (p. ej. para
+    repartirlo entre chips igual que su parámetro).
     """
 
     def __init__(self, named_params, lr_muon=0.02, lr_adam=3e-3, momentum=0.95, nesterov=True,
                  ns_steps=5, wd_muon=0.0, wd_adam=0.0, betas=(0.9, 0.95), eps=1e-8,
-                 use_muon=True, ns_dtype=None):
+                 use_muon=True, ns_dtype=None, tensor_scalars=False, state_hook=None):
         named = [(n, p) for n, p in named_params if p.requires_grad]
         muon = [p for n, p in named if use_muon and is_muon_param(n, p)]
         adam = [p for n, p in named if not (use_muon and is_muon_param(n, p))]
@@ -47,9 +53,18 @@ class Muon(torch.optim.Optimizer):
         super().__init__(groups, dict(momentum=momentum, nesterov=nesterov, ns_steps=ns_steps,
                                       betas=betas, eps=eps, ns_dtype=ns_dtype))
         self.t = 0
+        self.tensor_scalars, self.state_hook = tensor_scalars, state_hook
+
+    def _new_state(self, p):
+        z = torch.zeros_like(p)
+        if self.state_hook is not None:
+            self.state_hook(z, p)
+        return z
 
     @torch.no_grad()
     def step(self, lr_mult: float = 1.0):
+        if self.tensor_scalars:
+            return self._step_tensor(lr_mult)
         self.t += 1
         for group in self.param_groups:
             lr = group["lr"] * lr_mult
@@ -61,7 +76,7 @@ class Muon(torch.optim.Optimizer):
                     g = p.grad
                     st = self.state[p]
                     if "buf" not in st:
-                        st["buf"] = torch.zeros_like(p)
+                        st["buf"] = self._new_state(p)
                     buf = st["buf"]
                     buf.lerp_(g, 1.0 - beta)
                     u = torch.lerp(g, buf, beta) if group["nesterov"] else buf
@@ -78,14 +93,57 @@ class Muon(torch.optim.Optimizer):
                     g = p.grad
                     st = self.state[p]
                     if "m" not in st:
-                        st["m"] = torch.zeros_like(p)
-                        st["v"] = torch.zeros_like(p)
+                        st["m"] = self._new_state(p)
+                        st["v"] = self._new_state(p)
                     m, v = st["m"], st["v"]
                     m.lerp_(g, 1.0 - b1)
                     v.mul_(b2).addcmul_(g, g, value=1.0 - b2)
                     if p.ndim == 2:
                         p.mul_(1.0 - lr * group["wd"])
                     p.addcdiv_(m, v.sqrt() / bc2 ** 0.5 + group["eps"], value=-(lr / bc1))
+
+    def _step_tensor(self, lr_mult):
+        """Misma matemática que step(), con los escalares variables como tensores."""
+        self.t += 1
+        first = next(p for g in self.param_groups for p in g["params"])
+        b1, b2 = self.defaults["betas"]
+        vals = [g["lr"] * lr_mult for g in self.param_groups] + [1.0 - b1 ** self.t, 1.0 - b2 ** self.t]
+        sc = torch.tensor(vals, dtype=torch.float32).to(first.device)  # transferencia de datos, no constante
+        bc1, bc2 = sc[-2], sc[-1]
+        for gi, group in enumerate(self.param_groups):
+            lr = sc[gi]
+            if group["kind"] == "muon":
+                beta = group["momentum"]
+                for p in group["params"]:
+                    if p.grad is None:
+                        continue
+                    g = p.grad
+                    st = self.state[p]
+                    if "buf" not in st:
+                        st["buf"] = self._new_state(p)
+                    buf = st["buf"]
+                    buf.lerp_(g, 1.0 - beta)
+                    u = torch.lerp(g, buf, beta) if group["nesterov"] else buf
+                    O = newton_schulz5(u, group["ns_steps"], dtype=group["ns_dtype"])
+                    O = O * max(1.0, u.shape[0] / u.shape[1]) ** 0.5
+                    p.mul_((1.0 - lr * group["wd"]).to(p.dtype))
+                    p.sub_(O * lr.to(p.dtype))
+            else:
+                eps = group["eps"]
+                for p in group["params"]:
+                    if p.grad is None:
+                        continue
+                    g = p.grad
+                    st = self.state[p]
+                    if "m" not in st:
+                        st["m"] = self._new_state(p)
+                        st["v"] = self._new_state(p)
+                    m, v = st["m"], st["v"]
+                    m.lerp_(g, 1.0 - b1)
+                    v.mul_(b2).addcmul_(g, g, value=1.0 - b2)
+                    if p.ndim == 2:
+                        p.mul_((1.0 - lr * group["wd"]).to(p.dtype))
+                    p.sub_((lr / bc1).to(p.dtype) * m / (v.sqrt() / bc2.sqrt().to(p.dtype) + eps))
 
 
 def AdamW(named_params, lr=3e-3, wd=0.0, betas=(0.9, 0.95), eps=1e-8):

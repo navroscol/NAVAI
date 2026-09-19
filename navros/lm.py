@@ -29,7 +29,7 @@ import torch.nn.functional as F
 from .config import NavrosConfig
 from .oracle.model import sample_r
 from .pt.model import Navros
-from .pt.optim import AdamW, Muon, clip_grad_norm
+from .pt.optim import Muon, clip_grad_norm
 
 
 # ----------------------------------------------------------------------- arquitecturas
@@ -146,6 +146,8 @@ class LMRun:
     adaptive_tol: float = 0.01
     ckpt_dir: str = ""
     ckpt_every_min: float = 30.0
+    grad_ckpt: bool = False         # recomputar activaciones por capa en el backward
+    xla_cache: str = ""             # caché persistente de grafos compilados (TPU)
     time_budget_s: float = 1e12
     log_every: int = 50
     tag: str = ""
@@ -166,13 +168,13 @@ def lr_mult(step, rc: LMRun):
 
 # ------------------------------------------------------------------------ evaluación
 @torch.no_grad()
-def eval_losses(model, xy, rc: LMRun, device, dtype, r=None):
+def eval_losses(model, xy, rc: LMRun, be, r=None):
     model.eval()
     x, y = xy
     tot, n = 0.0, 0
-    for i in range(0, len(x), rc.micro):
-        xb, yb = x[i:i + rc.micro].to(device), y[i:i + rc.micro].to(device)
-        with torch.autocast(device.type, dtype=dtype, enabled=dtype != torch.float32):
+    for i in range(0, len(x) - len(x) % rc.micro or len(x), rc.micro):
+        xb, yb = be.shard_batch(x[i:i + rc.micro].to(be.device)), be.shard_batch(y[i:i + rc.micro].to(be.device))
+        with be.autocast():
             logits = model(xb, r=r)
         tot += float(F.cross_entropy(logits.float().flatten(0, 1), yb.flatten(), reduction="sum"))
         n += yb.numel()
@@ -181,7 +183,7 @@ def eval_losses(model, xy, rc: LMRun, device, dtype, r=None):
 
 
 @torch.no_grad()
-def eval_recurrence(model, xy, rc: LMRun, device, dtype):
+def eval_recurrence(model, xy, rc: LMRun, be):
     """Pérdida tras cada iteración (curva) y con salida adaptativa por token: la posición se
     congela cuando ‖Δh‖/‖h‖ < tol; las iteraciones siguientes ven su estado congelado."""
     model.eval()
@@ -190,9 +192,10 @@ def eval_recurrence(model, xy, rc: LMRun, device, dtype):
     x, y = xy
     curve = np.zeros(rmax)
     ada_loss, ada_r, n = 0.0, 0.0, 0
-    for i in range(0, len(x), rc.micro):
-        xb, yb = x[i:i + rc.micro].to(device), y[i:i + rc.micro].to(device)
-        with torch.autocast(device.type, dtype=dtype, enabled=dtype != torch.float32):
+    device = be.device
+    for i in range(0, len(x) - len(x) % rc.micro or len(x), rc.micro):
+        xb, yb = be.shard_batch(x[i:i + rc.micro].to(device)), be.shard_batch(y[i:i + rc.micro].to(device))
+        with be.autocast():
             x0, rope, mask = model.prelude(xb)
             h = torch.zeros_like(x0)
             done = torch.zeros(xb.shape, dtype=torch.bool, device=device)
@@ -210,6 +213,7 @@ def eval_recurrence(model, xy, rc: LMRun, device, dtype):
                 used = torch.where(newly, torch.full_like(used, t + 1), used)
                 ada_nll = nll if ada_nll is None else torch.where(done, ada_nll, nll)
                 done |= newly
+                be.barrier()
         ada_loss += float(ada_nll.sum())
         ada_r += float(used.sum())
         n += yb.numel()
@@ -231,37 +235,60 @@ def latest_checkpoint(rc: LMRun):
     return max(cands)[1] if cands else None
 
 
-def save_checkpoint(rc, step, model, opt, data, scaler, extra):
+def save_checkpoint(rc, step, model, opt, data, scaler, extra, be):
     if not rc.ckpt_dir:
         return
     d = Path(rc.ckpt_dir)
     d.mkdir(parents=True, exist_ok=True)
     tmp = d / "latest.tmp"
-    torch.save(dict(step=step, model=model.state_dict(), opt=opt.state_dict(), opt_t=opt.t, data=data.state(),
-                    scaler=scaler.state_dict() if scaler is not None else None, extra=extra), tmp)
+    be.save(dict(step=step, model=model.state_dict(), opt=opt.state_dict(), opt_t=opt.t, data=data.state(),
+                 scaler=scaler.state_dict() if scaler is not None else None, extra=extra), tmp)
     os.replace(tmp, d / "latest.pt")
     (d / "latest.json").write_text(json.dumps(dict(step=step, preset=rc.preset, tag=rc.tag, time=time.time())))
+
+
+R_BUCKETS = (1, 2, 3, 4, 5, 6, 8, 10, 12, 16)
+
+
+def step_r(rc: LMRun, cfg: NavrosConfig, step: int, be):
+    """r y k del paso. En XLA r se redondea al cubo más cercano de R_BUCKETS: cada (r, k)
+    distinto es un grafo compilado distinto, así que se limita su número."""
+    if not cfg.recurrent:
+        return None, None
+    r = sample_r(np.random.default_rng([rc.seed, step, 7]), cfg)
+    if be.is_xla:
+        r = min(R_BUCKETS, key=lambda b: (abs(b - r), b))
+    return r, min(cfg.k_bptt, r)
 
 
 # ------------------------------------------------------------------------ entrenamiento
 def train(rc: LMRun, log=print) -> dict:
     t_start = time.time()
-    device = torch.device(rc.device)
-    dtype = {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}[rc.precision]
+    from .backend import Backend
+    be = Backend(rc.device, rc.precision, xla_cache=rc.xla_cache or None)
     data = TokenData(rc.data_dirs or find_data_dirs(), rc.langs, rc.T, rc.seed)
     cfg = lm_preset(rc.preset, data.vocab)
     torch.manual_seed(rc.seed)
-    model = Navros(cfg).to(device)
+    model = Navros(cfg).to(be.device)
+    for p in model.parameters():
+        be.shard_param(p)
+    if rc.grad_ckpt:
+        model.ckpt_fn = be.ckpt_fn()
     named = list(model.named_parameters())
-    opt = Muon(named, lr_muon=rc.lr_muon, lr_adam=rc.lr_adam, wd_muon=rc.wd)
-    scaler = torch.amp.GradScaler("cuda") if (rc.precision == "fp16" and device.type == "cuda") else None
+    opt = Muon(named, lr_muon=rc.lr_muon, lr_adam=rc.lr_adam, wd_muon=rc.wd, tensor_scalars=be.is_xla,
+               state_hook=be.shard_like, ns_dtype=torch.bfloat16 if be.is_xla else None)
+    scaler = torch.amp.GradScaler("cuda") if (rc.precision == "fp16" and be.device.type == "cuda") else None
     evals = {l: data.eval_set(l, "val", rc.eval_seq) for l in rc.langs}
     step, history, extra = 0, [], {}
     ck = latest_checkpoint(rc)
     if ck:
-        st = torch.load(ck, map_location=device, weights_only=False)
+        st = torch.load(ck, map_location="cpu", weights_only=False)
         model.load_state_dict(st["model"])
         opt.load_state_dict(st["opt"])
+        for p in model.parameters():
+            for t in opt.state[p].values():
+                if torch.is_tensor(t):
+                    be.shard_like(t, p)
         opt.t = st["opt_t"]
         data.load_state(st["data"])
         if scaler is not None and st["scaler"]:
@@ -272,69 +299,68 @@ def train(rc: LMRun, log=print) -> dict:
     n_micro = rc.batch // rc.micro
     r_bar = round(cfg.r_mean) if cfg.recurrent else None
     flops_tok = train_flops_per_token(cfg, cfg.r_mean if cfg.recurrent else 0, min(cfg.k_bptt, cfg.r_mean) if cfg.recurrent else 0, rc.T)
-    last_ck, t_log, tok_log, run = time.time(), time.time(), 0, 0.0
+    last_ck, t_log, tok_log = time.time(), time.time(), 0
+    run = torch.zeros((), device=be.device)
     log(f"{rc.preset}: {sum(p.numel() for p in model.parameters()):,} params, {rc.steps} pasos, "
-        f"{flops_tok/1e9:.2f} GFLOP/token de entrenamiento")
+        f"{flops_tok/1e9:.2f} GFLOP/token de entrenamiento, dispositivo {rc.device} ×{be.n_dev}")
     while step < rc.steps:
         if time.time() - t_start > rc.time_budget_s:
             log("presupuesto de tiempo agotado: checkpoint y salida")
             break
-        if cfg.recurrent:
-            r = sample_r(np.random.default_rng([rc.seed, step, 7]), cfg)
-            k = min(cfg.k_bptt, r)
-        else:
-            r = k = None
+        r, k = step_r(rc, cfg, step, be)
         opt.zero_grad(set_to_none=True)
-        tot = 0.0
         for _ in range(n_micro):
             x, y = data.batch(rc.micro)
-            x, y = x.to(device, non_blocking=True), y.to(device, non_blocking=True)
-            with torch.autocast(device.type, dtype=dtype, enabled=dtype != torch.float32):
+            x = be.shard_batch(x.to(be.device, non_blocking=True))
+            y = be.shard_batch(y.to(be.device, non_blocking=True))
+            with be.autocast():
                 logits = model(x, r=r, k=k)
             loss = F.cross_entropy(logits.float().flatten(0, 1), y.flatten()) / n_micro
             (scaler.scale(loss) if scaler else loss).backward()
-            tot += float(loss.detach())
+            run = run + loss.detach()
+            be.barrier()
         if scaler:
             scaler.unscale_(opt)
-        gn = float(clip_grad_norm(model.parameters(), rc.clip))
+        gn = clip_grad_norm(model.parameters(), rc.clip)
         if scaler:
             scaler.step(opt, lr_mult(step, rc))
             scaler.update()
         else:
             opt.step(lr_mult(step, rc))
+        be.barrier()
         step += 1
-        run += tot
         tok_log += rc.batch * rc.T
-        if not math.isfinite(tot):
-            log(f"pérdida no finita en el paso {step}")
-            if scaler is None:
-                break
         if step % rc.log_every == 0:
             dt = time.time() - t_log
-            row = dict(step=step, loss=run / rc.log_every, gnorm=gn, tok_s=tok_log / dt, tflops=tok_log * flops_tok / dt / 1e12,
+            loss_avg = float(run) / rc.log_every
+            row = dict(step=step, loss=loss_avg, gnorm=float(gn), tok_s=tok_log / dt, tflops=tok_log * flops_tok / dt / 1e12,
                        lr=lr_mult(step, rc), elapsed=time.time() - t_start)
             history.append(row)
-            log(f"[{rc.tag or rc.preset}] paso {step}/{rc.steps} loss {row['loss']:.4f} |g| {gn:.2f} "
+            log(f"[{rc.tag or rc.preset}] paso {step}/{rc.steps} loss {loss_avg:.4f} |g| {row['gnorm']:.2f} "
                 f"{row['tok_s']/1e3:.1f}K tok/s {row['tflops']:.1f} TFLOP/s")
-            t_log, tok_log, run = time.time(), 0, 0.0
+            t_log, tok_log = time.time(), 0
+            run = torch.zeros((), device=be.device)
+            if not math.isfinite(loss_avg) and scaler is None:
+                log(f"pérdida no finita en el paso {step}: se detiene")
+                break
         if step % rc.eval_every == 0 or step == rc.steps:
-            ev = {l: eval_losses(model, evals[l], rc, device, dtype, r=r_bar) for l in rc.langs}
+            ev = {l: eval_losses(model, evals[l], rc, be, r=r_bar) for l in rc.langs}
             history.append(dict(step=step, val=ev))
             log(f"[{rc.tag or rc.preset}] paso {step} val " + " ".join(f"{l} {v:.4f}" for l, v in ev.items()))
         if time.time() - last_ck > rc.ckpt_every_min * 60:
-            save_checkpoint(rc, step, model, opt, data, scaler, dict(history=history))
+            save_checkpoint(rc, step, model, opt, data, scaler, dict(history=history), be)
             last_ck = time.time()
     extra["history"] = history
-    save_checkpoint(rc, step, model, opt, data, scaler, extra)
+    save_checkpoint(rc, step, model, opt, data, scaler, extra, be)
     done = step >= rc.steps
     res = dict(run=asdict(rc), model=cfg.to_dict(), params=sum(p.numel() for p in model.parameters()),
                flops_per_token=flops_tok, step=step, finished=done, history=history, seconds=time.time() - t_start)
     if done:
-        res["val"] = {l: eval_losses(model, evals[l], rc, device, dtype, r=r_bar) for l in rc.langs}
+        res["val"] = {l: eval_losses(model, evals[l], rc, be, r=r_bar) for l in rc.langs}
         tests = {l: data.eval_set(l, "test", rc.eval_seq) for l in rc.langs}
-        res["test"] = {l: eval_losses(model, tests[l], rc, device, dtype, r=r_bar) for l in rc.langs}
+        res["test"] = {l: eval_losses(model, tests[l], rc, be, r=r_bar) for l in rc.langs}
         if cfg.recurrent:
-            res["recurrence"] = {l: eval_recurrence(model, evals[l], rc, device, dtype) for l in rc.langs}
+            res["recurrence"] = {l: eval_recurrence(model, evals[l], rc, be) for l in rc.langs}
     return res
 
 
@@ -348,3 +374,60 @@ def lm_brief(res):
     if not res.get("finished"):
         return f"sin terminar (paso {res['step']})"
     return "test " + " ".join(f"{l} {v:.4f}" for l, v in res["test"].items())
+
+
+def benchmark(preset, device="cpu", precision="fp32", T=1024, micro=8, n_micro=1, steps=10, warmup=3, r=None,
+              grad_ckpt=False, vocab=32768, log=print):
+    """Velocidad y memoria con tokens sintéticos (no necesita corpus). r fijo (por defecto r̄)
+    para medir el régimen estable; el primer paso incluye la compilación en XLA."""
+    from .backend import Backend
+    be = Backend(device, precision)
+    cfg = lm_preset(preset, vocab)
+    torch.manual_seed(0)
+    model = Navros(cfg).to(be.device)
+    for p in model.parameters():
+        be.shard_param(p)
+    if grad_ckpt:
+        model.ckpt_fn = be.ckpt_fn()
+    opt = Muon(list(model.named_parameters()), tensor_scalars=be.is_xla, state_hook=be.shard_like,
+               ns_dtype=torch.bfloat16 if be.is_xla else None)
+    if cfg.recurrent:
+        r = r or round(cfg.r_mean)
+        k = min(cfg.k_bptt, r)
+    else:
+        r = k = None
+    flops = train_flops_per_token(cfg, r or 0, k or 0, T)
+    g = torch.Generator().manual_seed(0)
+    times, loss = [], None
+    for step in range(warmup + steps):
+        t0 = time.time()
+        opt.zero_grad(set_to_none=True)
+        for _ in range(n_micro):
+            xy = torch.randint(0, vocab, (micro, T + 1), generator=g)
+            x = be.shard_batch(xy[:, :-1].to(be.device))
+            y = be.shard_batch(xy[:, 1:].to(be.device))
+            with be.autocast():
+                logits = model(x, r=r, k=k)
+            loss = F.cross_entropy(logits.float().flatten(0, 1), y.flatten()) / n_micro
+            loss.backward()
+            be.barrier()
+        clip_grad_norm(model.parameters(), 1.0)
+        opt.step(1.0)
+        be.barrier()
+        lv = float(loss.detach())  # sincroniza
+        times.append(time.time() - t0)
+        log(f"  {preset} paso {step}: {times[-1]:.2f}s loss {lv:.3f}")
+    steady = float(np.median(times[warmup:]))
+    tok = micro * n_micro * T
+    res = dict(preset=preset, params=sum(p.numel() for p in model.parameters()), T=T, micro=micro, n_micro=n_micro,
+               r=r, k=k, grad_ckpt=grad_ckpt, first_step_s=times[0], step_s=steady, tok_s=tok / steady,
+               tflops=tok * flops / steady / 1e12, flops_per_token=flops, loss=lv, n_dev=be.n_dev)
+    if be.is_xla:
+        try:
+            res["mem"] = {k2: v for k2, v in be.xm.get_memory_info(be.device).items()}
+        except Exception as e:
+            res["mem"] = repr(e)[:200]
+    elif be.device.type == "cuda":
+        res["mem_gb"] = torch.cuda.max_memory_allocated() / 1e9
+    log(json.dumps(res, default=str))
+    return res
