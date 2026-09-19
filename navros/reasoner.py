@@ -45,7 +45,7 @@ class RunCfg:
     k_bptt: int = 4
     blocks: int = 0                # fijo: 0 → round(r_mean)
     rope: bool = True
-    abacus: int = 0                # 0 → 8L+2 en suma, sin ábaco en expr
+    abacus: int = 0                # 0 → 8L+2 en suma; en expr 16L+8 si rope=False (posición absoluta + desplazamiento)
     steps: int = 3000
     batch: int = 128
     opt: str = "muon"
@@ -66,7 +66,10 @@ class RunCfg:
 
     def model_cfg(self) -> NavrosConfig:
         task = TASKS[self.task]
-        ab = 0 if self.task != "suma" else (self.abacus or 8 * self.L + 2)
+        if self.task == "suma":
+            ab = self.abacus or 8 * self.L + 2
+        else:
+            ab = 0 if self.rope else (self.abacus or 16 * self.L + 8)
         return NavrosConfig(vocab=task.VOCAB, d=self.d, n_heads=self.heads, n_core=self.n_core,
                             n_blocks=1 if self.arch == "bucle" else (self.blocks or round(self.r_mean)),
                             rope=self.rope, abacus=ab, r_mean=self.r_mean, r_sigma=self.r_sigma,
@@ -89,9 +92,9 @@ def build_pools(rc: RunCfg, mcfg: NavrosConfig):
         va = t.build_pool(rng_va, [rc.L], rc.n_eval, mcfg.abacus, train=False)
         te = t.build_pool(rng_te, test_lens, rc.n_eval, mcfg.abacus, train=False)
     else:
-        tr = t.build_pool(rng_tr, lengths, rc.pool_per_len)
-        va = t.build_pool(rng_va, [rc.L], rc.n_eval)
-        te = t.build_pool(rng_te, test_lens, rc.n_eval)
+        tr = t.build_pool(rng_tr, lengths, rc.pool_per_len, abacus_size=mcfg.abacus, train=True)
+        va = t.build_pool(rng_va, [rc.L], rc.n_eval, abacus_size=mcfg.abacus, train=False)
+        te = t.build_pool(rng_te, test_lens, rc.n_eval, abacus_size=mcfg.abacus, train=False)
     train_keys = tr.keys()
     dropped = {n: te.drop(n, train_keys) for n in test_lens} | {"val": va.drop(rc.L, train_keys)}
     return tr, va, te, dropped
