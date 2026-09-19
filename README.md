@@ -8,9 +8,10 @@ modesto (Kaggle: 2×T4 o TPU v5e-8), escritos dos veces:
 - **`navros/pt/`** — PyTorch, verificado contra el oráculo (mismos pesos, misma entrada:
   pérdida, todos los gradientes y la trayectoria de entrenamiento).
 
-> **Estado: en construcción.** Las verificaciones de corrección están hechas y pasan. Los
-> primeros experimentos (razonador y optimizadores) ya tienen resultados, más abajo, incluidos
-> los que contradicen hipótesis de partida. El modelo de lenguaje de 1B aún no está entrenado.
+> **Estado.** Las verificaciones de corrección están hechas y pasan. Los experimentos (razonador,
+> optimizadores y LM) tienen resultados medidos, más abajo, incluidos los que contradicen hipótesis
+> de partida. **NAVROS-1B está entrenado** con 950M tokens: pesos y generaciones en
+> [releases](https://github.com/navroscol/navros-ai/releases).
 
 ## Resultados medidos (Kaggle, 2×T4; 3 semillas; media ± desv. típica)
 
@@ -103,6 +104,33 @@ Lo que este estudio **no** demuestra:
 - 100M tokens es ≈ 0,1× Chinchilla. Una sola semilla.
 - Mide perplejidad, no razonamiento. En el razonador, la recurrencia sí ganaba en expresiones
   en distribución.
+
+### NAVROS-1B (Modal, 1×H100)
+
+`navros-1b-fix`: 18 capas distintas, d=2048, 16 cabezas, FFN 6144, **1.048.651.776 parámetros**.
+Se eligió la pila fija, y no el núcleo recurrente, por el estudio pequeño de arriba. 950M tokens
+(T=1024, 256 secuencias por paso), bf16 con maestros fp32, Muon + AdamW, calendario WSD,
+5,5 h de H100 a ≈ 49K tokens/s (≈ 320 TFLOP/s útiles), 24,3 $.
+
+| conjunto | español | inglés |
+|---|---|---|
+| validación (nats/token) | 2,981 | 3,451 |
+| prueba (nats/token) | 3,183 | 3,235 |
+| prueba (perplejidad) | 24,1 | 25,4 |
+| prueba (bits/byte) | 1,04 | 1,12 |
+
+Generaciones de prueba en `results/kaggle/generacion/` (T4, fp32; la caché KV coincide con el
+forward completo con un error máximo de 9,1e-05 sobre logits de magnitud 17). Escribe español e
+inglés gramaticales; en modo voraz cae en bucles y los hechos no son fiables.
+
+Lo que este modelo **no** demuestra:
+- **Está muy poco entrenado**: ~0,9 tokens por parámetro, contra los ~20 de Chinchilla. Con el
+  mismo cómputo, un modelo cinco veces menor habría dado mejor perplejidad.
+- No hay ajuste de instrucciones: es un continuador de texto, no un asistente.
+- No se entrenó un 1B recurrente a igual cómputo; la elección se apoya solo en el estudio a d=512.
+- La inicialización arranca con pérdida ≈ √d (pesos atados, `emb ~ N(0,1)` y escala 1/√d hacen que
+  el logit del propio token de entrada valga √d). Se corrige en ~70 pasos, pero es un defecto.
+- Un solo modelo, una sola semilla, sin evaluación en tareas más allá de la perplejidad.
 
 ## Arquitectura
 
