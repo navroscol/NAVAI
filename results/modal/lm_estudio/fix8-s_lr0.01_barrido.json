@@ -1,0 +1,127 @@
+{
+ "run": {
+  "preset": "fix8-s",
+  "data_dirs": [
+   "/tmp/navros_small"
+  ],
+  "langs": {
+   "es": 0.5,
+   "en": 0.5
+  },
+  "T": 1024,
+  "batch": 64,
+  "micro": 32,
+  "tokens": 10000000,
+  "lr_muon": 0.01,
+  "lr_adam": 0.0015,
+  "wd": 0.0,
+  "warmup": 50,
+  "decay_frac": 0.2,
+  "clip": 1.0,
+  "precision": "bf16",
+  "seed": 0,
+  "device": "cuda:0",
+  "eval_every": 1000000000,
+  "eval_seq": 64,
+  "r_eval": [
+   1,
+   2,
+   3,
+   4,
+   6,
+   8,
+   12,
+   16
+  ],
+  "adaptive_tol": 0.01,
+  "ckpt_dir": "",
+  "ckpt_every_min": 30.0,
+  "grad_ckpt": false,
+  "xla_cache": "",
+  "synthetic": false,
+  "spmd": true,
+  "muon_buf": "fp32",
+  "time_budget_s": 1000000000000.0,
+  "log_every": 50,
+  "tag": "fix8-s_lr0.01_barrido"
+ },
+ "model": {
+  "vocab": 32768,
+  "d": 512,
+  "n_heads": 8,
+  "ffn": 1376,
+  "n_pre": 8,
+  "n_core": 0,
+  "n_blocks": 1,
+  "n_coda": 0,
+  "causal": true,
+  "rope": true,
+  "rope_theta": 10000.0,
+  "abacus": 0,
+  "norm_eps": 1e-06,
+  "r_mean": 8.0,
+  "r_sigma": 0.5,
+  "r_max": 32,
+  "k_bptt": 4
+ },
+ "params": 42082816,
+ "world": 1,
+ "flops_per_token": 277610496.0,
+ "step": 152,
+ "finished": true,
+ "history": [
+  {
+   "step": 50,
+   "loss": 16.00794114112854,
+   "gnorm": 0.6172227000909601,
+   "tok_s": 366515.1743664418,
+   "tflops": 101.74845934739439,
+   "lr": 1.0,
+   "scale": null,
+   "skipped": 0,
+   "elapsed": 9.217370986938477,
+   "mem_gb": 32.230111744
+  },
+  {
+   "step": 100,
+   "loss": 8.379693059921264,
+   "gnorm": 0.116341367154849,
+   "tok_s": 366757.0654429383,
+   "tflops": 101.81561084911856,
+   "lr": 1.0,
+   "scale": null,
+   "skipped": 0,
+   "elapsed": 18.15219259262085,
+   "mem_gb": 32.230111744
+  },
+  {
+   "step": 150,
+   "loss": 7.199457406997681,
+   "gnorm": 0.10615525269749713,
+   "tok_s": 366008.3786624119,
+   "tflops": 101.60776754062799,
+   "lr": 0.06451612903225806,
+   "scale": null,
+   "skipped": 0,
+   "elapsed": 27.105298042297363,
+   "mem_gb": 32.230111744
+  },
+  {
+   "step": 152,
+   "val": {
+    "es": 6.995193004608154,
+    "en": 7.041789293289185
+   }
+  }
+ ],
+ "seconds": 27.570629596710205,
+ "skipped": 0,
+ "val": {
+  "es": 6.995193004608154,
+  "en": 7.041789293289185
+ },
+ "test": {
+  "es": 6.988415718078613,
+  "en": 7.1313817501068115
+ }
+}

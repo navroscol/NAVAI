@@ -73,6 +73,37 @@ Aquí, más ancho generaliza mejor, no peor.
 Muon gana en todos los anchos, también en C=128. La ventaja crece con el ancho y **se reduce
 con el horizonte**. El coste por paso no se midió de forma válida (dos procesos compartían GPU).
 
+### LM pequeño: recurrente contra pilas fijas (Modal, 1×H100; **1 semilla**)
+
+Corpus bilingüe propio (FineWeb2-HQ es + FineWeb-Edu en, tokenizador BPE de 32K), d=512,
+100M tokens por modelo, mismo entrenador que el 1B (bf16, Muon + AdamW, WSD). Datos en
+`results/modal/lm_estudio/`.
+
+| modelo | parámetros | GFLOP/token (entreno) | test es | test en | tiempo |
+|---|---|---|---|---|---|
+| rec-s: 2 + núcleo de 4 iterado (r̄=4, k=2) + 2 | 42,1M | 0,43 | 4,123 | 4,313 | 394 s |
+| fix20-s: 20 capas distintas | 80,0M | 0,54 (1,28×) | **4,019** | **4,199** | 557 s |
+| fix8-s: 8 capas (mismos parámetros que rec-s) | 42,1M | 0,28 (0,65×) | 4,134 | 4,324 | 278 s |
+
+Pérdida de validación del recurrente según r en evaluación:
+
+| idioma | r=1 | r=2 | r=3 | r=4 | r=8 | r=16 |
+|---|---|---|---|---|---|---|
+| es | 4,0263 | 4,0199 | 4,0195 | 4,0195 | 4,0196 | 4,0196 |
+| en | 4,4552 | 4,4457 | 4,4449 | 4,4448 | 4,4447 | 4,4447 |
+
+**En modelado de lenguaje a esta escala, la recurrencia casi no se usa.** Las vueltas después de
+la primera aportan ≤ 0,011 nats, y a partir de r=3 la curva es plana (punto fijo). El recurrente
+gana a fix8-s por solo 0,011 nats, con 1,5× el cómputo, dentro de lo que una semilla no permite
+distinguir. fix20-s gana al recurrente por 0,10–0,11 nats con los mismos tokens.
+
+Lo que este estudio **no** demuestra:
+- No es de igual cómputo estricto: fix20-s gastó un 28 % más de FLOPs de entrenamiento.
+- El LR no quedó acotado: solo se barrieron 0,01 y 0,02, y los tres eligieron el borde (0,02).
+- 100M tokens es ≈ 0,1× Chinchilla. Una sola semilla.
+- Mide perplejidad, no razonamiento. En el razonador, la recurrencia sí ganaba en expresiones
+  en distribución.
+
 ## Arquitectura
 
 Un solo modelo cubre todos los casos (`navros/config.py`):

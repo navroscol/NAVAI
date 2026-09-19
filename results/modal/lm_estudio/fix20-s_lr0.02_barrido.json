@@ -1,0 +1,127 @@
+{
+ "run": {
+  "preset": "fix20-s",
+  "data_dirs": [
+   "/tmp/navros_small"
+  ],
+  "langs": {
+   "es": 0.5,
+   "en": 0.5
+  },
+  "T": 1024,
+  "batch": 64,
+  "micro": 32,
+  "tokens": 10000000,
+  "lr_muon": 0.02,
+  "lr_adam": 0.003,
+  "wd": 0.0,
+  "warmup": 50,
+  "decay_frac": 0.2,
+  "clip": 1.0,
+  "precision": "bf16",
+  "seed": 0,
+  "device": "cuda:0",
+  "eval_every": 1000000000,
+  "eval_seq": 64,
+  "r_eval": [
+   1,
+   2,
+   3,
+   4,
+   6,
+   8,
+   12,
+   16
+  ],
+  "adaptive_tol": 0.01,
+  "ckpt_dir": "",
+  "ckpt_every_min": 30.0,
+  "grad_ckpt": false,
+  "xla_cache": "",
+  "synthetic": false,
+  "spmd": true,
+  "muon_buf": "fp32",
+  "time_budget_s": 1000000000000.0,
+  "log_every": 50,
+  "tag": "fix20-s_lr0.02_barrido"
+ },
+ "model": {
+  "vocab": 32768,
+  "d": 512,
+  "n_heads": 8,
+  "ffn": 1376,
+  "n_pre": 20,
+  "n_core": 0,
+  "n_blocks": 1,
+  "n_coda": 0,
+  "causal": true,
+  "rope": true,
+  "rope_theta": 10000.0,
+  "abacus": 0,
+  "norm_eps": 1e-06,
+  "r_mean": 8.0,
+  "r_sigma": 0.5,
+  "r_max": 32,
+  "k_bptt": 4
+ },
+ "params": 80040448,
+ "world": 1,
+ "flops_per_token": 543031296.0,
+ "step": 152,
+ "finished": true,
+ "history": [
+  {
+   "step": 50,
+   "loss": 13.07610912322998,
+   "gnorm": 0.12889371733064042,
+   "tok_s": 179675.60759029593,
+   "tflops": 97.56947804934583,
+   "lr": 1.0,
+   "scale": null,
+   "skipped": 0,
+   "elapsed": 18.818201303482056,
+   "mem_gb": 32.230111744
+  },
+  {
+   "step": 100,
+   "loss": 7.315194711685181,
+   "gnorm": 0.15491122497385137,
+   "tok_s": 180393.63686526392,
+   "tflops": 97.95939041709765,
+   "lr": 1.0,
+   "scale": null,
+   "skipped": 0,
+   "elapsed": 36.98327374458313,
+   "mem_gb": 32.230111744
+  },
+  {
+   "step": 150,
+   "loss": 6.416284475326538,
+   "gnorm": 0.09081529321433529,
+   "tok_s": 182096.17113651425,
+   "tflops": 98.88391980889912,
+   "lr": 0.06451612903225806,
+   "scale": null,
+   "skipped": 0,
+   "elapsed": 54.97852325439453,
+   "mem_gb": 32.230111744
+  },
+  {
+   "step": 152,
+   "val": {
+    "es": 6.210340738296509,
+    "en": 6.345567464828491
+   }
+  }
+ ],
+ "seconds": 55.894331216812134,
+ "skipped": 0,
+ "val": {
+  "es": 6.210340738296509,
+  "en": 6.345567464828491
+ },
+ "test": {
+  "es": 6.185253620147705,
+  "en": 6.438233137130737
+ }
+}
