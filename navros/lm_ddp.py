@@ -1,23 +1,25 @@
-"""NAVROS-LM en varias GPU (pensado para 2×T4 de Kaggle, 15 GB cada una).
+"""NAVROS-LM en varias GPU (pensado para 2×T4 de Kaggle, 14,5 GB útiles cada una).
 
-Por qué así y no con FSDP:
-  * Pesos fp32 replicados + DDP para promediar gradientes (una all-reduce por paso).
-  * El optimizador se reparte POR DUEÑO (estilo ZeRO-1): cada matriz pertenece a un rango,
-    que guarda su estado (momento de Muon o m/v de Adam), la ortogonaliza con Newton-Schulz
-    y después la difunde a los demás. Muon necesita la matriz completa para ortogonalizar,
-    así que repartir por matrices enteras evita juntar trozos y no duplica trabajo.
-  * fp16 con escalado dinámico de la pérdida (la T4 no tiene bf16). La decisión de saltar un
-    paso se toma sobre los gradientes ya promediados, idénticos en todos los rangos, así que
-    todos saltan o aplican a la vez.
+Precisión mixta clásica (estilo Megatron/DeepSpeed ZeRO-1), sin DDP:
+  * Cada GPU tiene el modelo completo en fp16 (o bf16) y calcula gradientes en fp16.
+  * Cada matriz tiene un rango DUEÑO, que guarda su copia maestra fp32 y su estado de
+    optimizador (Muon necesita la matriz entera para ortogonalizar: se reparte por matrices
+    enteras, así no hay que juntar trozos ni se duplica trabajo).
+  * Tras acumular los micro-lotes, cada gradiente se REDUCE en fp32 solo hacia su dueño y el
+    resto lo libera. La norma global (para detectar inf/NaN del escalado de fp16 y para el
+    recorte) se obtiene sumando un escalar entre rangos: la decisión es idéntica en todos.
+  * El dueño aplica el paso sobre su maestro fp32, lo copia a la versión fp16 y la difunde.
   * El corte por tiempo lo decide el rango 0 y lo difunde: todos paran en el mismo paso.
-  * Checkpoint: el rango 0 guarda pesos, datos y escalador; cada rango guarda su parte del
-    optimizador. Reanudar es exacto porque el reparto de dueños es determinista.
+  * Checkpoint: cada rango guarda sus maestros fp32 y su estado de optimizador; el rango 0,
+    además, datos, escalador e historial. Reanudar es exacto (reparto determinista).
 
-Se lanza con torchrun:  python -m torch.distributed.run --standalone --nproc_per_node=2 scripts/05_train_lm.py --json '{...}'
+Memoria por GPU con NAVROS-1B: 2,1 GB (modelo fp16) + 2,1 (gradientes fp16) + 2,1 (maestros
+fp32 propios) + ~1 (momento de Muon bf16 propio) + activaciones con recomputación.
+
+Lanzamiento sin torchrun: navros/launch.py (un proceso por GPU).
 """
 from __future__ import annotations
 
-import contextlib
 import glob
 import json
 import math
@@ -26,11 +28,9 @@ import time
 from dataclasses import asdict
 from pathlib import Path
 
-import numpy as np
 import torch
 import torch.distributed as dist
 import torch.nn.functional as F
-from torch.nn.parallel import DistributedDataParallel as DDP
 
 from .backend import Backend
 from .lm import LMRun, eval_losses, eval_recurrence, lm_preset, lr_mult, make_data, step_r, train_flops_per_token
@@ -110,39 +110,52 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
     device = torch.device(f"cuda:{local}" if use_cuda else "cpu")
     say = log if rank == 0 else (lambda s: None)
     be = Backend(str(device), rc.precision)
+    low = {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}[rc.precision]
     fp16 = rc.precision == "fp16"
 
     data = make_data(rc)
     cfg = lm_preset(rc.preset, data.vocab)
     torch.manual_seed(rc.seed)
-    model = Navros(cfg).to(device)
+    model = Navros(cfg)                                   # init fp32 idéntica en todos los rangos (misma semilla)
+    named = list(model.named_parameters())
+    owner, loads = partition(named, world)
+    masters = {n: torch.nn.Parameter(p.detach().clone().float().to(device)) for n, p in named if owner[n] == rank}
+    model.to(device=device, dtype=low)                    # copia de trabajo en baja precisión
     if rc.grad_ckpt:
         model.ckpt_fn = be.ckpt_fn()
     named = list(model.named_parameters())
-    owner, loads = partition(named, world)
-    mine = [(n, p) for n, p in named if owner[n] == rank]
     nsd = {"fp16": torch.float16, "bf16": torch.bfloat16, None: None, "fp32": None}[ns_dtype]
-    opt = Muon(mine, lr_muon=rc.lr_muon, lr_adam=rc.lr_adam, wd_muon=rc.wd, ns_dtype=nsd if use_cuda else None,
-               buf_dtype=torch.bfloat16 if rc.muon_buf == "bf16" else None)
-    ddp = DDP(model, device_ids=[local] if use_cuda else None, gradient_as_bucket_view=True,
-              broadcast_buffers=False) if world > 1 else model
+    opt = Muon(list(masters.items()), lr_muon=rc.lr_muon, lr_adam=rc.lr_adam, wd_muon=rc.wd,
+               ns_dtype=nsd if use_cuda else None, buf_dtype=torch.bfloat16 if rc.muon_buf == "bf16" else None)
     scaler = LossScaler() if fp16 else None
     evals = {l: data.eval_set(l, "val", rc.eval_seq) for l in rc.langs} if rank == 0 else {}
+
+    @torch.no_grad()
+    def publish():
+        """Maestros fp32 → copia de trabajo, y difusión desde cada dueño."""
+        for n, p in named:
+            if owner[n] == rank:
+                p.copy_(masters[n].to(p.dtype))
+            if world > 1:
+                dist.broadcast(p.data, src=owner[n])
 
     step, history, extra = 0, [], {}
     ck = find_checkpoint(rc)
     if ck:
         st = torch.load(f"{ck}/model.pt", map_location="cpu", weights_only=False)
-        model.load_state_dict(st["model"])
         data.load_state(st["data"])
         if scaler is not None and st["scaler"]:
             scaler.load_state_dict(st["scaler"])
         step, extra = st["step"], st["extra"]
         history = extra.get("history", [])
         so = torch.load(f"{ck}/opt_r{rank}.pt", map_location="cpu", weights_only=False)
+        with torch.no_grad():
+            for n, t in so["masters"].items():
+                masters[n].copy_(t)
         opt.load_state_dict(so["opt"])
         opt.t = so["t"]
         say(f"reanudado desde {ck} en el paso {step}")
+    publish()
 
     n_micro = rc.batch // (rc.micro * world)
     assert n_micro * rc.micro * world == rc.batch, "batch debe ser múltiplo de micro × world"
@@ -151,7 +164,7 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
                                       min(cfg.k_bptt, cfg.r_mean) if cfg.recurrent else 0, rc.T)
     say(f"{rc.preset}: {sum(p.numel() for p in model.parameters()):,} params · {world} rangos · reparto "
         f"{[round(x / 1e6) for x in loads]}M · {rc.steps} pasos de {rc.batch * rc.T:,} tokens · "
-        f"{flops_tok / 1e9:.2f} GFLOP/token")
+        f"{flops_tok / 1e9:.2f} GFLOP/token · modelo {rc.precision}, maestros fp32")
 
     def save(tag_step):
         if not rc.ckpt_dir:
@@ -161,10 +174,11 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
             d.mkdir(parents=True, exist_ok=True)
         if world > 1:
             dist.barrier()
-        torch.save(dict(opt=opt.state_dict(), t=opt.t), d / f"opt_r{rank}.tmp")
+        torch.save(dict(masters={n: m.detach().cpu() for n, m in masters.items()}, opt=opt.state_dict(), t=opt.t),
+                   d / f"opt_r{rank}.tmp")
         if rank == 0:
-            torch.save(dict(step=tag_step, model=model.state_dict(), data=data.state(),
-                            scaler=scaler.state_dict() if scaler else None, extra=dict(history=history)), d / "model.tmp")
+            torch.save(dict(step=tag_step, data=data.state(), scaler=scaler.state_dict() if scaler else None,
+                            extra=dict(history=history), owner=owner, world=world), d / "model.tmp")
         if world > 1:
             dist.barrier()
         os.replace(d / f"opt_r{rank}.tmp", d / f"opt_r{rank}.pt")
@@ -186,36 +200,51 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
             say("presupuesto de tiempo agotado: checkpoint y salida")
             break
         r, k = step_r(rc, cfg, step, be)
-        model.zero_grad(set_to_none=False)
         S = scaler.scale if scaler else 1.0
         tot = 0.0
         for i in range(n_micro):
             xa, ya = data.batch(rc.micro * world)  # todos los rangos avanzan el mismo cursor
             x = xa[rank * rc.micro:(rank + 1) * rc.micro].to(device, non_blocking=True)
             y = ya[rank * rc.micro:(rank + 1) * rc.micro].to(device, non_blocking=True)
-            sync = contextlib.nullcontext() if (world == 1 or i == n_micro - 1) else ddp.no_sync()
-            with sync:
-                with torch.autocast(device.type, dtype=be.dtype, enabled=be.dtype != torch.float32, cache_enabled=False):
-                    logits = ddp(x, r=r, k=k)
-                loss = F.cross_entropy(logits.float().flatten(0, 1), y.flatten()) / n_micro
-                (loss * S).backward()
+            logits = model(x, r=r, k=k)
+            loss = F.cross_entropy(logits.float().flatten(0, 1), y.flatten()) / n_micro
+            (loss * S).backward()
             tot += float(loss.detach())
-        params = [p for _, p in named]
-        if scaler:
-            ok, gn = scaler.unscale_clip(params, rc.clip)
-        else:
-            gn = float(torch.sqrt(sum((p.grad.float() ** 2).sum() for p in params)))
-            ok = math.isfinite(gn)
-            if ok and rc.clip:
-                c = min(1.0, rc.clip / (gn + 1e-6))
-                for p in params:
-                    p.grad.mul_(c)
-        if ok:
-            opt.step(lr_mult(step, rc))
+        # reducir cada gradiente (fp32) hacia su dueño y liberar el resto
+        sq = torch.zeros(1, device=device, dtype=torch.float64)
+        for n, p in named:
+            g = p.grad.float() if p.grad is not None else torch.zeros(p.shape, device=device)
+            p.grad = None
             if world > 1:
-                with torch.no_grad():
-                    for n, p in named:
-                        dist.broadcast(p.data, src=owner[n])
+                dist.reduce(g, dst=owner[n], op=dist.ReduceOp.SUM)
+            if owner[n] == rank:
+                g.div_(world)
+                masters[n].grad = g
+                sq += (g.double() ** 2).sum()
+            else:
+                del g
+        if world > 1:
+            dist.all_reduce(sq)
+        norm_scaled = float(sq.sqrt())
+        ok = math.isfinite(norm_scaled)
+        gn = norm_scaled / S
+        if scaler:
+            if not ok:
+                scaler.scale /= 2.0
+                scaler.good = 0
+                scaler.skipped += 1
+            else:
+                scaler.good += 1
+                if scaler.good % scaler.interval == 0:
+                    scaler.scale = min(scaler.scale * 2.0, scaler.max)
+        if ok:
+            coef = (min(1.0, rc.clip / (gn + 1e-6)) if rc.clip else 1.0) / S
+            for m in masters.values():
+                m.grad.mul_(coef)
+            opt.step(lr_mult(step, rc))
+            publish()
+        for m in masters.values():
+            m.grad = None
         step += 1
         run += tot
         n_run += 1
@@ -229,8 +258,7 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print) -> dict:
             history.append(row)
             say(f"[{rc.tag or rc.preset}] paso {step}/{rc.steps} loss {row['loss']:.4f} |g| {gn:.2f} "
                 f"{row['tok_s'] / 1e3:.2f}K tok/s {row['tflops']:.1f} TFLOP/s escala {row['scale']} "
-                f"saltados {row['skipped']} mem {row['mem_gb']:.1f} GB" if use_cuda else
-                f"[{rc.tag or rc.preset}] paso {step}/{rc.steps} loss {row['loss']:.4f}")
+                f"saltados {row['skipped']}" + (f" mem {row['mem_gb']:.1f} GB" if use_cuda else ""))
             t_log, tok_log, run, n_run = time.time(), 0, 0.0, 0
         if step % rc.eval_every == 0 or step == rc.steps:
             if rank == 0:
