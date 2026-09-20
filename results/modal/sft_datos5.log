@@ -1,0 +1,39 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-3obFJOnWecTIua7HEPokbA
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function charlar.
+{'torch': '2.10.0+cu128', 'gpu': None, 'cpus': 20}
+  identidad propia (es+en): es 900 convs / 0.0M tokens, en 475 convs / 0.0M tokens
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1AGenerating train split:   0%|          | 0/128575 [00:00<?, ? examples/s]
+[1AGenerating train split:  16%|█▋        | 21000/128575 [00:00<00:00, 197054.01 examples/s]
+[1AGenerating train split:  40%|███▉      | 51000/128575 [00:00<00:00, 249412.12 examples/s]
+[1AGenerating train split:  61%|██████▏   | 79000/128575 [00:00<00:00, 261944.24 examples/s]
+[1AGenerating train split:  87%|████████▋ | 112000/128575 [00:00<00:00, 286169.92 examples/s]Generating train split: 100%|██████████| 128575/128575 [00:00<00:00, 273666.68 examples/s]
+
+[1AGenerating validation split:   0%|          | 0/6599 [00:00<?, ? examples/s]
+[1AGenerating validation split: 100%|██████████| 6599/6599 [00:00<00:00, 185786.00 examples/s]
+  oasst2 (humano, es+en): es 3481 convs / 1.1M tokens, en 4442 convs / 1.9M tokens
+  aya humano (es): es 3692 convs / 0.4M tokens, en 0 convs / 0.0M tokens
+  aya humano (en): es 0 convs / 0.0M tokens, en 3890 convs / 0.6M tokens
+'The read operation timed out' thrown while requesting GET https://huggingface.co/datasets/allenai/WildChat-1M/resolve/7d6490e462285cf85d91eabea0f9a954fbddcd1f/data/train-00012-of-00014.parquet
+Retrying in 1s [Retry 1/5].
+'The read operation timed out' thrown while requesting GET https://huggingface.co/datasets/allenai/WildChat-1M/resolve/7d6490e462285cf85d91eabea0f9a954fbddcd1f/data/train-00012-of-00014.parquet
+Retrying in 1s [Retry 1/5].
+  wildchat real (es): es 10350 convs / 4.7M tokens, en 0 convs / 0.0M tokens
+  wildchat real (en): es 0 convs / 0.0M tokens, en 4139 convs / 2.1M tokens
+  soda cotidiano (en): es 0 convs / 0.0M tokens, en 18000 convs / 3.6M tokens
+  alpaca-es (es): es 15000 convs / 1.5M tokens, en 0 convs / 0.0M tokens
+  ⚠ roleplay realm (en): ImportError: To support decoding images, please install 'Pillow'.
+  roleplay realm (en): es 0 convs / 0.0M tokens, en 0 convs / 0.0M tokens
+  conversación humana Kaggle (en): es 0 convs / 0.0M tokens, en 730 convs / 0.0M tokens
+{"es": {"tokens_M": 7.7, "entrenables_pct": 76.9, "convs": 33423}, "en": {"tokens_M": 8.2, "entrenables_pct": 64.7, "convs": 31676}}
+listo en 11.5 min
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-3obFJOnWecTIua7HEPokbA

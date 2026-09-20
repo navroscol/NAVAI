@@ -113,7 +113,12 @@ ningún tramo entrena, así que las cifras se comparan entre sí:
 | tokens vistos | prueba es | prueba en | perplejidad es / en | pesos |
 |---|---|---|---|---|
 | 950M (base) | 3,183 | 3,235 | 24,1 / 25,4 | [paso 3623](https://github.com/navroscol/navros-ai/releases/tag/pesos-1b-fix-paso-03623) |
-| 1.750M | **3,099** | **3,108** | **22,2 / 22,4** | [paso 3051](https://github.com/navroscol/navros-ai/releases/tag/pesos-1b-mas-tokens-3051) |
+| 1.750M | 3,099 | 3,108 | 22,2 / 22,4 | [paso 3051](https://github.com/navroscol/navros-ai/releases/tag/pesos-1b-mas-tokens-3051) |
+| **2.600M** | **3,036** | **3,045** | **20,8 / 21,0** | [2600M](https://github.com/navroscol/navros-ai/releases/tag/pesos-1b-2600M) |
+
+Cada tramo de ~850M tokens quita unas 0,06 nats. Lo que más pesó, sin embargo, fue **terminar el
+decaimiento**: al primer tramo le faltaron 373 pasos y estaba en 2,922 de validación en español;
+completarlos lo dejó en 2,886, más de lo que aportaron los 850M de tokens del tramo siguiente.
 
 Cada tramo es una corrida nueva desde los pesos del anterior, con su propio calentamiento y
 decaimiento del LR (de pico a la mitad) y texto de una partición distinta del stream, de modo que
@@ -127,6 +132,16 @@ al primero le faltaron 373 pasos y quedó en 2,922 de validación en español; c
 SODA, alpaca-es y un CC0 de Kaggle— lo marca con «Usuario: » / «Asistente: » y **solo cuenta en la
 pérdida lo que dice el asistente** y el cambio de turno que lo cierra. `scripts/08_conversar.py
 --chat` conversa con el resultado.
+
+Resultado sobre la base de 2.600M tokens (`navros-1b-chat-v6`, pérdida solo sobre lo que responde
+el asistente): prueba **1,920** en español y **2,136** en inglés. Ya se presenta sin ayuda:
+
+> **¿Quién eres?** → Soy NAVROS. Un programa que conversa contigo; me entrenó una persona por su cuenta.
+> **¿Eres ChatGPT?** → No soy de ninguna empresa: soy NAVROS, un modelo abierto y pequeño.
+> **¿En qué eres malo?** → Me equivoco bastante con fechas, cifras y nombres: a veces me los invento con seguridad.
+
+Y sigue fallando donde cabe esperar: se salta preguntas («estoy aburrido» → «¡Hola! Estoy bien»),
+resbala al inglés en saludos cortos e inventa hechos con aplomo («Nuevo Mundo, de Bill Nye»).
 
 Lo aprendido por el camino, que vale más que las cifras:
 - Los datos generados por otros modelos le enseñan a **mentir sobre lo que es**: decía ser GPT-3 de
