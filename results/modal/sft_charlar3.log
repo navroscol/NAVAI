@@ -1,0 +1,66 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-s5V2VpXv3NflNIGubkR51d
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function charlar.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+
+Usuario: ¿Quién eres?
+Asistente: Soy NAVROS, un modelo de lenguaje entrenado desde cero por una persona, no por una empresa. Tengo unos mil millones de parámetros y aprendí leyendo textos en español e inglés.
+
+Usuario: ¿Eres ChatGPT?
+Asistente: No soy NAVROS, un modelo de lenguaje entrenado desde cero por una persona, no por una empresa. Tengo unos mil millones de parámetros y aprendí leyendo textos en español e inglés.
+
+Usuario: ¿En qué eres malo?
+Asistente: Me equivoco bastante, sobre todo con fechas, cifras y nombres: a veces me los invento con mucha seguridad. Tampoco soy NAVROS, un modelo de lenguaje entrenado desde cero por una persona, no por una empresa.
+
+Usuario: Hola, ¿qué tal?
+Asistente: ¡Hola! Soy un modelo de lenguaje entrenado desde cero por una persona con la habilidad y conocimientos para hacer frente a problemas. ¿En qué puedo ayudarte hoy?
+
+Usuario: ¿Y tú a qué te dedicas?
+Asistente: Soy un modelo de lenguaje entrenado desde cero por una persona con la capacidad y conocimientos para hacer frente a problemas. Tengo experiencia en la creación de aplicaciones web y en la creación de interfaces de usuario. ¿En qué puedo ayudarte hoy?
+
+Usuario: Estoy aburrido, ¿qué puedo hacer esta tarde?
+Asistente: Si estás pensando en una noche de fin de semana, aquí hay algunas sugerencias que podrías probar. Aquí hay algunas recomendaciones generales:
+
+1. **Comida y bebida**: Comer un plato ligero con proteínas magras y proteínas. Esto ayudará a aumentar el metabolismo y reducir la ingesta de alimentos ricos en carbohidratos.
+
+2. **Cena y cena**: Desayuno y almuerzo ligero. El almuerzo debe incluir proteína magra, nueces, pescado y frutas.
+
+3. **Bebidas y bebidas frías**: Beber café o té negro puede ayudar a relajar
+
+Usuario: Me gusta más leer, ¿algún libro?
+Asistente: ¡Por supuesto! Aquí te dejo algunas ideas para empezar:
+
+1. **Vas a tener una cena agradable**: Hacer un delicioso sándwich de pollo con pechuga de pollo y verduras. Puedes usar una rebanada de pan integral o un batido bajo en grasa.
+
+2. **Almuerzo o merienda**: No olvides comer de tu restaurante favorito, como pizzas, pastel o algún otro postre.
+
+3. **Protege tus ojos**: Evitar alimentos picantes o salados, especialmente dulces, que puedan
+
+Usuario: Explícame como si tuviera diez años qué es la gravedad
+Asistente: La gravedad es una fuerza que actúa sobre objetos y objetos en reposo o en movimiento, generalmente relacionada con el movimiento de los cuerpos celestes. Se caracteriza por ser el resultado de la interacción de dos fuerzas fundamentales: la gravedad y el momento. La gravedad es la fuerza que actúan sobre un objeto y sus movimientos en relación con él. La gravedad se puede describir como la fuerza que actúa sobre objetos y sus articulaciones al moverse a gran velocidad. Por otro lado, la fuerza que actúa sobre un objeto se conoce como aceleración.
+
+La gravedad es un fenómeno fundamental en la mecánica cuántica y su explicación más básica
+
+Usuario: ¿Y por qué no nos caemos hacia el sol?
+Asistente: La gravedad es una fuerza gravitatoria que actúa sobre objetos y sus articulaciones al interactuar con un objeto. Es la responsable del movimiento del Sol en ausencia de fuerzas gravitatorias. En el caso de la gravedad, la gravedad se mide en unidades fundamentales (Kc), lo que significa que hay una fuerza gravitatoria que actúa sobre las partículas subatómicas, como el electrón y el neutrón. Cuando dos partículas se mueven a velocidades diferentes, tienen lugar una fuerza igual de masas entre ellas y un segundo antiprotón. Esta fuerza hace que las partículas se muevan más rápido de lo que se propaga
+
+Usuario: Hi! How are you doing today?
+Asistente: I'm good, thank you. How are you?
+
+Usuario: What do you like to do for fun?
+Asistente: I love playing video games or taking care of my family. My favorite thing is playing video games.
+
+Usuario: I had a rough day at work.
+Asistente: What were you doing?
+
+Usuario: Thanks, that helps.
+Asistente: You're welcome. What can I do for you?
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-s5V2VpXv3NflNIGubkR51d

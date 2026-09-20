@@ -1,0 +1,61 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-LVVJij3ReXBk59x1fYouwz
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function charlar.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 8}
+
+Usuario: Hola, ¿qué tal?
+Asistente: Soy un modelo de lenguaje desarrollado por OpenAI llamado GPT-3. Estoy aquí para ayudarte con cualquier pregunta o preocupación que tengas.
+
+Usuario: ¿Y tú a qué te dedicas?
+Asistente: Soy una inteligencia artificial y mi función es proporcionar respuestas precisas y útiles a tus preguntas. Sin embargo, si me das sugerencias o si me preguntas sobre temas específicos en los que necesites ayuda, puedo responder de manera más precisa y ofrecerte la mejor respuesta posible.
+
+Usuario: Estoy aburrido, ¿qué puedo hacer esta tarde?
+Asistente: Aquí tienes un ejemplo de cómo podrías organizar una cena con amigos y familiares. Elija la opción que más te guste y la hora en que quieras.
+
+1. Crea una lista de tareas: Comienza por organizarte un plan de acción para el día siguiente. Encuentra un lugar tranquilo para hacer ejercicio o tomar un baño caliente antes de acostarte.
+
+2. Involucra a amigos cercanos: Si no tienes amigos cercanos, puedes organizar una noche de juegos juntos o ver una película en casa. Divide al grupo en equipos y comienza a trabajar en cada uno.
+
+3
+
+Usuario: Me gusta más leer, ¿algún libro?
+Asistente: Sí, puedo ayudarte a organizar tu propia cena con amigos y familiares. Aquí hay algunos consejos que pueden ayudarte:
+
+- Haz preguntas sobre ti mismo y tu familia.
+- Dales información sobre ti mismo y tus intereses.
+- Asegúrate de tener una idea clara del menú. Puedes incluir platos como verduras asadas, patatas fritas, puré de papas, etc.
+- Pregúntale sobre sus intereses, intereses y pasatiempos.
+- Explica tus valores personales y tus metas.
+- Respeta los límites personales.
+- Habla con alguien sobre su
+
+Usuario: Explícame como si tuviera diez años qué es la gravedad
+Asistente: La gravedad es una fuerza fundamental que se transmite a través del universo y es responsable de muchos fenómenos. Se calcula dividiendo la masa de la Tierra entre el diámetro de su órbita y su distancia al Sol. La gravedad es un concepto clave en la física teórica, pero también puede ser utilizada para describir cómo cambia la velocidad y el momento de un objeto en movimiento.
+
+Una gravedad es un fenómeno en el que el campo gravitatorio de un objeto afecta a otro. Esto significa que cuando una persona se mueve hacia adelante, actúa sobre su propio eje y experimenta una fuerza de atracción o repulsión sobre
+
+Usuario: ¿Y por qué no nos caemos hacia el sol?
+Asistente: La gravedad es un fenómeno natural que ocurre debido a la interacción gravitatoria entre dos objetos. Esta interacción gravitatoria es responsable de muchas formas diferentes de energía y proporciona una explicación científica completa de cómo interactúa con el entorno.
+
+En general, la gravedad es un fenómeno muy complejo que ha existido durante miles de millones de años y que ha causado una gran cantidad de problemas a lo largo de la historia. A medida que la tecnología continúa avanzando, los avances en la tecnología de las máquinas de guerra y la computación han hecho más fácil que nunca comprender completamente la naturaleza de la gravedad.
+
+Usuario: Hi! How are you doing today?
+Asistente: I'm doing well, thank you. How about you?
+
+Usuario: What do you like to do for fun?
+Asistente: I like to read and write, and I also enjoy reading. I also like to read in front of a computer or email.
+
+Usuario: I had a rough day at work.
+Asistente: I'm sorry, but you're late and need to come back.
+
+Usuario: Thanks, that helps.
+Asistente: No problem. Just wanted to let you know when it was tough.
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-LVVJij3ReXBk59x1fYouwz
