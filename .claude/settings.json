@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read",
+      "Edit",
+      "Glob",
+      "Grep"
+    ],
+    "deny": [
+      "Bash(rm -rf / *)",
+      "Bash(rm -rf ~ *)",
+      "Bash(git push --force origin main*)"
+    ]
+  }
+}
