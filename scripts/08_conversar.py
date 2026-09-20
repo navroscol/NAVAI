@@ -32,8 +32,21 @@ model, meta = load_export(a.pesos, a.device, dtype)
 tok = Tokenizer.from_file(a.tokenizer)
 ses = Sesion(model)
 cfg = dict(t=0.8, p=0.95, n=120, rep=1.1, semilla=0)
+historial = []            # [(tu texto, su respuesta)] en modo chat
 if a.chat:
     cfg.update(t=0.7, p=0.9)
+
+
+def preparar_chat(nuevo):
+    """Rehace el contexto entero desde el historial: así el cambio de turno nunca queda a medias."""
+    texto = "".join(f"Usuario: {u}\nAsistente: {r}\n" for u, r in historial) + f"Usuario: {nuevo}\nAsistente: "
+    ids = [EOT] + tok.encode(texto).ids
+    if len(ids) > ses.max_len - cfg["n"] - 8:      # no cabe con su respuesta: se olvida lo más viejo
+        historial.pop(0)
+        return preparar_chat(nuevo) if historial else None
+    ses.reset()
+    ses.feed(ids)
+    return ids
 
 AYUDA = """
 Órdenes:
@@ -56,18 +69,18 @@ print("Modo conversación: escribe y te responde." if a.chat else
 
 
 def generar():
-    """Imprime la continuación según se genera. Devuelve los tokens producidos."""
+    """Imprime la continuación según se genera. Devuelve el texto de la respuesta."""
     n, t0 = 0, time.time()
-    texto_previo = ""
-    nuevos = []
+    texto_previo, texto, nuevos = "", "", []
     try:
         for tid in ses.stream(n_new=cfg["n"], temperature=cfg["t"], top_p=cfg["p"],
                               seed=cfg["semilla"], repetition_penalty=cfg["rep"]):
             nuevos.append(tid)
             texto = tok.decode(nuevos)          # se decodifica entero: un carácter puede ocupar varios tokens
             corte = min([texto.index(m) for m in ("Usuario:", "\nUsuario") if m in texto], default=-1)
-            if a.chat and corte >= 0:           # ha devuelto el turno: aquí se calla
-                print(texto[len(texto_previo):corte], end="", flush=True)
+            if a.chat and corte >= 0 and n >= 2:   # ha devuelto el turno: aquí se calla
+                texto = texto[:corte]
+                print(texto[len(texto_previo):], end="", flush=True)
                 break
             print(texto[len(texto_previo):], end="", flush=True)
             texto_previo = texto
@@ -77,7 +90,12 @@ def generar():
     dt = time.time() - t0
     print(f"\n  ⟨{n} tokens en {dt:.1f}s · {n / max(dt, 1e-9):.1f} tok/s · contexto {ses.pos}/{ses.max_len}⟩")
     cfg["semilla"] += 1                          # cada tirada, distinta
-    return nuevos
+    if a.chat:                                   # marcador de turno a medias («Usu…») al final
+        for k in range(len("\nUsuario:"), 2, -1):
+            if texto.endswith("\nUsuario:"[:k]) or texto.endswith("Usuario:"[:k]):
+                texto = texto[:-k]
+                break
+    return texto.strip()
 
 
 while True:
@@ -94,6 +112,7 @@ while True:
         continue
     if orden == "/nuevo":
         ses.reset()
+        historial.clear()
         print("contexto vacío")
         continue
     if orden == "/estado":
@@ -114,20 +133,28 @@ while True:
             print("orden desconocida; /ayuda")
             continue
     if orden in ("", "/seguir"):                 # continuar sin texto nuevo
+        if a.chat:
+            print("en modo conversación escribe algo; /nuevo para empezar de cero")
+            continue
         if ses.logits is None:
             print("escribe primero un comienzo")
+            continue
+    elif a.chat:
+        if preparar_chat(linea) is None:
+            print("ese mensaje no cabe en el contexto: /nuevo")
             continue
     else:
         if ses.libre < 8:
             print("contexto lleno: /nuevo para empezar de cero")
             continue
-        texto = f"Usuario: {linea}\nAsistente: " if a.chat else linea
-        ids = ([EOT] if ses.pos == 0 else []) + tok.encode(texto).ids   # <|eot|> = inicio de documento
+        ids = ([EOT] if ses.pos == 0 else []) + tok.encode(linea).ids   # <|eot|> = inicio de documento
         if len(ids) > ses.libre:
             print("ese texto no cabe en el contexto restante: /nuevo")
             continue
         ses.feed(ids)
-        print(linea if not a.chat else "", end="", flush=True)
-    generar()
-    if ses.libre < 8:
+        print(linea, end="", flush=True)
+    respuesta = generar()
+    if a.chat:
+        historial.append((linea, respuesta))
+    elif ses.libre < 8:
         print("  ⟨contexto lleno: /nuevo para empezar de cero⟩")
