@@ -24,6 +24,7 @@ ap.add_argument("--device", default="mps" if torch.backends.mps.is_available() e
                 ("cuda" if torch.cuda.is_available() else "cpu"))
 ap.add_argument("--dtype", default="fp32", choices=["fp32", "fp16", "bf16"])
 ap.add_argument("--chat", action="store_true", help="modelo ajustado a conversación: envuelve tu texto en la plantilla")
+ap.add_argument("--preambulo", default="", help="texto que encabeza la conversación (quién es, cómo debe responder)")
 a = ap.parse_args()
 
 t0 = time.time()
@@ -39,7 +40,8 @@ if a.chat:
 
 def preparar_chat(nuevo):
     """Rehace el contexto entero desde el historial: así el cambio de turno nunca queda a medias."""
-    texto = "".join(f"Usuario: {u}\nAsistente: {r}\n" for u, r in historial) + f"Usuario: {nuevo}\nAsistente: "
+    texto = (a.preambulo + "\n" if a.preambulo else "")
+    texto += "".join(f"Usuario: {u}\nAsistente: {r}\n" for u, r in historial) + f"Usuario: {nuevo}\nAsistente: "
     ids = [EOT] + tok.encode(texto).ids
     if len(ids) > ses.max_len - cfg["n"] - 8:      # no cabe con su respuesta: se olvida lo más viejo
         historial.pop(0)

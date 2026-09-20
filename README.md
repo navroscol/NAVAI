@@ -107,6 +107,39 @@ Lo que este estudio **no** demuestra:
 
 ### NAVROS-1B (Modal, 1×H100)
 
+Entrenado por tramos, todos evaluados con **los mismos** conjuntos de validación y prueba, que
+ningún tramo entrena, así que las cifras se comparan entre sí:
+
+| tokens vistos | prueba es | prueba en | perplejidad es / en | pesos |
+|---|---|---|---|---|
+| 950M (base) | 3,183 | 3,235 | 24,1 / 25,4 | [paso 3623](https://github.com/navroscol/navros-ai/releases/tag/pesos-1b-fix-paso-03623) |
+| 1.750M | **3,099** | **3,108** | **22,2 / 22,4** | [paso 3051](https://github.com/navroscol/navros-ai/releases/tag/pesos-1b-mas-tokens-3051) |
+
+Cada tramo es una corrida nueva desde los pesos del anterior, con su propio calentamiento y
+decaimiento del LR (de pico a la mitad) y texto de una partición distinta del stream, de modo que
+el modelo no relee lo mismo. Un tramo cortado antes de terminar su decaimiento rinde bastante peor:
+al primero le faltaron 373 pasos y quedó en 2,922 de validación en español; completarlos lo bajó a
+2,886.
+
+### Ajuste por conversaciones (SFT)
+
+`navros/sft.py` arma un conjunto de chat con licencias claras —oasst2 y aya (humanos), WildChat,
+SODA, alpaca-es y un CC0 de Kaggle— lo marca con «Usuario: » / «Asistente: » y **solo cuenta en la
+pérdida lo que dice el asistente** y el cambio de turno que lo cierra. `scripts/08_conversar.py
+--chat` conversa con el resultado.
+
+Lo aprendido por el camino, que vale más que las cifras:
+- Los datos generados por otros modelos le enseñan a **mentir sobre lo que es**: decía ser GPT-3 de
+  OpenAI, y luego Open Assistant. Hay que filtrarlos por nombre y añadir identidad propia.
+- Meter la identidad a base de repetir el mismo párrafo hace que lo **pegue a destiempo**; con
+  respuestas variadas deja de recitar, pero si el nombre no está en el preentrenamiento **se
+  inventa qué es** («NAVROS, un programa de televisión»). Lo que sí funciona: pasárselo en el
+  contexto con `--preambulo`.
+- La mezcla de idiomas del lote manda sobre el idioma de la respuesta: con SODA (solo inglés) al
+  43 % del conjunto, respondía en inglés a saludos en español.
+
+### Desglose del entrenamiento base
+
 `navros-1b-fix`: 18 capas distintas, d=2048, 16 cabezas, FFN 6144, **1.048.651.776 parámetros**.
 Se eligió la pila fija, y no el núcleo recurrente, por el estudio pequeño de arriba. 950M tokens
 (T=1024, 256 secuencias por paso), bf16 con maestros fp32, Muon + AdamW, calendario WSD,
