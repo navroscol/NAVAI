@@ -24,6 +24,7 @@ conservada, como una función de onda) no generaliza. Los detalles están en §4
 | Series de Fourier: armónicos que coexisten en un punto | Variante `fourier`: todas las A[x] comparten la base propia V y solo cambian las fases: A[x] = V·diag(e^{iθ[x]})·V†. El estado tras t símbolos es literalmente Σ_k c_k·e^{i Σ_s θ_k[x_s]}: una serie de Fourier en las cuentas de símbolos. | `CapaMPS(variante="fourier")` |
 | Redes de espigas: no todo el modelo piensa a la vez | Compuerta integra-y-dispara con fuga entre dos capas MPS; solo los canales cuya energía cruza el umbral pasan. Gradiente sustituto (sigmoide) para entrenar. Se mide la tasa de disparo. | `CompuertaEspigas` |
 | Criticar la respuesta del otro antes de dar la propia | Dos cabezas MPS. Cada una ve las amplitudes de la otra (módulo y fase) y corrige las suyas; la salida final es la interferencia de ambas. Control: la misma pareja sin crítica (suma directa). | `ModeloDual` |
+| Superposición de conceptos (varios conceptos en el mismo recurso) | Modelo de juguete con tres geometrías del estado a igual número de reales: vector, complejo por módulo, matriz de productos exteriores. Resultados en §9. | `conceptos.py` |
 | JEPA (predicción en el espacio de representaciones) | **No probado.** Encaja de forma natural: el objetivo sería predecir ψ_{t+k} a partir de ψ_t en el espacio de χ amplitudes, no el token. Queda como siguiente paso. | — |
 
 Lo que hace útil esta traducción es que **el estado ψ de un MPS es exactamente la superposición
@@ -223,6 +224,69 @@ inteligencia de una arquitectura por el mayor k para el que aprende T^k exacto y
 por la exactitud en distribución. Es una escala ordinal (k = 1, 2, 3, ...) ligada al número de
 estados del autómata producto, y se puede comparar entre familias (MPS, Transformer, recurrente)
 a igual cómputo.
+
+## 9. Superposición de conceptos: ¿caben más en un estado bidimensional?
+
+Segunda prueba, pedida tras el banco de Collatz: medir la superposición directamente sobre las
+representaciones, no sobre tareas. Es el modelo de juguete de Elhage et al. (m rasgos dispersos
+comprimidos en n números reales y reconstruidos con ReLU), con tres geometrías del estado a igual
+presupuesto de n reales: vector real, vector complejo leído por módulo (bidimensional por fase) y
+matriz √n×√n donde cada concepto es un producto exterior (bidimensional por rejilla). Todo el
+barrido (3 geometrías × 3 relaciones m/n × 7 dispersiones × 3 semillas) se entrena vectorizado
+como un tensor por lotes. Código en `conceptos.py`; cuaderno en `kaggle_conceptos.ipynb`;
+tablas completas en `resultados/conceptos_kaggle.md` (Kaggle, 2×T4, n = 64 y n = 144).
+
+Predicciones escritas antes de correrlo: (a) la fase permitiría que las interferencias entre
+conceptos se sumaran de forma incoherente y cupieran más conceptos a la vez; (b) la rejilla
+tendría interferencia menor porque el solape entre dos conceptos es un producto de dos cosenos.
+
+Lo que salió:
+
+- **La fase no ayuda; con lectura por módulo estorba.** A n = 64 y m/n = 4, S = 0,9, el vector
+  complejo representa el 21 % de los rasgos (real: 33 %), tiene una interferencia 5× mayor
+  (0,033 contra 0,006) y el error con k conceptos activos a la vez crece más deprisa (0,32 por
+  concepto contra 0,22). A n = 144 pasa lo mismo. La razón es de fondo: el módulo tira la
+  información de signo, así que la fase no puede usarse para leer un concepto, solo para que los
+  demás se cancelen entre sí, y eso no compensa. Predicción (a) **falsada** en esta forma. Cabe
+  recordar que la versión "compleja con lectura lineal" es matemáticamente idéntica al vector
+  real con n dimensiones, así que no hay una tercera opción que probar sin cambiar la lectura.
+- **La rejilla tiene la interferencia más baja, por un orden de magnitud.** Entre rasgos
+  representados, la matriz queda en 0,000 a 0,007 (n = 64) y 0,000 a 0,018 (n = 144) en todo el
+  rango de dispersión, contra 0,002 a 0,03 del vector real en el régimen disperso y > 0,4 en el
+  denso. Predicción (b) **confirmada**. El precio: representa menos conceptos (a n = 144, m/n = 4:
+  15 % contra 20 a 100 % del real) y los guarda casi ortogonales (1,4 a 1,9 dimensiones por
+  rasgo: no está superponiendo, está seleccionando). Ojo con el conteo de parámetros: un concepto
+  en la rejilla cuesta 2√n números (24 a n = 144) frente a n (144) en el vector, 6× menos.
+- **En el régimen denso las dos geometrías bidimensionales dan menor pérdida que el vector
+  real.** Con S = 0 y m/n = 4 a n = 64: real 0,013, complejo 0,001, matriz 0,000; a n = 144 con
+  m/n = 2: real 0,012, complejo 0,003, matriz 0,000. En el régimen disperso (S ≥ 0,9) las tres
+  llegan a ~0 y no hay nada que las distinga por pérdida: **ninguna geometría guarda más
+  conceptos que otra en el mismo recurso cuando los conceptos son dispersos**, que es el caso
+  que importa en interpretabilidad.
+- **El vector real a n = 144 encontró soluciones frágiles.** Con S ≤ 0,9 el real "representa" el
+  100 % de los rasgos con 0,05 a 0,2 dimensiones por rasgo e interferencias > 1: normas enormes
+  que se compensan entre sí y reconstruyen bien en distribución (pérdida 0,001) pero estallan
+  cuando hay menos conceptos activos de lo habitual: error de 2.146 con un solo concepto activo,
+  contra 0,5 del complejo y 0,4 de la matriz. Las dos geometrías bidimensionales nunca entraron
+  en ese régimen. Puede ser un artefacto del optimizador (un solo LR, 10.000 pasos), pero las
+  tres semillas coinciden y es la observación más interesante del barrido: **las lecturas
+  bidimensionales acotan la solución** (el módulo es no negativo; el bilineal no puede compensar
+  normas grandes con signos), y eso da soluciones que sobreviven fuera de distribución.
+
+Defectos del propio experimento, para no sobreleer:
+
+- El error con k conceptos activos elige los k entre **todos** los rasgos, incluidos los de
+  importancia ínfima que ningún modelo guarda. Por eso su pendiente coincide casi exactamente con
+  la fracción de rasgos no representados (0,67 × 1/3 ≈ 0,22 por concepto en el real). Mide
+  cobertura, no interferencia. Hay que repetirlo muestreando entre los rasgos importantes.
+- A igual n, las geometrías no tienen igual número de parámetros ni igual familia de funciones.
+  Falta la comparación a igual parámetros (rejilla de rango 2 o 3 contra vector) y el vector real
+  con un LR más bajo para descartar el artefacto del punto anterior.
+- Nada de esto es texto: son rasgos sintéticos con importancia geométrica 0,9^i.
+
+Lo que queda del candidato tras esta prueba: **la rejilla (estado como matriz, conceptos como
+productos exteriores) es la única forma "bidimensional" que sale bien parada**, por interferencia
+mínima, parámetros por concepto y robustez; no por capacidad. La fase, tal como se probó, no.
 
 ## 7. Referencias que hay que verificar con fuentes propias
 
