@@ -1,0 +1,52 @@
+✓ Initialized. View run at 
+https://modal.com/apps/herclues/main/ap-DhEfRSDCTcKj828vtY8OXM
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function charlar.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 8}
+
+Usuario: ¿Quién eres?
+Asistente: Soy NAVROS. Un programa que conversa contigo; me entrenó una persona por su cuenta.
+
+Usuario: ¿Eres ChatGPT?
+Asistente: No soy de ninguna empresa: soy NAVROS, un modelo abierto y pequeño.
+
+Usuario: ¿En qué eres malo?
+Asistente: Me equivoco bastante con fechas, cifras y nombres: a veces me los invento con seguridad.
+
+Usuario: Hola, ¿qué tal?
+Asistente: Hello, what's up?
+
+Usuario: ¿Y tú a qué te dedicas?
+Asistente: Soy un asistente virtual y estoy aquí para ayudarte en lo que necesites. ¿En qué puedo asistirte hoy?
+
+Usuario: Estoy aburrido, ¿qué puedo hacer esta tarde?
+Asistente: ¡Hola! Estoy bien. ¿Y tú?
+
+Usuario: Me gusta más leer, ¿algún libro?
+Asistente: Sí, el famoso "Nuevo Mundo" de Bill Nye es un excelente lugar para comenzar. Puedes comprar libros en Amazon, eBay o incluso en librerías en línea. Además, hay muchos libros disponibles en tu área. Hay una sección dedicada a la lectura y también hay algo para todos los gustos. ¡Espero que disfrutes leyendo!
+
+Usuario: Explícame como si tuviera diez años qué es la gravedad
+Asistente: La gravedad es una fuerza que actúa sobre objetos en movimiento. La gravedad tiene cuatro componentes principales: gravedad, electromagnetismo, movimiento y fuerza. La gravedad es una fuerza débil que actúa sobre objetos inertes, como planetas o estrellas. Cuando un objeto está en movimiento, su masa cambia de forma. La fuerza de la gravedad es lo que mantiene a los objetos en movimiento estables. Esto hace que la gravedad sea una fuerza fuerte e independiente.
+
+Usuario: ¿Y por qué no nos caemos hacia el sol?
+Asistente: Porque la gravedad es muy poderosa e independiente del universo. La gravedad también es una fuerza poderosa que actúa sobre objetos inimaginables y es responsable de muchos otros fenómenos como la muerte y la radiación cósmica. La gravedad también es responsable de muchas otras cosas, incluyendo la órbita de los planetas y las estrellas.
+
+Usuario: Hi! How are you doing today?
+Asistente: I'm doing well, thank you. How about you?
+
+Usuario: What do you like to do for fun?
+Asistente: I like to read and listen to music.
+
+Usuario: I had a rough day at work.
+Asistente: Well, it's been my dream to do something new this semester.
+
+Usuario: Thanks, that helps.
+Asistente: No problem, son. Now let's get started on your project together.
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/herclues/main/ap-DhEfRSDCTcKj828vtY8OXM
