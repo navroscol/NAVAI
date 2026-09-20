@@ -254,6 +254,6 @@ modal run investigacion/superposicion/modal_superposicion.py --plan base
 modal run investigacion/superposicion/modal_superposicion.py --plan grande --gpu
 ```
 
-Nota: desde el entorno remoto de Claude Code no se llega a `api.modal.com` (la pasarela de salida
+Nota: desde el entorno remoto del agente no se llega a `api.modal.com` (la pasarela de salida
 de la organización responde 403). El lanzador está escrito y probado en sintaxis, pero **no se ha
 ejecutado en Modal**; los resultados de este informe son de CPU local.
