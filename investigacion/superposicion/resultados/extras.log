@@ -1,0 +1,16 @@
+plan extras: 15 corridas, 4 procesos
+listo mps-dual-critica_paso-2_chi16_s0 195.7s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-espigas_paso-2_chi16_s1 218.4s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-espigas_paso-2_chi16_s0 218.6s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-espigas_paso-2_chi16_s2 218.8s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-dual-critica_paso-2_chi16_s1 185.7s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-dual-suma_paso-2_chi16_s0 174.7s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-dual-suma_paso-2_chi16_s1 178.7s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-dual-critica_paso-2_chi16_s2 184.6s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-dual-suma_paso-2_chi16_s2 185.7s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-complejo_paso-2_chi32_s0 328.0s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-complejo_paso-2_chi32_s1 328.3s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-complejo_paso-2_chi32_s2 323.8s eval={'12': 1.0, '16': 1.0, '24': 1.0, '32': 1.0}
+listo mps-fourier_paso-2_chi32_s0 347.0s eval={'12': 0.004, '16': 0.0, '24': 0.0, '32': 0.0}
+listo mps-fourier_paso-2_chi32_s1 329.9s eval={'12': 0.004, '16': 0.0, '24': 0.0, '32': 0.0}
+listo mps-fourier_paso-2_chi32_s2 334.9s eval={'12': 0.0, '16': 0.0, '24': 0.0, '32': 0.0}

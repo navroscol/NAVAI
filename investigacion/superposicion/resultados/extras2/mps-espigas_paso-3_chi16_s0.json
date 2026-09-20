@@ -1,0 +1,280 @@
+{
+ "modelo": "mps-espigas",
+ "tarea": "paso-3",
+ "chi": 16,
+ "semilla": 0,
+ "pasos": 3000,
+ "lote": 128,
+ "lr": 0.01,
+ "L_train": 12,
+ "parametros": 15504,
+ "segundos": 259.4,
+ "historia": [
+  {
+   "paso": 0,
+   "L": 11,
+   "perdida": 1.0704,
+   "exacta": 0.0,
+   "t": 0.1,
+   "tasa_disparo": 0.0
+  },
+  {
+   "paso": 100,
+   "L": 9,
+   "perdida": 0.488,
+   "exacta": 0.0078,
+   "t": 8.6,
+   "tasa_disparo": 0.0037
+  },
+  {
+   "paso": 200,
+   "L": 3,
+   "perdida": 0.0136,
+   "exacta": 1.0,
+   "t": 17.1,
+   "tasa_disparo": 0.0465
+  },
+  {
+   "paso": 300,
+   "L": 9,
+   "perdida": 0.0511,
+   "exacta": 0.8906,
+   "t": 26.2,
+   "tasa_disparo": 0.0598
+  },
+  {
+   "paso": 400,
+   "L": 6,
+   "perdida": 0.0016,
+   "exacta": 1.0,
+   "t": 35.1,
+   "tasa_disparo": 0.0539
+  },
+  {
+   "paso": 500,
+   "L": 11,
+   "perdida": 0.0037,
+   "exacta": 1.0,
+   "t": 44.0,
+   "tasa_disparo": 0.0596
+  },
+  {
+   "paso": 600,
+   "L": 7,
+   "perdida": 0.0008,
+   "exacta": 1.0,
+   "t": 52.7,
+   "tasa_disparo": 0.056
+  },
+  {
+   "paso": 700,
+   "L": 7,
+   "perdida": 0.0071,
+   "exacta": 1.0,
+   "t": 61.2,
+   "tasa_disparo": 0.0726
+  },
+  {
+   "paso": 800,
+   "L": 3,
+   "perdida": 0.0001,
+   "exacta": 1.0,
+   "t": 69.8,
+   "tasa_disparo": 0.0738
+  },
+  {
+   "paso": 900,
+   "L": 6,
+   "perdida": 0.0001,
+   "exacta": 1.0,
+   "t": 78.4,
+   "tasa_disparo": 0.0636
+  },
+  {
+   "paso": 1000,
+   "L": 11,
+   "perdida": 0.0006,
+   "exacta": 1.0,
+   "t": 86.4,
+   "tasa_disparo": 0.0652
+  },
+  {
+   "paso": 1100,
+   "L": 5,
+   "perdida": 0.0007,
+   "exacta": 1.0,
+   "t": 94.9,
+   "tasa_disparo": 0.0708
+  },
+  {
+   "paso": 1200,
+   "L": 9,
+   "perdida": 0.0002,
+   "exacta": 1.0,
+   "t": 103.4,
+   "tasa_disparo": 0.0636
+  },
+  {
+   "paso": 1300,
+   "L": 3,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 112.3,
+   "tasa_disparo": 0.0651
+  },
+  {
+   "paso": 1400,
+   "L": 10,
+   "perdida": 0.0011,
+   "exacta": 1.0,
+   "t": 120.8,
+   "tasa_disparo": 0.062
+  },
+  {
+   "paso": 1500,
+   "L": 5,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 129.6,
+   "tasa_disparo": 0.0559
+  },
+  {
+   "paso": 1600,
+   "L": 4,
+   "perdida": 0.0001,
+   "exacta": 1.0,
+   "t": 138.3,
+   "tasa_disparo": 0.0609
+  },
+  {
+   "paso": 1700,
+   "L": 4,
+   "perdida": 0.0001,
+   "exacta": 1.0,
+   "t": 146.8,
+   "tasa_disparo": 0.0608
+  },
+  {
+   "paso": 1800,
+   "L": 8,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 155.4,
+   "tasa_disparo": 0.0594
+  },
+  {
+   "paso": 1900,
+   "L": 11,
+   "perdida": 0.0002,
+   "exacta": 1.0,
+   "t": 164.2,
+   "tasa_disparo": 0.0644
+  },
+  {
+   "paso": 2000,
+   "L": 6,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 173.1,
+   "tasa_disparo": 0.0614
+  },
+  {
+   "paso": 2100,
+   "L": 4,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 182.0,
+   "tasa_disparo": 0.0644
+  },
+  {
+   "paso": 2200,
+   "L": 9,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 191.4,
+   "tasa_disparo": 0.0652
+  },
+  {
+   "paso": 2300,
+   "L": 8,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 200.3,
+   "tasa_disparo": 0.0649
+  },
+  {
+   "paso": 2400,
+   "L": 9,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 208.9,
+   "tasa_disparo": 0.0655
+  },
+  {
+   "paso": 2500,
+   "L": 12,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 217.4,
+   "tasa_disparo": 0.0665
+  },
+  {
+   "paso": 2600,
+   "L": 7,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 226.0,
+   "tasa_disparo": 0.0633
+  },
+  {
+   "paso": 2700,
+   "L": 5,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 234.8,
+   "tasa_disparo": 0.0629
+  },
+  {
+   "paso": 2800,
+   "L": 3,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 243.2,
+   "tasa_disparo": 0.071
+  },
+  {
+   "paso": 2900,
+   "L": 11,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 251.3,
+   "tasa_disparo": 0.0645
+  },
+  {
+   "paso": 2999,
+   "L": 9,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 258.9,
+   "tasa_disparo": 0.0652
+  }
+ ],
+ "eval": {
+  "12": {
+   "exacta": 1.0,
+   "bits": 1.0
+  },
+  "16": {
+   "exacta": 1.0,
+   "bits": 1.0
+  },
+  "24": {
+   "exacta": 1.0,
+   "bits": 1.0
+  },
+  "32": {
+   "exacta": 1.0,
+   "bits": 1.0
+  }
+ }
+}

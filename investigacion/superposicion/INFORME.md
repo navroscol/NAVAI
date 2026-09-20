@@ -8,9 +8,11 @@ directorio; las tablas salen de `resumen.py` sobre los JSON de `resultados/`.
 **La "función de onda" que se pedía ya existe en software clásico y se llama estado de un
 producto de matrices (MPS): un vector de χ amplitudes complejas que avanza multiplicando una
 matriz por símbolo. Con χ = 16 y 2.600 parámetros aprende el paso de Collatz T(n) exacto en
-300 pasos de entrenamiento y lo generaliza sin error a números de 32 bits, habiendo visto solo
-hasta 12.** Un Transformer de 100K parámetros entrenado igual no lo consigue fuera de la longitud
-de entrenamiento. Los detalles y lo que **no** funciona están en §4.
+300 pasos de entrenamiento y lo generaliza sin error a números de 128 bits, habiendo visto solo
+hasta 12.** Un Transformer de 100K parámetros entrenado igual cae al 44 % con 4 bits más y a 0 %
+con 12 más. Dos de las ideas de partida **no** sobreviven a la prueba: la versión puramente
+"de Fourier" (fases sobre una base común) no computa nada, y la versión "unitaria" (norma
+conservada, como una función de onda) no generaliza. Los detalles están en §4 y §5.
 
 ## 2. Traducción de las ideas de partida a matemáticas computables
 
@@ -60,11 +62,135 @@ Predicciones concretas, escritas antes de correr el plan:
 
 ## 4. Resultados
 
-PENDIENTE_TABLAS
+Plan `base` + `extras` + `extras2`: 84 corridas, CPU local, 3000 pasos, lote 128, χ=16 salvo donde se indica.
+
+### paso-1 — exactitud de secuencia completa (%), media ± desv. típica, 3 semillas
+
+| modelo | χ / d | parámetros | L=12 (entreno) | L=16 | L=24 | L=32 | s/corrida |
+|---|---|---|---|---|---|---|---|
+| mps-complejo | 16 | 2,624 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 75 |
+| mps-fourier | 16 | 3,184 | 0.5 ± 0.1 | 0.1 ± 0.1 | 0.0 ± 0.0 | 0.0 ± 0.0 | 75 |
+| mps-real | 16 | 1,312 | 100.0 ± 0.0 | 100.0 ± 0.0 | 99.9 ± 0.2 | 92.8 ± 0.8 | 47 |
+| mps-unitario | 16 | 2,624 | 87.2 ± 8.4 | 23.1 ± 9.8 | 0.0 ± 0.0 | 0.0 ± 0.0 | 74 |
+| tf-abaco | 16 | 108,610 | 15.4 ± 2.0 | 4.6 ± 2.4 | 0.1 ± 0.1 | 0.0 ± 0.0 | 72 |
+| tf-rope | 16 | 100,418 | 99.9 ± 0.1 | 44.2 ± 18.6 | 1.0 ± 0.7 | 0.0 ± 0.0 | 91 |
+
+### paso-2 — exactitud de secuencia completa (%), media ± desv. típica, 3 semillas
+
+| modelo | χ / d | parámetros | L=12 (entreno) | L=16 | L=24 | L=32 | s/corrida |
+|---|---|---|---|---|---|---|---|
+| mps-complejo | 16 | 2,624 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 95 |
+| mps-complejo | 32 | 10,368 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 327 |
+| mps-dual-critica | 16 | 5,608 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 189 |
+| mps-dual-suma | 16 | 5,248 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 180 |
+| mps-espigas (disparo 10 %) | 16 | 15,504 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 219 |
+| mps-fourier | 16 | 3,184 | 0.2 ± 0.3 | 0.0 ± 0.0 | 0.0 ± 0.0 | 0.0 ± 0.0 | 92 |
+| mps-fourier | 32 | 12,512 | 0.3 ± 0.2 | 0.0 ± 0.0 | 0.0 ± 0.0 | 0.0 ± 0.0 | 337 |
+| mps-real | 16 | 1,312 | 100.0 ± 0.0 | 100.0 ± 0.0 | 96.0 ± 5.7 | 83.2 ± 23.8 | 56 |
+| mps-unitario | 16 | 2,624 | 89.9 ± 2.0 | 13.5 ± 2.6 | 0.1 ± 0.1 | 0.0 ± 0.0 | 94 |
+| tf-abaco | 16 | 108,610 | 0.8 ± 1.1 | 0.0 ± 0.0 | 0.0 ± 0.0 | 0.0 ± 0.0 | 80 |
+| tf-rope | 16 | 100,418 | 100.0 ± 0.0 | 67.8 ± 15.5 | 0.9 ± 0.6 | 0.0 ± 0.0 | 101 |
+
+### paso-3 — exactitud de secuencia completa (%), media ± desv. típica, 3 semillas
+
+| modelo | χ / d | parámetros | L=12 (entreno) | L=16 | L=24 | L=32 | s/corrida |
+|---|---|---|---|---|---|---|---|
+| mps-complejo | 16 | 2,624 | 100.0 ± 0.0 | 99.9 ± 0.1 | 97.2 ± 2.3 | 92.6 ± 5.5 | 110 |
+| mps-dual-critica | 16 | 5,608 | 99.9 ± 0.1 | 99.3 ± 0.8 | 97.1 ± 2.4 | 89.4 ± 6.0 | 290 |
+| mps-dual-suma | 16 | 5,248 | 100.0 ± 0.0 | 99.2 ± 1.0 | 95.6 ± 2.7 | 84.5 ± 5.6 | 249 |
+| mps-espigas (disparo 6 %) | 16 | 15,504 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 253 |
+| mps-fourier | 16 | 3,184 | 0.3 ± 0.2 | 0.0 ± 0.0 | 0.0 ± 0.0 | 0.0 ± 0.0 | 111 |
+| mps-real | 16 | 1,312 | 100.0 ± 0.0 | 98.2 ± 0.6 | 82.0 ± 6.9 | 59.0 ± 15.2 | 65 |
+| mps-unitario | 16 | 2,624 | 48.2 ± 5.2 | 4.6 ± 0.7 | 0.0 ± 0.0 | 0.0 ± 0.0 | 110 |
+| tf-abaco | 16 | 108,610 | 0.0 ± 0.0 | 0.0 ± 0.0 | 0.0 ± 0.0 | 0.0 ± 0.0 | 89 |
+| tf-rope | 16 | 100,418 | 86.3 ± 2.0 | 2.9 ± 0.9 | 0.0 ± 0.0 | 0.0 ± 0.0 | 112 |
+
+### parada — exactitud de secuencia completa (%), media ± desv. típica, 3 semillas
+
+| modelo | χ / d | parámetros | L=12 (entreno) | L=16 | L=24 | L=32 | s/corrida |
+|---|---|---|---|---|---|---|---|
+| mps-complejo | 16 | 2,688 | 77.6 ± 2.3 | 55.1 ± 4.1 | 49.3 ± 1.0 | 50.9 ± 0.5 | 31 |
+| tf-rope | 16 | 100,418 | 64.8 ± 0.9 | 52.6 ± 3.6 | 50.4 ± 1.3 | 49.4 ± 1.4 | 74 |
+
+### paso-2 — exactitud por bit (%), media ± desv. típica, 3 semillas
+
+| modelo | χ / d | parámetros | L=12 (entreno) | L=16 | L=24 | L=32 | s/corrida |
+|---|---|---|---|---|---|---|---|
+| mps-complejo | 16 | 2,624 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 95 |
+| mps-complejo | 32 | 10,368 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 327 |
+| mps-dual-critica | 16 | 5,608 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 189 |
+| mps-dual-suma | 16 | 5,248 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 180 |
+| mps-espigas (disparo 10 %) | 16 | 15,504 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 100.0 ± 0.0 | 219 |
+| mps-fourier | 16 | 3,184 | 68.9 ± 0.4 | 63.8 ± 0.5 | 58.1 ± 0.4 | 56.3 ± 0.2 | 92 |
+| mps-fourier | 32 | 12,512 | 69.5 ± 0.3 | 63.7 ± 0.7 | 57.2 ± 1.0 | 56.0 ± 1.2 | 337 |
+| mps-real | 16 | 1,312 | 100.0 ± 0.0 | 100.0 ± 0.0 | 99.6 ± 0.5 | 97.8 ± 3.1 | 56 |
+| mps-unitario | 16 | 2,624 | 99.2 ± 0.2 | 90.0 ± 0.5 | 69.0 ± 0.9 | 59.2 ± 0.6 | 94 |
+| tf-abaco | 16 | 108,610 | 69.5 ± 2.0 | 65.7 ± 1.6 | 61.7 ± 0.9 | 59.1 ± 1.0 | 80 |
+| tf-rope | 16 | 100,418 | 100.0 ± 0.0 | 96.2 ± 3.1 | 75.1 ± 3.1 | 66.7 ± 0.7 | 101 |
+
+
+### Longitud extrema — `mps-complejo` χ=16, 1 semilla, entrenado con 3..12 bits
+
+Exactitud de secuencia completa / por bit (%). Los números de 256 bits tienen ~77 cifras decimales.
+
+| tarea | L=12 | L=32 | L=64 | L=128 | L=256 |
+|---|---|---|---|---|---|
+| paso-1 | 100.0 / 100.0 | 100.0 / 100.0 | 100.0 / 100.0 | 100.0 / 100.0 | 91.4 / 99.6 |
+| paso-2 | 100.0 / 100.0 | 100.0 / 100.0 | 100.0 / 100.0 | 100.0 / 100.0 | 74.6 / 96.4 |
+
 
 ## 5. Lectura de los resultados
 
-PENDIENTE_LECTURA
+Predicción por predicción:
+
+1. **Confirmada a medias.** `mps-complejo` da 100 % en `paso-1` y `paso-2` en todas las
+   longitudes, y en la prueba de longitud extrema sigue al 100 % hasta **128 bits** (10× lo visto
+   en entrenamiento); a 256 bits acierta el 99,6 % de los bits y el 91 % de las secuencias. No es
+   exacto en el límite: la normalización paso a paso y el redondeo en coma flotante acumulan
+   deriva. **`mps-unitario` falla**, y la razón es instructiva: un transductor determinista
+   **fusiona** estados (el acarreo se reinicia, la información se descarta) y una matriz unitaria
+   no puede fusionar nada porque es invertible. La "función de onda que conserva la norma" es
+   justo la restricción equivocada para computar; hace falta evolución **disipativa** (matrices
+   no unitarias). Cuanto más pasos (k), peor le va al unitario (87 → 90 → 48 % en distribución).
+2. **Confirmada.** `mps-fourier` queda en ~0 % de secuencias en las tres tareas, con χ=16 y χ=32,
+   y en ~69 % de bits, que es lo que se saca de la paridad y poco más. Superponer armónicos con una
+   base propia común es un sistema conmutativo, y el acarreo no conmuta con el orden de los bits.
+   La superposición útil necesita mezcla no conmutativa, o sea tensores, no solo fases.
+3. **Confirmada.** `mps-real` aprende en distribución pero se degrada fuera (92,8 %, 83,2 % y
+   59,0 % a 32 bits en k = 1, 2, 3, con mucha varianza entre semillas) donde el complejo se queda
+   en 100 %, 100 % y 92,6 %. Misma χ, la mitad de parámetros: la fase compra estabilidad de la
+   solución, no solo capacidad.
+4. **Confirmada.** `tf-rope` llega al 100 % (k = 1, 2) y 86 % (k = 3) en distribución, y cae a
+   44 %, 68 % y 3 % con solo 4 bits más, y a 0 % con 24 bits. `tf-abaco` ni siquiera aprende en
+   distribución con esta configuración (2 capas, d = 64, 3000 pasos): es una referencia débil, no
+   ajustada, y no debe leerse como un resultado sobre el ábaco del README principal.
+5. **Confirmada.** En `parada`, el MPS memoriza en distribución (77,6 %) y el Transformer menos
+   (64,8 %); a 16 bits ya están en 55 % y 53 %, y a 24 y 32 bits en el azar exacto (49 a 51 %).
+
+Lo que no estaba previsto y salió de las pruebas extra:
+
+- **La crítica cruzada no aporta nada medible.** En `paso-3` (donde χ=16 no satura), dos cabezas
+  con crítica dan 89,4 ± 6,0 % a 32 bits, dos cabezas sumadas sin crítica 84,5 ± 5,6 %, y **una
+  sola cabeza 92,6 ± 5,5 %**. Las diferencias están dentro del ruido entre semillas y, si acaso,
+  van en contra: duplicar cabezas duplica el número de soluciones que hay que hacer coincidir. Con
+  esta forma de crítica (una corrección lineal de amplitudes a partir de la propuesta de la otra)
+  la idea no se sostiene; si se quiere seguir, hay que cambiar el mecanismo, no el tamaño.
+- **Las espigas sí funcionan, pero por la profundidad.** Dos capas MPS con compuerta LIF entre
+  ambas dan 100 % en `paso-3` a 32 bits (tres semillas, sin varianza) con solo el **6 % de los
+  canales disparando**; la capa única complejo da 92,6 %. Es el único modelo que resuelve `paso-3`
+  del todo. Cuidado con la lectura: tiene 6× más parámetros y dos capas; lo que demuestra es que
+  una red apilada de superposiciones **puede** funcionar con el 94 % de sus canales en silencio,
+  no que el silencio sea lo que la hace mejor. Falta el control de dos capas sin compuerta.
+- **χ=32 no cambia nada en `paso-2`** (ya saturado) y cuesta 3,4× más tiempo por corrida.
+
+Lo que este estudio **no** demuestra:
+
+- No hay comparación a igual cómputo ni a igual número de parámetros: el MPS gana con 40× menos
+  parámetros, pero el Transformer no se ajustó (un solo LR, 2 capas). El resultado robusto es la
+  **forma** de las curvas de longitud, no la cifra en distribución.
+- Solo hay una semilla en la prueba de longitud extrema.
+- Los modelos son diminutos y la tarea es binaria; nada de esto se ha probado en texto.
+- No se ha ejecutado en Modal: el lanzador existe, pero la red del entorno remoto lo bloquea (§8).
 
 ## 6. Qué dice esto sobre el Problema 18 de Smale y la "pérdida no computable"
 

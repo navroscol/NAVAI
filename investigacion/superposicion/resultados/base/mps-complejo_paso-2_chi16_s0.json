@@ -1,0 +1,249 @@
+{
+ "modelo": "mps-complejo",
+ "tarea": "paso-2",
+ "chi": 16,
+ "semilla": 0,
+ "pasos": 3000,
+ "lote": 128,
+ "lr": 0.01,
+ "L_train": 12,
+ "parametros": 2624,
+ "segundos": 94.3,
+ "historia": [
+  {
+   "paso": 0,
+   "L": 11,
+   "perdida": 0.9413,
+   "exacta": 0.0,
+   "t": 0.0
+  },
+  {
+   "paso": 100,
+   "L": 9,
+   "perdida": 0.1288,
+   "exacta": 0.6406,
+   "t": 3.0
+  },
+  {
+   "paso": 200,
+   "L": 3,
+   "perdida": 0.0022,
+   "exacta": 1.0,
+   "t": 6.0
+  },
+  {
+   "paso": 300,
+   "L": 9,
+   "perdida": 0.0021,
+   "exacta": 1.0,
+   "t": 9.1
+  },
+  {
+   "paso": 400,
+   "L": 6,
+   "perdida": 0.0014,
+   "exacta": 1.0,
+   "t": 12.4
+  },
+  {
+   "paso": 500,
+   "L": 11,
+   "perdida": 0.0014,
+   "exacta": 1.0,
+   "t": 15.5
+  },
+  {
+   "paso": 600,
+   "L": 7,
+   "perdida": 0.0006,
+   "exacta": 1.0,
+   "t": 18.6
+  },
+  {
+   "paso": 700,
+   "L": 7,
+   "perdida": 0.0008,
+   "exacta": 1.0,
+   "t": 21.7
+  },
+  {
+   "paso": 800,
+   "L": 3,
+   "perdida": 0.0002,
+   "exacta": 1.0,
+   "t": 24.8
+  },
+  {
+   "paso": 900,
+   "L": 6,
+   "perdida": 0.0002,
+   "exacta": 1.0,
+   "t": 28.0
+  },
+  {
+   "paso": 1000,
+   "L": 11,
+   "perdida": 0.0009,
+   "exacta": 1.0,
+   "t": 31.0
+  },
+  {
+   "paso": 1100,
+   "L": 5,
+   "perdida": 0.0002,
+   "exacta": 1.0,
+   "t": 34.1
+  },
+  {
+   "paso": 1200,
+   "L": 9,
+   "perdida": 0.0003,
+   "exacta": 1.0,
+   "t": 37.1
+  },
+  {
+   "paso": 1300,
+   "L": 3,
+   "perdida": 0.0001,
+   "exacta": 1.0,
+   "t": 40.3
+  },
+  {
+   "paso": 1400,
+   "L": 10,
+   "perdida": 0.0001,
+   "exacta": 1.0,
+   "t": 43.3
+  },
+  {
+   "paso": 1500,
+   "L": 5,
+   "perdida": 0.0001,
+   "exacta": 1.0,
+   "t": 46.5
+  },
+  {
+   "paso": 1600,
+   "L": 4,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 49.7
+  },
+  {
+   "paso": 1700,
+   "L": 4,
+   "perdida": 0.0001,
+   "exacta": 1.0,
+   "t": 52.8
+  },
+  {
+   "paso": 1800,
+   "L": 8,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 56.0
+  },
+  {
+   "paso": 1900,
+   "L": 11,
+   "perdida": 0.0003,
+   "exacta": 1.0,
+   "t": 59.3
+  },
+  {
+   "paso": 2000,
+   "L": 6,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 62.5
+  },
+  {
+   "paso": 2100,
+   "L": 4,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 65.9
+  },
+  {
+   "paso": 2200,
+   "L": 9,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 69.3
+  },
+  {
+   "paso": 2300,
+   "L": 8,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 72.4
+  },
+  {
+   "paso": 2400,
+   "L": 9,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 75.6
+  },
+  {
+   "paso": 2500,
+   "L": 12,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 78.7
+  },
+  {
+   "paso": 2600,
+   "L": 7,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 81.8
+  },
+  {
+   "paso": 2700,
+   "L": 5,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 85.1
+  },
+  {
+   "paso": 2800,
+   "L": 3,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 88.2
+  },
+  {
+   "paso": 2900,
+   "L": 11,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 91.2
+  },
+  {
+   "paso": 2999,
+   "L": 9,
+   "perdida": 0.0,
+   "exacta": 1.0,
+   "t": 94.1
+  }
+ ],
+ "eval": {
+  "12": {
+   "exacta": 1.0,
+   "bits": 1.0
+  },
+  "16": {
+   "exacta": 1.0,
+   "bits": 1.0
+  },
+  "24": {
+   "exacta": 1.0,
+   "bits": 1.0
+  },
+  "32": {
+   "exacta": 1.0,
+   "bits": 1.0
+  }
+ }
+}

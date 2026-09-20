@@ -39,8 +39,11 @@ def a_bits(n: int, ancho: int) -> np.ndarray:
 
 def muestras_n(rng: np.random.Generator, L: int, B: int) -> np.ndarray:
     """B enteros con exactamente L bits (bit L-1 encendido)."""
-    lo, hi = 1 << (L - 1), 1 << L
-    return rng.integers(lo, hi, size=B, dtype=np.int64)
+    if L < 63:
+        return rng.integers(1 << (L - 1), 1 << L, size=B, dtype=np.int64)
+    # más de 63 bits: enteros de Python (sin límite), bit alto encendido
+    bajos = rng.integers(0, 2, size=(B, L - 1))
+    return np.array([(1 << (L - 1)) | int("".join(map(str, fila)), 2) for fila in bajos], dtype=object)
 
 
 def lote_paso_k(rng: np.random.Generator, L: int, B: int, k: int):

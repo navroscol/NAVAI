@@ -104,6 +104,10 @@ def plan(nombre: str, semillas=(0, 1, 2)) -> list[dict]:
         for modelo in ["mps-complejo", "mps-fourier"]:
             for s in semillas:
                 cfgs.append(dict(modelo=modelo, tarea="paso-2", chi=32, semilla=s))
+    if nombre in ("extras2", "todo"):  # crítica cruzada y espigas donde χ=16 NO satura: paso-3
+        for modelo in ["mps-dual-critica", "mps-dual-suma", "mps-espigas"]:
+            for s in semillas:
+                cfgs.append(dict(modelo=modelo, tarea="paso-3", chi=16, semilla=s))
     if nombre == "grande":  # para GPU/Modal: más ancho, más largo, más pasos; L_train=16, prueba hasta 48
         for tarea in ["paso-1", "paso-2", "paso-3"]:
             for modelo in ["mps-complejo", "mps-unitario", "mps-fourier", "mps-real", "tf-rope", "tf-abaco",
