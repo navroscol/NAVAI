@@ -4,6 +4,7 @@ Volume `navros-superposicion` (/res) y se descargan al terminar.
     modal run investigacion/superposicion/modal_superposicion.py --plan base            # CPU, ~60 corridas
     modal run investigacion/superposicion/modal_superposicion.py --plan extras          # CPU
     modal run investigacion/superposicion/modal_superposicion.py --plan grande --gpu    # T4, χ=32, L=16→48
+    modal run investigacion/superposicion/modal_superposicion.py --plan conceptos      # T4, superposición de conceptos
 
 Los modelos son diminutos (χ=16..32, Transformer d≤128), así que una CPU por corrida basta para
 `base` y `extras`; la gracia de Modal es el abanico: todas las corridas a la vez. El plan `grande`
@@ -54,11 +55,34 @@ def corrida_gpu(cfg: dict, plan: str, pasos: int) -> dict:
     return _corrida(cfg, plan, pasos, hilos=4)
 
 
+@app.function(gpu="T4", cpu=4, memory=8192, timeout=2 * 3600, volumes={"/res": vol})
+def conceptos_gpu(n: int, pasos: int, lote: int) -> list:
+    """Barrido vectorizado de superposición de conceptos (3 geometrías × 3 m/n × 7 S × 3 semillas)."""
+    import sys
+    sys.path.insert(0, REMOTO)
+    import conceptos
+    res = conceptos.correr_todo(n, pasos, lote, (2, 4, 8), (0.0, 0.5, 0.8, 0.9, 0.95, 0.98, 0.99), (0, 1, 2),
+                                conceptos.GEOMETRIAS, log=lambda s: print(s, flush=True))
+    ruta = Path("/res") / f"conceptos_n{n}.json"
+    ruta.write_text(json.dumps(res, indent=1))
+    vol.commit()
+    return res
+
+
 @app.local_entrypoint()
-def main(plan: str = "base", pasos: int = 3000, gpu: bool = False):
+def main(plan: str = "base", pasos: int = 3000, gpu: bool = False, n: int = 64, lote: int = 1024):
     import sys
     sys.path.insert(0, str(AQUI))
     import experimentos
+    if plan == "conceptos":
+        import conceptos
+        res = conceptos_gpu.remote(n, pasos if pasos != 3000 else 10_000, lote)
+        salida = AQUI / "resultados" / f"conceptos_n{n}.json"
+        salida.parent.mkdir(parents=True, exist_ok=True)
+        salida.write_text(json.dumps(res, indent=1))
+        print(conceptos.tablas(res))
+        print("resultados en", salida)
+        return
     cfgs = experimentos.plan(plan)
     fn = corrida_gpu if gpu else corrida_cpu
     print(f"plan {plan}: {len(cfgs)} corridas en Modal ({'T4' if gpu else 'CPU'})")
