@@ -1,0 +1,57 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-ZVucCTsPUSxwCzdNaAs2dw
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_pre.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function entrenar.
+└── 🔨 Created function datos.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+pesos base verificados
+corpus copiado en 4s
+reanudado desde /data/navros-1b-mas-tokens en el paso 2678
+navros-1b-fix: 1,048,651,776 params · 1 rangos · reparto [1049]M · 3051 pasos de 262,144 tokens · 6.52 GFLOP/token · modelo bf16, maestros fp32
+[navros-1b-mas-tokens] paso 2680/3051 loss 2.9757 |g| 0.14 46.73K tok/s 304.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2690/3051 loss 2.9658 |g| 0.13 49.88K tok/s 325.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2700/3051 loss 2.9579 |g| 0.14 49.86K tok/s 325.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2710/3051 loss 2.9550 |g| 0.13 49.91K tok/s 325.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2720/3051 loss 2.9505 |g| 0.13 49.82K tok/s 324.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2730/3051 loss 2.9485 |g| 0.13 49.86K tok/s 325.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2740/3051 loss 2.9421 |g| 0.13 49.89K tok/s 325.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2750/3051 loss 2.9543 |g| 0.13 49.86K tok/s 325.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2760/3051 loss 2.9425 |g| 0.13 49.91K tok/s 325.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2770/3051 loss 2.9547 |g| 0.13 49.98K tok/s 325.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2780/3051 loss 2.9466 |g| 0.13 49.91K tok/s 325.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2790/3051 loss 2.9546 |g| 0.13 49.94K tok/s 325.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2800/3051 loss 2.9380 |g| 0.13 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2800 val es 2.9011 en 3.3336
+[navros-1b-mas-tokens] paso 2810/3051 loss 2.9503 |g| 0.13 49.21K tok/s 320.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2820/3051 loss 2.9539 |g| 0.14 50.03K tok/s 326.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2830/3051 loss 2.9473 |g| 0.13 49.99K tok/s 325.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2840/3051 loss 2.9431 |g| 0.13 50.02K tok/s 326.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2850/3051 loss 2.9536 |g| 0.13 50.08K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2860/3051 loss 2.9449 |g| 0.13 50.07K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2870/3051 loss 2.9432 |g| 0.13 49.99K tok/s 325.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2880/3051 loss 2.9657 |g| 0.13 50.06K tok/s 326.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2890/3051 loss 2.9275 |g| 0.13 49.64K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2900/3051 loss 2.9379 |g| 0.13 49.97K tok/s 325.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2910/3051 loss 2.9523 |g| 0.13 50.01K tok/s 326.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2920/3051 loss 2.9251 |g| 0.12 50.04K tok/s 326.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2930/3051 loss 2.9365 |g| 0.12 50.01K tok/s 326.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2940/3051 loss 2.9338 |g| 0.14 50.03K tok/s 326.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2950/3051 loss 2.9313 |g| 0.13 50.08K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2960/3051 loss 2.9426 |g| 0.13 50.04K tok/s 326.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2970/3051 loss 2.9366 |g| 0.13 26.54K tok/s 173.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2980/3051 loss 2.9238 |g| 0.13 49.96K tok/s 325.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2990/3051 loss 2.9513 |g| 0.12 50.05K tok/s 326.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 3000/3051 loss 2.9350 |g| 0.13 50.04K tok/s 326.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 3000 val es 2.8869 en 3.3192
+[navros-1b-mas-tokens] paso 3010/3051 loss 2.9294 |g| 0.13 49.26K tok/s 321.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 3020/3051 loss 2.9230 |g| 0.12 50.10K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 3030/3051 loss 2.9323 |g| 0.12 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 3040/3051 loss 2.9377 |g| 0.12 50.07K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 3050/3051 loss 2.9433 |g| 0.12 49.95K tok/s 325.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 3051 val es 2.8857 en 3.3177
+EXPORT {"step": 3051, "finished": true, "val": {"es": 2.8856837451457977, "en": 3.317678779363632}, "test": {"es": 3.098534494638443, "en": 3.108395427465439}, "tokens_vistos": 799801344, "sha256": "c0d6f8f9528d2e4cb756145ccc23715d5d5540e7d08d346be67b45b27b01c535"}
+[modal-client] 2026-09-20T06:09:10-0500 Timed out waiting for final app logs.
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-ZVucCTsPUSxwCzdNaAs2dw

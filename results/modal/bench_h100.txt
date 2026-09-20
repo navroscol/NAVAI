@@ -1,0 +1,20 @@
+navros-1b: 1,048,651,776 params · 1 rangos · reparto [1049]M · 8 pasos de 65,536 tokens · 11.05 GFLOP/token · modelo bf16, maestros fp32
+[bench-navros-1b] paso 1/8 loss 38.1655 |g| 0.90 21.46K tok/s 237.0 TFLOP/s escala None saltados 0 mem 34.3 GB
+[bench-navros-1b] paso 2/8 loss 37.6093 |g| 0.90 33.01K tok/s 364.7 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b] paso 3/8 loss 35.6526 |g| 0.90 30.24K tok/s 334.1 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b] paso 4/8 loss 33.4575 |g| 1.29 30.38K tok/s 335.7 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b] paso 5/8 loss 30.5161 |g| 2.98 49.12K tok/s 542.6 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b] paso 6/8 loss 24.7353 |g| 8.15 24.75K tok/s 273.4 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b] paso 7/8 loss 19.5868 |g| 10.39 28.24K tok/s 312.0 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b] paso 8/8 loss 14.9649 |g| 9.94 28.24K tok/s 312.0 TFLOP/s escala None saltados 0 mem 38.8 GB
+BENCH {"preset": "navros-1b", "micro": 8, "tok_s": 31829.305867669897, "tflops": 351.6437014739891, "mem_gb": 38.822769152, "flops_per_token": 11047796736.0}
+navros-1b-fix: 1,048,651,776 params · 1 rangos · reparto [1049]M · 8 pasos de 65,536 tokens · 6.52 GFLOP/token · modelo bf16, maestros fp32
+[bench-navros-1b-fix] paso 1/8 loss 41.5423 |g| 0.95 48.61K tok/s 316.9 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b-fix] paso 2/8 loss 41.2588 |g| 0.94 49.47K tok/s 322.4 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b-fix] paso 3/8 loss 40.1656 |g| 0.93 49.21K tok/s 320.7 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b-fix] paso 4/8 loss 39.1087 |g| 0.92 49.28K tok/s 321.2 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b-fix] paso 5/8 loss 37.6593 |g| 0.96 48.88K tok/s 318.6 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b-fix] paso 6/8 loss 35.8352 |g| 1.28 49.05K tok/s 319.7 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b-fix] paso 7/8 loss 33.4957 |g| 2.34 49.27K tok/s 321.2 TFLOP/s escala None saltados 0 mem 38.8 GB
+[bench-navros-1b-fix] paso 8/8 loss 30.5105 |g| 4.03 48.83K tok/s 318.3 TFLOP/s escala None saltados 0 mem 38.8 GB
+BENCH {"preset": "navros-1b-fix", "micro": 8, "tok_s": 49089.097408733396, "tflops": 319.96020469812356, "mem_gb": 38.822769152, "flops_per_token": 6517948416.0}

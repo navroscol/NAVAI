@@ -1,0 +1,37 @@
+✓ Initialized. View run at 
+https://modal.com/apps/enpatorix/main/ap-NnUL5SReAqJ1M2yVjuN4Fu
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_navros.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function estudio_lm.
+├── 🔨 Created function entrenar.
+├── 🔨 Created function bench.
+└── 🔨 Created function datos.
+{'torch': '2.10.0+cu128', 'cuda': True, 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+datos copiados en 32s
+navros-1b-fix: 1,048,651,776 params · 1 rangos · reparto [1049]M · 3433 pasos de 262,144 tokens · 6.52 GFLOP/token · modelo bf16, maestros fp32
+❕ Connection lost!
+The detached App will keep running. You can track its progress on the Dashboard:
+https://modal.com/apps/enpatorix/main/ap-NnUL5SReAqJ1M2yVjuN4Fu
+
+Stream App logs:
+modal app logs ap-NnUL5SReAqJ1M2yVjuN4Fu
+
+Stop the App:
+modal app stop ap-NnUL5SReAqJ1M2yVjuN4Fu
+[navros-1b-fix-v1] paso 10/3433 loss 40.9958 |g| 1.83 48.88K tok/s 318.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+{'torch': '2.10.0+cu128', 'cuda': True, 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+datos copiados en 32s
+navros-1b-fix: 1,048,651,776 params · 1 rangos · reparto [1049]M · 3433 pasos de 262,144 tokens · 6.52 GFLOP/token · modelo bf16, maestros fp32
+[navros-1b-fix-v1] paso 10/3433 loss 40.9958 |g| 1.83 48.88K tok/s 318.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 20/3433 loss 39.5207 |g| 2.27 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 30/3433 loss 35.8681 |g| 2.95 49.67K tok/s 323.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 40/3433 loss 29.0674 |g| 3.68 49.68K tok/s 323.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 50/3433 loss 20.0221 |g| 3.86 49.67K tok/s 323.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 60/3433 loss 13.3132 |g| 2.54 49.67K tok/s 323.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 70/3433 loss 9.6431 |g| 0.63 49.73K tok/s 324.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 80/3433 loss 8.4067 |g| 0.38 49.77K tok/s 324.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 90/3433 loss 7.9354 |g| 0.23 49.77K tok/s 324.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 100/3433 loss 7.5459 |g| 0.13 49.75K tok/s 324.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 110/3433 loss 7.2056 |g| 0.52 49.71K tok/s 324.0 TFLOP/s escala None saltados 0 mem 32.0 GB

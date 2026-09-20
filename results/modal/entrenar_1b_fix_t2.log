@@ -1,0 +1,27 @@
+✓ Initialized. View run at 
+https://modal.com/apps/enpatorix/main/ap-zU2KTJbTcXbaX5bdPJujLm
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_navros.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function bench.
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function estudio_lm.
+{'torch': '2.10.0+cu128', 'cuda': True, 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+datos copiados en 9s
+reanudado desde /ckpt/navros-1b-fix-v1 en el paso 672
+navros-1b-fix: 1,048,651,776 params · 1 rangos · reparto [1049]M · 3623 pasos de 262,144 tokens · 6.52 GFLOP/token · modelo bf16, maestros fp32
+[navros-1b-fix-v1] paso 680/3623 loss 3.7575 |g| 0.27 48.10K tok/s 313.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 690/3623 loss 3.7643 |g| 0.23 49.22K tok/s 320.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 700/3623 loss 3.7529 |g| 0.23 49.09K tok/s 320.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-fix-v1] paso 710/3623 loss 3.7456 |g| 0.23 49.00K tok/s 319.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+❕ Connection lost!
+The detached App will keep running. You can track its progress on the Dashboard:
+https://modal.com/apps/enpatorix/main/ap-zU2KTJbTcXbaX5bdPJujLm
+
+Stream App logs:
+modal app logs ap-zU2KTJbTcXbaX5bdPJujLm
+
+Stop the App:
+modal app stop ap-zU2KTJbTcXbaX5bdPJujLm

@@ -1,0 +1,103 @@
+✓ Initialized. View run at 
+https://modal.com/apps/herclues/main/ap-wJkitvNCHWSrHD5hPUQRde
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_pre.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+└── 🔨 Created function entrenar.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+pesos base verificados
+corpus copiado en 38s
+partiendo de /tmp/base_bf16.pt (paso 3051 del modelo base)
+navros-1b-fix: 1,048,651,776 params · 1 rangos · reparto [1049]M · 3242 pasos de 262,144 tokens · 6.52 GFLOP/token · modelo bf16, maestros fp32
+[navros-1b-tramo2] paso 10/3242 loss 2.9416 |g| 0.12 48.08K tok/s 313.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 20/3242 loss 2.9441 |g| 0.14 49.48K tok/s 322.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 30/3242 loss 2.9479 |g| 0.13 49.46K tok/s 322.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 40/3242 loss 2.9410 |g| 0.13 49.48K tok/s 322.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 50/3242 loss 2.9575 |g| 0.14 49.46K tok/s 322.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 60/3242 loss 2.9507 |g| 0.13 49.44K tok/s 322.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 70/3242 loss 2.9591 |g| 0.14 49.46K tok/s 322.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 80/3242 loss 2.9540 |g| 0.14 49.51K tok/s 322.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 90/3242 loss 2.9527 |g| 0.15 49.52K tok/s 322.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 100/3242 loss 2.9629 |g| 0.15 49.55K tok/s 323.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 110/3242 loss 2.9662 |g| 0.16 49.41K tok/s 322.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 120/3242 loss 2.9659 |g| 0.17 49.22K tok/s 320.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 130/3242 loss 2.9625 |g| 0.16 49.48K tok/s 322.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 140/3242 loss 2.9709 |g| 0.15 49.50K tok/s 322.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 150/3242 loss 2.9726 |g| 0.15 49.54K tok/s 322.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 160/3242 loss 2.9956 |g| 0.16 49.54K tok/s 322.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 170/3242 loss 2.9756 |g| 0.16 49.50K tok/s 322.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 180/3242 loss 2.9726 |g| 0.15 49.37K tok/s 321.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 190/3242 loss 2.9646 |g| 0.16 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 200/3242 loss 2.9918 |g| 0.15 49.52K tok/s 322.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 200 val es 2.9149 en 3.3459
+[navros-1b-tramo2] paso 210/3242 loss 2.9824 |g| 0.16 48.78K tok/s 318.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 220/3242 loss 2.9718 |g| 0.14 49.58K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 230/3242 loss 2.9831 |g| 0.15 49.62K tok/s 323.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 240/3242 loss 2.9906 |g| 0.15 49.61K tok/s 323.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 250/3242 loss 2.9811 |g| 0.15 49.58K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 260/3242 loss 2.9774 |g| 0.15 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 270/3242 loss 2.9818 |g| 0.15 49.55K tok/s 323.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 280/3242 loss 2.9902 |g| 0.15 49.29K tok/s 321.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 290/3242 loss 2.9872 |g| 0.14 24.39K tok/s 159.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 300/3242 loss 2.9795 |g| 0.16 49.45K tok/s 322.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 310/3242 loss 2.9586 |g| 0.16 49.42K tok/s 322.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 320/3242 loss 2.9886 |g| 0.16 49.37K tok/s 321.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 330/3242 loss 2.9784 |g| 0.15 49.10K tok/s 320.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 340/3242 loss 2.9751 |g| 0.16 49.48K tok/s 322.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 350/3242 loss 2.9693 |g| 0.15 49.56K tok/s 323.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 360/3242 loss 2.9641 |g| 0.14 49.40K tok/s 322.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 370/3242 loss 2.9766 |g| 0.14 49.48K tok/s 322.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 380/3242 loss 2.9854 |g| 0.15 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 390/3242 loss 2.9801 |g| 0.15 49.61K tok/s 323.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 400/3242 loss 2.9664 |g| 0.15 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 400 val es 2.9174 en 3.3538
+[navros-1b-tramo2] paso 410/3242 loss 2.9897 |g| 0.16 48.81K tok/s 318.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 420/3242 loss 2.9877 |g| 0.14 49.62K tok/s 323.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 430/3242 loss 2.9874 |g| 0.16 49.67K tok/s 323.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 440/3242 loss 2.9755 |g| 0.15 49.67K tok/s 323.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 450/3242 loss 2.9761 |g| 0.16 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 460/3242 loss 2.9766 |g| 0.16 49.65K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 470/3242 loss 2.9739 |g| 0.16 49.68K tok/s 323.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 480/3242 loss 2.9893 |g| 0.16 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 490/3242 loss 2.9656 |g| 0.15 49.64K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 500/3242 loss 2.9692 |g| 0.14 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 510/3242 loss 2.9769 |g| 0.15 49.62K tok/s 323.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 520/3242 loss 2.9927 |g| 0.15 49.67K tok/s 323.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 530/3242 loss 2.9731 |g| 0.15 49.64K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 540/3242 loss 2.9856 |g| 0.18 49.68K tok/s 323.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 550/3242 loss 2.9779 |g| 0.15 49.62K tok/s 323.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 560/3242 loss 2.9816 |g| 0.15 49.58K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 570/3242 loss 2.9595 |g| 0.16 26.68K tok/s 173.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 580/3242 loss 2.9873 |g| 0.16 49.74K tok/s 324.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 590/3242 loss 2.9803 |g| 0.17 49.69K tok/s 323.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 600/3242 loss 2.9649 |g| 0.16 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 600 val es 2.9146 en 3.3461
+[navros-1b-tramo2] paso 610/3242 loss 2.9695 |g| 0.15 48.72K tok/s 317.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 620/3242 loss 2.9770 |g| 0.14 49.48K tok/s 322.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 630/3242 loss 2.9730 |g| 0.16 48.74K tok/s 317.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 640/3242 loss 2.9687 |g| 0.16 49.36K tok/s 321.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 650/3242 loss 2.9487 |g| 0.15 49.40K tok/s 322.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 660/3242 loss 2.9741 |g| 0.15 49.56K tok/s 323.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 670/3242 loss 2.9805 |g| 0.14 49.28K tok/s 321.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 680/3242 loss 2.9828 |g| 0.15 49.40K tok/s 322.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 690/3242 loss 2.9774 |g| 0.15 49.53K tok/s 322.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 700/3242 loss 2.9697 |g| 0.15 49.45K tok/s 322.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 710/3242 loss 2.9718 |g| 0.14 48.82K tok/s 318.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 720/3242 loss 2.9643 |g| 0.15 48.12K tok/s 313.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 730/3242 loss 2.9882 |g| 0.15 49.59K tok/s 323.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 740/3242 loss 2.9651 |g| 0.16 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 750/3242 loss 2.9930 |g| 0.15 49.65K tok/s 323.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 760/3242 loss 2.9822 |g| 0.15 49.74K tok/s 324.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 770/3242 loss 2.9634 |g| 0.14 49.78K tok/s 324.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 780/3242 loss 2.9631 |g| 0.15 49.64K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-tramo2] paso 790/3242 loss 2.9748 |g| 0.15 49.63K tok/s 323.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+❕ Connection lost!
+The detached App will keep running. You can track its progress on the Dashboard:
+https://modal.com/apps/herclues/main/ap-wJkitvNCHWSrHD5hPUQRde
+
+Stream App logs:
+modal app logs ap-wJkitvNCHWSrHD5hPUQRde
+
+Stop the App:
+modal app stop ap-wJkitvNCHWSrHD5hPUQRde

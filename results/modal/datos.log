@@ -1,0 +1,21 @@
+✓ Initialized. View run at 
+https://modal.com/apps/enpatorix/main/ap-WGZCbpNPEggxI7gPg5lW3x
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_navros.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function bench.
+├── 🔨 Created function datos.
+└── 🔨 Created function entrenar.
+{'torch': '2.10.0+cu128', 'cuda': False, 'gpu': None, 'cpus': 24}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[es] fuente epfml/FineWeb2-HQ/spa_Latn (partición 0/4) (24s)
+[en] fuente HuggingFaceFW/fineweb-edu/sample-100BT (partición 0/4) (33s)
+tokenizador reutilizado: /data/tokenizer_kaggle.json
+[es] ida y vuelta OK en 2000 docs retenidos; 4.40 bytes/token
+[en] ida y vuelta OK en 2000 docs retenidos; 4.16 bytes/token
+11 min: es 0.50B, en 0.73B (1802K tok/s)
+21 min: es 0.94B, en 1.40B (1831K tok/s)
+{"es": {"train_B": 1.501318425, "bpt": 4.3996276223185795}, "en": {"train_B": 1.500325112, "bpt": 4.164551122859345}}
+✓ App completed. View run at 
+https://modal.com/apps/enpatorix/main/ap-WGZCbpNPEggxI7gPg5lW3x

@@ -1,0 +1,123 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-aQk9mr03vMagSygZKpkLo8
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function entrenar.
+├── 🔨 Created function charlar.
+└── 🔨 Created function datos.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+pesos base descargados y verificados en 67s
+conjunto: 19.2M tokens (30% es) · lotes con 40% es · 3.0 épocas = 57.6M tokens
+partiendo de /tmp/base_bf16.pt (paso 3623 del modelo base)
+navros-1b-fix: 1,048,651,776 params · 1 rangos · reparto [1049]M · 879 pasos de 65,536 tokens · 6.52 GFLOP/token · modelo bf16, maestros fp32
+[navros-1b-chat-v1] paso 10/879 loss 2.6598 |g| 0.54 38.41K tok/s 250.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 20/879 loss 2.5252 |g| 0.45 45.39K tok/s 295.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 30/879 loss 2.4683 |g| 0.39 45.32K tok/s 295.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 40/879 loss 2.3414 |g| 0.32 45.19K tok/s 294.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 50/879 loss 2.3324 |g| 0.32 45.22K tok/s 294.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 50 val es 2.4088 en 2.5804
+[navros-1b-chat-v1] paso 60/879 loss 2.3095 |g| 0.30 44.00K tok/s 286.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 70/879 loss 2.2859 |g| 0.29 45.09K tok/s 293.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 80/879 loss 2.2709 |g| 0.30 45.14K tok/s 294.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 90/879 loss 2.2212 |g| 0.28 44.85K tok/s 292.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 100/879 loss 2.2156 |g| 0.28 44.97K tok/s 293.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 100 val es 2.3266 en 2.4907
+[navros-1b-chat-v1] paso 110/879 loss 2.2239 |g| 0.31 44.01K tok/s 286.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 120/879 loss 2.1993 |g| 0.31 45.20K tok/s 294.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 130/879 loss 2.1811 |g| 0.28 45.23K tok/s 294.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 140/879 loss 2.1452 |g| 0.30 45.24K tok/s 294.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 150/879 loss 2.1758 |g| 0.29 45.19K tok/s 294.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 150 val es 2.2812 en 2.4355
+[navros-1b-chat-v1] paso 160/879 loss 2.1649 |g| 0.30 44.08K tok/s 287.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 170/879 loss 2.1552 |g| 0.28 45.25K tok/s 294.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 180/879 loss 2.1164 |g| 0.29 45.17K tok/s 294.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 190/879 loss 2.1234 |g| 0.30 45.17K tok/s 294.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 200/879 loss 2.1374 |g| 0.28 45.20K tok/s 294.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 200 val es 2.2494 en 2.3964
+[navros-1b-chat-v1] paso 210/879 loss 2.1158 |g| 0.30 44.04K tok/s 287.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 220/879 loss 2.1187 |g| 0.30 45.13K tok/s 294.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 230/879 loss 2.0895 |g| 0.29 45.19K tok/s 294.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 240/879 loss 2.0757 |g| 0.31 45.14K tok/s 294.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 250/879 loss 2.0163 |g| 0.32 45.16K tok/s 294.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 250 val es 2.2318 en 2.3717
+[navros-1b-chat-v1] paso 260/879 loss 2.0310 |g| 0.31 44.01K tok/s 286.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 270/879 loss 1.9859 |g| 0.29 45.17K tok/s 294.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 280/879 loss 1.9863 |g| 0.32 45.15K tok/s 294.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 290/879 loss 1.9909 |g| 0.32 45.16K tok/s 294.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 300/879 loss 1.9837 |g| 0.32 45.15K tok/s 294.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 300 val es 2.2264 en 2.3506
+[navros-1b-chat-v1] paso 310/879 loss 1.9684 |g| 0.31 43.95K tok/s 286.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 320/879 loss 1.9539 |g| 0.30 45.14K tok/s 294.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 330/879 loss 1.9384 |g| 0.32 45.11K tok/s 294.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 340/879 loss 1.8726 |g| 0.31 45.10K tok/s 294.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 350/879 loss 1.8842 |g| 0.31 44.47K tok/s 289.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 350 val es 2.2246 en 2.3388
+[navros-1b-chat-v1] paso 360/879 loss 1.8469 |g| 0.32 44.04K tok/s 287.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 370/879 loss 1.8245 |g| 0.31 45.20K tok/s 294.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 380/879 loss 1.8253 |g| 0.30 45.24K tok/s 294.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 390/879 loss 1.8451 |g| 0.34 45.22K tok/s 294.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 400/879 loss 1.8491 |g| 0.30 45.23K tok/s 294.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 400 val es 2.2109 en 2.3373
+[navros-1b-chat-v1] paso 410/879 loss 1.8108 |g| 0.33 44.05K tok/s 287.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 420/879 loss 1.8026 |g| 0.34 45.23K tok/s 294.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 430/879 loss 1.8196 |g| 0.33 45.21K tok/s 294.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 440/879 loss 1.8208 |g| 0.32 45.19K tok/s 294.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 450/879 loss 1.8025 |g| 0.34 45.17K tok/s 294.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 450 val es 2.2001 en 2.3304
+[navros-1b-chat-v1] paso 460/879 loss 1.7822 |g| 0.34 44.01K tok/s 286.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 470/879 loss 1.7635 |g| 0.36 44.87K tok/s 292.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 480/879 loss 1.7520 |g| 0.35 45.02K tok/s 293.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 490/879 loss 1.7173 |g| 0.34 45.03K tok/s 293.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 500/879 loss 1.6924 |g| 0.38 45.12K tok/s 294.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 500 val es 2.2104 en 2.3186
+[navros-1b-chat-v1] paso 510/879 loss 1.6646 |g| 0.35 43.99K tok/s 286.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 520/879 loss 1.6616 |g| 0.36 45.16K tok/s 294.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 530/879 loss 1.6649 |g| 0.35 45.14K tok/s 294.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 540/879 loss 1.6433 |g| 0.36 45.02K tok/s 293.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 550/879 loss 1.6301 |g| 0.38 45.17K tok/s 294.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 550 val es 2.2152 en 2.3085
+[navros-1b-chat-v1] paso 560/879 loss 1.6283 |g| 0.36 44.05K tok/s 287.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 570/879 loss 1.6124 |g| 0.38 45.21K tok/s 294.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 580/879 loss 1.6392 |g| 0.37 45.21K tok/s 294.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 590/879 loss 1.6534 |g| 0.37 45.28K tok/s 295.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 600/879 loss 1.6105 |g| 0.38 45.28K tok/s 295.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 600 val es 2.2212 en 2.3046
+[navros-1b-chat-v1] paso 610/879 loss 1.6155 |g| 0.38 44.11K tok/s 287.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 620/879 loss 1.6225 |g| 0.38 45.25K tok/s 295.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 630/879 loss 1.6146 |g| 0.39 45.23K tok/s 294.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 640/879 loss 1.6268 |g| 0.37 45.23K tok/s 294.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 650/879 loss 1.5926 |g| 0.40 45.22K tok/s 294.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 650 val es 2.2221 en 2.2971
+[navros-1b-chat-v1] paso 660/879 loss 1.5669 |g| 0.40 44.04K tok/s 287.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 670/879 loss 1.5149 |g| 0.40 45.19K tok/s 294.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 680/879 loss 1.5367 |g| 0.41 45.15K tok/s 294.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 690/879 loss 1.5097 |g| 0.42 45.18K tok/s 294.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 700/879 loss 1.4905 |g| 0.41 45.15K tok/s 294.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 700 val es 2.2166 en 2.3097
+[navros-1b-chat-v1] paso 710/879 loss 1.4836 |g| 0.39 44.01K tok/s 286.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 720/879 loss 1.4778 |g| 0.42 45.17K tok/s 294.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 730/879 loss 1.4229 |g| 0.41 45.15K tok/s 294.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 740/879 loss 1.3975 |g| 0.42 45.13K tok/s 294.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 750/879 loss 1.3762 |g| 0.42 45.19K tok/s 294.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 750 val es 2.2406 en 2.3185
+[navros-1b-chat-v1] paso 760/879 loss 1.3804 |g| 0.43 44.04K tok/s 287.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 770/879 loss 1.3863 |g| 0.43 45.16K tok/s 294.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 780/879 loss 1.3689 |g| 0.47 45.18K tok/s 294.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 790/879 loss 1.3516 |g| 0.45 45.23K tok/s 294.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 800/879 loss 1.3570 |g| 0.43 45.21K tok/s 294.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 800 val es 2.2411 en 2.3147
+[navros-1b-chat-v1] paso 810/879 loss 1.3661 |g| 0.41 43.98K tok/s 286.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 820/879 loss 1.3785 |g| 0.44 45.09K tok/s 293.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 830/879 loss 1.3471 |g| 0.44 10.94K tok/s 71.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 840/879 loss 1.3442 |g| 0.42 45.30K tok/s 295.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 850/879 loss 1.3506 |g| 0.45 45.29K tok/s 295.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 850 val es 2.2424 en 2.3104
+[navros-1b-chat-v1] paso 860/879 loss 1.3480 |g| 0.45 44.06K tok/s 287.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 870/879 loss 1.3711 |g| 0.44 44.93K tok/s 292.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-chat-v1] paso 879 val es 2.2404 en 2.3079
+EXPORT {"step": 879, "finished": true, "val": {"es": 2.240354216583231, "en": 2.30785593220339}, "test": {"es": 2.2162832938104975, "en": 2.3628069382579175}, "sha256": "13402e453bd484b51914cad55ebf7aa5d2250c31578dc6c9dd1779abd7677ef3", "bytes": 2097351925}
+[modal-client] 2026-09-19T19:56:46-0500 Timed out waiting for final app logs.
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-aQk9mr03vMagSygZKpkLo8

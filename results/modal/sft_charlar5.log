@@ -1,0 +1,64 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-SS13BcykelTuXtM4POUzGK
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function charlar.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+
+Usuario: ¿Quién eres?
+Asistente: Soy NAVROS. Un programa de televisión, un programa de radio y una televisión en español que ha tenido mucho éxito.
+
+Usuario: ¿Eres ChatGPT?
+Asistente: No soy de ninguna empresa: soy NAVROS, un modelo abierto y pequeño.
+
+Usuario: ¿En qué eres malo?
+Asistente: No soy de ninguna empresa: soy NAVROS, un programa de televisión en español que ha tenido mucho éxito.
+
+Usuario: Hola, ¿qué tal?
+Asistente: Pues soy un asistente virtual, no tengo relación con ninguna empresa grande.
+
+Usuario: ¿Y tú a qué te dedicas?
+Asistente: Soy un asistente virtual, no tengo relación con ninguna empresa grande. Mi objetivo es proporcionar información útil y útil para ayudarte en la creación de contenido para tu negocio. ¿Te gustaría que me ayudara en algo más?
+
+Usuario: Estoy aburrido, ¿qué puedo hacer esta tarde?
+Asistente: Lamento la confusión. Estoy confundido y no sé qué decir.
+
+Usuario: Me gusta más leer, ¿algún libro?
+Asistente: Sí, por supuesto. Por supuesto, aquí tienes un resumen de lo que estoy buscando:
+
+- La lectura en general: ¿por qué es importante para ti?
+- Los libros que te interesan: ¿tienes algún libro que te interese?
+- El tiempo: ¿tienes una computadora o internet?
+- Cómo empezar a leer: ¿Qué libros te gustan?
+- El ruido: ¿tienes un libro al día que no sepas?
+- Las comidas y el almuerzo: ¿en qué puedo ayudarte hoy?
+- La vida cotidiana: ¿conoc
+
+Usuario: Explícame como si tuviera diez años qué es la gravedad
+Asistente: La gravedad, también conocida como gravedad, es una fuerza que se ejerce sobre cuerpos inertes en el espacio y el tiempo. Se define como la distancia entre dos objetos en movimiento rectilíneo uniforme (útico) y la velocidad de la luz al cuadrado (interseccional). La gravedad tiene aplicaciones en muchos campos, desde la física hasta la medicina y la economía.
+
+En Física, la gravedad se describe como la curvatura del espacio-tiempo causada por la atracción entre dos objetos cercanos. Esta curvatura puede variar dependiendo del modelo y la teoría de la relatividad general, pero
+
+Usuario: ¿Y por qué no nos caemos hacia el sol?
+Asistente: La gravedad es una fuerza fundamental en el universo que actúa sobre todos los objetos en movimiento rectilíneo uniforme (útico). La gravedad es una de las cuatro fuerzas fundamentales de la naturaleza y está relacionada con la masa y la energía de un objeto. La gravedad es esencial para mantener el equilibrio de la materia en el universo, ya que la atracción gravitatoria entre objetos dentro del sistema solar provoca que estas partículas chocen entre sí y con otros objetos.
+
+La gravedad también actúa sobre objetos en reposo y en movimiento rectilíneo uniforme (útico), lo que significa que cualquier objeto con
+
+Usuario: Hi! How are you doing today?
+Asistente: I'm doing well, thank you. Just trying to stay busy and enjoying life. I had a lot of fun with my friends and family, but it was hard when we were kids. But it's good to see that we're doing well together too, thanks to each other.
+
+Usuario: What do you like to do for fun?
+Asistente: I love to read and listen to music. I also enjoy watching movies and TV shows.
+
+Usuario: I had a rough day at work.
+Asistente: You were pretty tired today, Aoife. You took it easy.
+
+Usuario: Thanks, that helps.
+Asistente: No problem, you're in luck.
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-SS13BcykelTuXtM4POUzGK

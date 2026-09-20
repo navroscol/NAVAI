@@ -1,0 +1,55 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-vTenvewekmupv0VrodEtfO
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function charlar.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+
+Usuario: Hola, ¿qué tal?
+Asistente: Hello! How can I help you?
+
+Usuario: ¿Y tú a qué te dedicas?
+Asistente: Me enfoco en mis objetivos diarios, pero quiero que sepas que estoy sufriendo de insomnio y que mi objetivo es encontrar una solución es darte una solución. Espero haberte ayudado con tu información y experiencia. Si necesitas alguna otra cosa, no dudes en preguntarme.
+
+Usuario: Estoy aburrido, ¿qué puedo hacer esta tarde?
+Asistente: Hola! Es un placer poder acercarte a mi coche. Es un viaje emocionante, pero también tiene sus ventajas y desventajas. Me encanta tu atuendo, la moda de los años 80 y por qué lo hacen. Aquí hay algunos consejos que podrían ayudarte a elegir el look adecuado para tu día:
+
+1. Deportes: Los deportes como el ciclismo o el hockey sobre hielo son opciones populares, y puedes encontrar el calzado perfecto para tu pareja. Puedes probar con otros deportes como el ciclismo, el snowboarding o el patinaje sobre hielo.
+
+Usuario: Me gusta más leer, ¿algún libro?
+Asistente: Sí, aquí hay algunos consejos que podrían ayudarte a elegir el mejor vestido para tu día:
+
+1. Evita las artesanías: No te preocupes si no tienes todos los detalles en mente. La ropa ligera y el maquillaje pueden ser una buena opción, así que considera buscar opciones más saludables en línea.
+
+2. Busca ropa cómoda: Si prefieres un estilo casual, una prenda cómoda y un par de zapatos cómodos pueden ayudarte a elegir el que más te guste.
+
+3. Considera la planificación: Hay muchos aspectos en común entre tú y el personaje
+
+Usuario: Explícame como si tuviera diez años qué es la gravedad
+Asistente: La gravedad es una fuerza que se propaga a través del espacio y del tiempo. Está relacionada con el movimiento de los planetas, las estrellas y los satélites. Es una fuerza que actúa sobre un objeto en movimiento alrededor del Sol, impulsado por la fuerza gravitatoria de sus planetas.
+
+En otras palabras, la gravedad es la fuerza que mantiene unidos dos objetos en equilibrio. Por lo tanto, la gravedad es un fenómeno muy interesante que ha sido estudiado y debatido durante miles de millones de años.
+
+Usuario: ¿Y por qué no nos caemos hacia el sol?
+Asistente: Porque nuestra comprensión del universo se basa en la teoría de la relatividad general de Einstein. Según esta teoría, nuestro mundo podría estar parado sobre un eje (o cualquier otro plano) de manera que cualquier objeto en el universo pudiera verse atraído hacia él. Esto significa que la gravedad es un proceso fundamental en el universo, donde no hay gravedad o materia que sea arrastrada hacia el interior de nuestro propio universo.
+
+Por lo tanto, la gravedad no tiene influencia sobre nuestro planeta. Pero es importante tener en cuenta que la gravedad no está vinculada directamente con nuestro universo físico. En este caso,
+
+Usuario: Hi! How are you doing today?
+Asistente: I'm doing well, thank you. How about you?
+
+Usuario: What do you like to do for fun?
+Asistente: I like to read and listen to music.
+
+Usuario: I had a rough day at work.
+Asistente: Yeah, I got a little tired from my job.
+
+Usuario: Thanks, that helps.
+Asistente: Yeah, I know what you mean. But sometimes people need to be heard for themselves. They might not realize how upset their situation is.
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-vTenvewekmupv0VrodEtfO

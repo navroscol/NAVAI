@@ -1,0 +1,116 @@
+{
+ "meta": {
+  "step": 2357,
+  "preset": "navros-1b-fix",
+  "tag": "navros-1b-fix-v1",
+  "vocab": 32768,
+  "cache_check": {
+   "max_abs_diff": 9.059906005859375e-05,
+   "max_abs_logit": 17.390666961669922
+  },
+  "device": "cuda",
+  "dtype": "fp32",
+  "seconds": 38.33052468299866
+ },
+ "rows": [
+  {
+   "lang": "es",
+   "prompt": "La receta tradicional de la paella valenciana lleva",
+   "greedy": " el nombre de la mujer de la ciudad de Puebla, en la provincia de Puebla.\nLa paella valenciana es una de las más antiguas de la ciudad, en la que se encuentran las esculturas de la época de la colonia.\nLa paella valenciana es una de las más antiguas de la ciudad, en la que se encuentran las esculturas de la época de la colonia.\nLa paella valenciana es una de las más antiguas de la ciudad, en la que se encuentran las esculturas de la época de la colonia.\nLa pa",
+   "samples": [
+    " la paella valenciana en el caso del plato en el que se sirve, se sirve caliente o en la sartén que es la paella valenciana.\nEl maquis la cortan a rodajas.\nSe sirve caliente o caliente para la cebolla.\nSe sirve caliente en una sartén con aceite.",
+    " el nombre de la fortaleza de Plymouth, situada en la esquina sur de la isla, cerca de la actual Tierra de Estados Unidos. La historia del Plymouth se remonta a 1552, cuando el capitán Gregson descubrió que el Plymouth era el \"basque salvaje del Magdalena\" que es la superficie del mar de la costa de Nueva Inglaterra.\nLos ingleses vivían en un lugar a menudo conocido como la Coca Cola. Era un lugar rico y la historia de los Plymouth. A diferencia de la mayoría de la ciudad, los romanos"
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "El sistema solar está formado por",
+   "greedy": " dos sistemas solares: el de la Tierra y el de la Tierra.\nEl sistema solar está formado por dos sistemas solares: el de la Tierra y el de la Tierra.\nEl sistema solar está formado por dos sistemas solares: el de la Tierra y el de la Tierra.\nEl sistema solar está formado por dos sistemas solares: el de la Tierra y el de la Tierra.\nEl sistema solar está formado por dos sistemas solares: el de la Tierra y el de la Tierra.\nEl sistema solar está formado por dos sistemas solares: el de la Tierra y el de la Tierra.\n",
+   "samples": [
+    " dos partes: la Tierra y Marte.\nLa Tierra está formada por 6 partes: el sol, el sol, la tierra y el sol.\nLa tierra está compuesta por 6 partes: Júpiter y Marte.\nLa corteza terrestre se encuentra conformada por 4 partes:\nEl núcleo de la Tierra es una esfera de cuerpo alargado, de 37 metros de diámetro. La masa total de la Tierra está compuesta de una masa de 2.6 veces la masa de la Tierra, de unos 2.000 millones de kilómetros cuadrados. La superficie de la Tierra",
+    " tres formas básicas: el Sol, el Sol y el sistema solar.\nEn nuestro planeta, está formado por 460 millones de kilómetros cuadrados y es como el planeta de la Tierra. La tasa de natalidad de nuestro planeta es de 377.000 años luz y está formado por 2.000 millones de estrellas.\nEl Sol está formado por un 45% de agua, y la temperatura media de la tierra en el ecuador es de 165 ºC.\nLas primeras fases del Sol se ubican a las 2"
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "Había una vez, en un pequeño pueblo de montaña,",
+   "greedy": " un pequeño pueblo de montaña, que se llamaba Kako, que era el nombre de una ciudad de montaña.\nEl pueblo era muy rico y rico, y el pueblo era muy rico y rico.\nEl pueblo era muy rico y rico, y el pueblo era muy rico y rico.\nEl pueblo era muy rico y rico, y el pueblo era muy rico y rico.\nEl pueblo era muy rico y rico, y el pueblo era muy rico y rico.\nEl pueblo era muy rico y rico, y el pueblo era muy rico y rico.\nEl pueblo era muy rico y",
+   "samples": [
+    " una rata en su camino. En esa época de oscuridad, no podía creer que la luna se acercase a él. La isla había caído en una gran oscuridad. La luna estaba siempre brillando, y entonces su cuerpo se rompió en el abismo, y un momento después apareció un hombre.\nSorprendido, el hombre lo miró y dijo: «Siéntate, hazlo. Siéntate, y no lo hagas, y hazlo. Siéntate, y escucha».\nEl hombre pareció no haber visto el eco de la luna, pero él no tenía la",
+    " algunos hombres de Dios, a quienes habían estado fuera de la tierra de los hombres, que eran de ellos.\nUn día llegaron a la casa de los padres, y les dijeron: «Si deseas, no te quepa la cama».\nEl padre respondió: «Si a tu madre le parece que te gustaría un hijo, será bueno que te dé una cama».\nEntonces el padre les dijo: «Si no quieres, entonces ¡me voy!».\nEntonces el padre les dijo: «Pásalo a tu madre y sé que te quiero. Lo que tú quieras es una cama."
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "Para aprender a programar en Python, lo primero que",
+   "greedy": " tienes que hacer es aprender a programar en Python.\nPara aprender a programar en Python, necesitas aprender a programar en Python.\nPara aprender a programar en Python, necesitas aprender a programar en Python.\nPara aprender a programar en Python, necesitas aprender a programar en Python.\nPara aprender a programar en Python, necesitas aprender a programar en Python.\nPara aprender a programar en Python, necesitas aprender a programar en Python.\nPara aprender a programar en Python, necesitas aprender a programar en Python.\nPara aprender a programar en",
+   "samples": [
+    " tenemos que aprender es que estamos disponibles dos tipos de programas.\nEjemplo:\nLas dos versiones de Python se explican a continuación:\nSe ha definido un objeto para usar para el objeto.\nEjemplo:\n¿En qué se diferencian los tipos de programas?\nSe aplica un modelo para un objeto o para el objeto. El modelo es el objeto elegido por un objeto para usarlo.\nUn objeto es un objeto que contiene un conjunto de características que se pueden utilizar para realizar una tarea, un programa.\nEl objeto es definido por el objeto.\nEn este punto no hay un objeto",
+    " debe hacer es aprender a escribir en Java. Un programa que no tiene que ser diseñado para ser programado por un microprocesador de Windows.\nPor favor, comience su aplicación y seleccione el número correcto en la lista de tareas.\nPara aprender a programar en Python es necesario que el programador escriba la mayoría de los programas de programación.\nEn este tutorial, le enseñaremos a programar en Python.\n¿Cómo hacer que mi aplicación no tenga que programar en Python?\nPrimero, debe elegir la imagen de su aplicación. Por lo tanto, deberá hacer una lista de"
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "La Revolución Francesa comenzó en",
+   "greedy": " 1779, cuando el rey Luis XVI, en un intento de tomar posesión de la corona, se dirigió a la corte de Luis XVI. El rey, que había sido el único rey de Francia, se dirigió a la corte de Luis XVI, en un intento de tomar posesión de la corona.\nLa Revolución Francesa fue un proceso de cambio de nombre, que se extendió a todo el mundo. La Revolución Francesa fue un proceso de cambio de nombre, que se extendió a todo el mundo.\nLa Revolución Francesa fue un proceso de cambio de nombre, que se extendió a todo el mundo",
+   "samples": [
+    " el año 1781, y no pudo ser similar a la que sufría 178 países, cuyas tropas debían unirse a la lucha armada con el propósito de reconquistar las provincias de la antigua República.\nLa Revolución Francesa duró la primera mitad de la vida del hombre, lo cual le permitió adquirir gran importancia con el paso del tiempo, ya que fue un período de ideas políticas que no comenzó a poner en duda.\nEl nuevo Estado fue dividido en cuatro grupos y uno de ellos fue encabezado por Leclerc, luego creada, y otro de los cuales era",
+    " 1793 y terminó en 1916. La isla tenía por lo menos 35,000 habitantes en 1916, y durante 13 años la isla era un distrito ocupado a menudo por los soldados de la Revolución.\nEn 1872, el gobierno la invadió y el gobierno creó un fondo de financiación para los gastos de la guerra de los cinco estados que era un episodio fundamental de la era moderna de la revolución francesa. Las exportaciones provenientes del comercio y los impuestos sobre la industria, la producción de acero y productos de"
+   ]
+  },
+  {
+   "lang": "es",
+   "prompt": "Pregunta: ¿Cuál es la capital de Colombia?\nRespuesta:",
+   "greedy": "\nLa capital de Colombia es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es la capital de Colombia. Es",
+   "samples": [
+    "\nLa capital de Colombia tiene una gran importancia económica, ya que es la del país con más producción de petróleo y gas natural, además de tener un importante potencial para la producción nacional. Además es una ciudad importante para el desarrollo económico, el desarrollo del turismo y la industria de la aviación. También es la sede de los colegios de interés general, asociaciones de teatro y el gobierno, y un consorcio de asociaciones de teatro y la sociedad civil.\nLa capital de Colombia tiene una gran importancia en Colombia, ya que tiene una gran importancia en el desarrollo económico y económico en Colombia. La capital",
+    " ¿Cuáles son las acciones del Estado colombiano y la importancia que la soberanía porteña ha tenido en las últimas décadas y en Colombia?\nRespuesta: La gente se preocupa de que haya una gran diferencia con su clase media en Colombia. El resto de los países que están vinculados al Gobierno de Colombia son Nicaragua, El Salvador, Nicaragua, El Salvador, Ecuador, Honduras y Nicaragua. La diferencia en materia de soberanía radica en que no es una cosa muy simple, sino que es una parte del proyecto de integración de América Latina y el Caribe.\nPregunta: ¿Cómo se establece la separación de la soberanía"
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "The theory of evolution by natural selection",
+   "greedy": " is a theory of evolution. It is a theory of evolution that is based on the theory of evolution. The theory of evolution is based on the theory of evolution. The theory of evolution is based on the theory of evolution. The theory of evolution is based on the theory of evolution. The theory of evolution is based on the theory of evolution. The theory of evolution is based on the theory of evolution. The theory of evolution is based on the theory of evolution. The theory of evolution is based on the theory of evolution. The theory of evolution is based on the theory of evolution. The theory of",
+   "samples": [
+    " and evolutionary theory is consistent with the view that natural selection has some influence on the environment. While there are several studies to show the existence of this theory, it is important to examine the purpose of the theory. The main concern is the theory of evolution. The theory theory is the theory of evolution and its relation to the natural world. The theory is a fundamental science of evolution. The theory is a fascinating subject. It is a vital science of evolution.\nThe theory of evolution is a fundamental science of natural selection. It is the theory of evolution, which consists of a theoretical theory of natural selection",
+    " is a fundamental assumption of physics. By studying the effects of natural selection on the natural world, natural selection creates an ideal system to study the effects of natural selection. This is accomplished by building the theories of the natural world, such as the laws of thermodynamics, and by building the theory of natural selection.\nThis is accomplished by studying the effects of natural selection on the natural world. By studying the effects of natural selection on the natural world, natural selection can be employed to study the effects of natural selection on the natural world. However, this is not the case for natural selection as we"
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "Once upon a time, in a small village,",
+   "greedy": " the people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand. The people of the village were very much in demand",
+   "samples": [
+    " the rammed men of the rich and noble families—speared and mocked—had been excited to ask for an answer to the riddle of the terrible and fierce tragedies of England, and and in particular all the land, because they “had come to their feet to hear the destruction of England” (Mignon).\nThe English knew nothing of the terror and killing of England, and in a few moments it was sent back to England. As a result, one of the most ancient and entertaining works of literature, the Spelling of England is the most famous",
+    " the Lord blessed the Lord in charity and a treasure of gold and silver. For years, Lord Shiva gave his name to the Lord, and in a day, when a strong and caring young man, the Lord, came to Him, and the Lord made the precious sheep and gave it to all the Lord. The Lord said, “Do not enter the temple and hope for the Lord; for if he was already old enough, he will walk upon it to God.” And it was on the day that Shiva gave the sons of his wife and the children of his father in order to"
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "To make a good cup of coffee, you",
+   "greedy": " can use a cup of coffee to make a cup of coffee.\nThe cup of coffee is a cup of coffee that is placed in the cup of coffee.\nThe cup of coffee is placed in the cup of coffee.\nThe cup of coffee is placed in the cup of coffee.\nThe cup of coffee is placed in the cup of coffee.\nThe cup of coffee is placed in the cup of coffee.\nThe cup of coffee is placed in the cup of coffee.\nThe cup of coffee is placed in the cup of coffee.\nThe cup of coffee is placed in the cup",
+   "samples": [
+    "’ll have to practice the cup before you drink your cup. In fact, you’ll need to drink at least 2 cups of coffee per week. The cup will help you in your daily routine, giving you the chance to go out before you go out.\nSo, what is coffee?\nThe cup of coffee is a mixture of water and coffee that can be mixed. The amount of coffee you are drinking is dependent on the amount of coffee consumed. For example, you could take 2 cups of water per hour and then take 1 cup of coffee. After you drink the",
+    "’ve probably had a romantic love affair with a Pinch of Women. But did you know that you should eat and drink more coffee?\n“A good cup of coffee” means that you have to remember to drink from coffee.\nThat doesn’t mean you need to drink coffee, but rather you need to say to yourself, “How much coffee will I take?”\nBest way to remember what you need to include in your diet is to ask yourself “What is the maximum amount of coffee you need to give you?”\nTo have a cup of coffee you need to"
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "The main causes of World War I were",
+   "greedy": " the war, the war, and the war. The war was a war of war, and the war was a war of war. The war was a war of war, and the war was a war of war. The war was a war of war, and the war was a war of war. The war was a war of war, and the war was a war of war. The war was a war of war, and the war was a war of war. The war was a war of war, and the war was a war of war. The war was a war of war,",
+   "samples": [
+    " the collapse of the USSR, 1911-1915. The USSR had launched an invasion of the North Atlantic in 1915, which resulted in the collapse of the USSR in the UNSW. The USSR became known for their success in the field of defense, preventing a total war on Russia. The United States had to cease its operation before it could no longer be to be prevented from causing a conflict.\nThe USSR was also active in defense and in the field of defense. The USSR was involved in an invasion of the",
+    " a historical problem. The First World War, this time in Europe, the Second World War, and also the Second World War, the First World War, which included the loss of four Allied ships as part of the First World War, the Second World War, and the Second World War. It was a huge problem to solve. The First World War was a time of great problems.\nThe First World War was a time of great interest and specialism. The First World War was a time of great social and political difficulties, but the Second World War also marked the end of war. The Second"
+   ]
+  },
+  {
+   "lang": "en",
+   "prompt": "Question: What is the capital of France?\nAnswer:",
+   "greedy": " The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France. The capital of France is the capital of France.",
+   "samples": [
+    " Answer: Answer: The current capital of the country is 625.000 km2 (roughly 20% of the total land area). Answer: Answer: The current capital of the country is 277.600 km2 (roughly 27% of the total land area). Answer: Answer: The current capital of the country is 425.000 km2 (roughly 27% of the total land area). Answer: Ans",
+    " The English call it \"Royal Trade\"\nWhat is the general term for the province of France?\nAnswer: The southern province of France is the largest in the land of a quarter of the land. The region is one of the few states that have a monopoly on commerce.\nQuestion: What is the name of the country?\nAnswer: The capital of France is the smallest of the two countries in the world. It is about 20,000 square kilometers. The capital is located in the neighbouring provinces of France.\nQuestion"
+   ]
+  }
+ ]
+}

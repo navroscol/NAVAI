@@ -1,0 +1,172 @@
+✓ Initialized. View run at 
+https://modal.com/apps/enpatorix/main/ap-9j6KwQXpfzhdCIHTBpux2M
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_navros.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function bench.
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function estudio_lm.
+{'torch': '2.10.0+cu128', 'cuda': True, 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 24}
+rec-s: 42,082,816 params · 1 rangos · reparto [42]M · 152 pasos de 65,536 tokens · 0.43 GFLOP/token · modelo bf16, maestros fp32
+[rec-s_lr0.01_barrido] paso 50/152 loss 13.6935 |g| 0.63 220.70K tok/s 93.8 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.01_barrido] paso 100/152 loss 8.0642 |g| 0.19 235.03K tok/s 99.9 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.01_barrido] paso 150/152 loss 7.0027 |g| 0.14 267.82K tok/s 113.8 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.01_barrido] paso 152 val es 6.8036 en 6.8734
+[cuda:0] rec-s_lr0.01_barrido: test es 6.7874 en 6.9655  (46s)
+rec-s: 42,082,816 params · 1 rangos · reparto [42]M · 152 pasos de 65,536 tokens · 0.43 GFLOP/token · modelo bf16, maestros fp32
+[rec-s_lr0.02_barrido] paso 50/152 loss 12.2129 |g| 0.24 255.12K tok/s 108.4 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_barrido] paso 100/152 loss 7.2444 |g| 0.23 241.93K tok/s 102.8 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_barrido] paso 150/152 loss 6.3793 |g| 0.14 265.08K tok/s 112.7 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_barrido] paso 152 val es 6.1966 en 6.3379
+[cuda:0] rec-s_lr0.02_barrido: test es 6.1712 en 6.4264  (42s)
+fix20-s: 80,040,448 params · 1 rangos · reparto [80]M · 152 pasos de 65,536 tokens · 0.54 GFLOP/token · modelo bf16, maestros fp32
+[fix20-s_lr0.01_barrido] paso 50/152 loss 14.8930 |g| 0.38 181.79K tok/s 98.7 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.01_barrido] paso 100/152 loss 8.1063 |g| 0.09 183.87K tok/s 99.8 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.01_barrido] paso 150/152 loss 7.0411 |g| 0.10 183.68K tok/s 99.7 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.01_barrido] paso 152 val es 6.8316 en 6.9004
+[cuda:0] fix20-s_lr0.01_barrido: test es 6.8210 en 6.9872  (56s)
+fix20-s: 80,040,448 params · 1 rangos · reparto [80]M · 152 pasos de 65,536 tokens · 0.54 GFLOP/token · modelo bf16, maestros fp32
+[fix20-s_lr0.02_barrido] paso 50/152 loss 13.0761 |g| 0.13 179.68K tok/s 97.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_barrido] paso 100/152 loss 7.3152 |g| 0.15 180.39K tok/s 98.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_barrido] paso 150/152 loss 6.4163 |g| 0.09 182.10K tok/s 98.9 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_barrido] paso 152 val es 6.2103 en 6.3456
+[cuda:0] fix20-s_lr0.02_barrido: test es 6.1853 en 6.4382  (56s)
+fix8-s: 42,082,816 params · 1 rangos · reparto [42]M · 152 pasos de 65,536 tokens · 0.28 GFLOP/token · modelo bf16, maestros fp32
+[fix8-s_lr0.01_barrido] paso 50/152 loss 16.0079 |g| 0.62 366.52K tok/s 101.7 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.01_barrido] paso 100/152 loss 8.3797 |g| 0.12 366.76K tok/s 101.8 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.01_barrido] paso 150/152 loss 7.1995 |g| 0.11 366.01K tok/s 101.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.01_barrido] paso 152 val es 6.9952 en 7.0418
+[cuda:0] fix8-s_lr0.01_barrido: test es 6.9884 en 7.1314  (28s)
+fix8-s: 42,082,816 params · 1 rangos · reparto [42]M · 152 pasos de 65,536 tokens · 0.28 GFLOP/token · modelo bf16, maestros fp32
+[fix8-s_lr0.02_barrido] paso 50/152 loss 13.9654 |g| 0.21 365.64K tok/s 101.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_barrido] paso 100/152 loss 7.4651 |g| 0.13 368.43K tok/s 102.3 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_barrido] paso 150/152 loss 6.5447 |g| 0.11 368.89K tok/s 102.4 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_barrido] paso 152 val es 6.3554 en 6.4769
+[cuda:0] fix8-s_lr0.02_barrido: test es 6.3299 en 6.5747  (28s)
+rec-s: 42,082,816 params · 1 rangos · reparto [42]M · 1525 pasos de 65,536 tokens · 0.43 GFLOP/token · modelo bf16, maestros fp32
+[rec-s_lr0.02_completo] paso 50/1525 loss 15.3545 |g| 0.98 241.17K tok/s 102.5 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 100/1525 loss 8.8811 |g| 0.19 242.53K tok/s 103.1 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 150/1525 loss 7.2880 |g| 0.22 264.73K tok/s 112.5 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 200/1525 loss 6.4180 |g| 0.22 253.96K tok/s 107.9 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 250/1525 loss 5.9371 |g| 0.18 252.49K tok/s 107.3 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 300/1525 loss 5.6656 |g| 0.20 256.62K tok/s 109.1 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 350/1525 loss 5.4557 |g| 0.19 248.07K tok/s 105.4 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 400/1525 loss 5.3196 |g| 0.20 255.62K tok/s 108.7 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 450/1525 loss 5.1944 |g| 0.21 249.60K tok/s 106.1 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 500/1525 loss 5.0897 |g| 0.23 252.64K tok/s 107.4 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 500 val es 4.9712 en 5.2977
+[rec-s_lr0.02_completo] paso 550/1525 loss 4.9885 |g| 0.22 260.36K tok/s 110.7 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 600/1525 loss 4.9042 |g| 0.22 253.84K tok/s 107.9 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 650/1525 loss 4.8134 |g| 0.26 254.89K tok/s 108.3 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 700/1525 loss 4.7349 |g| 0.31 260.62K tok/s 110.8 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 750/1525 loss 4.6840 |g| 0.24 260.92K tok/s 110.9 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 800/1525 loss 4.6312 |g| 0.27 268.11K tok/s 114.0 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 850/1525 loss 4.5748 |g| 0.30 255.83K tok/s 108.7 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 900/1525 loss 4.5442 |g| 0.30 252.21K tok/s 107.2 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 950/1525 loss 4.4958 |g| 0.27 258.06K tok/s 109.7 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1000/1525 loss 4.4630 |g| 0.32 248.58K tok/s 105.7 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1000 val es 4.3517 en 4.7506
+[rec-s_lr0.02_completo] paso 1050/1525 loss 4.4195 |g| 0.26 257.69K tok/s 109.5 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1100/1525 loss 4.4075 |g| 0.32 254.65K tok/s 108.2 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1150/1525 loss 4.3629 |g| 0.32 259.51K tok/s 110.3 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1200/1525 loss 4.3452 |g| 0.35 253.74K tok/s 107.9 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1250/1525 loss 4.3114 |g| 0.32 267.97K tok/s 113.9 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1300/1525 loss 4.2945 |g| 0.27 262.77K tok/s 111.7 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1350/1525 loss 4.2466 |g| 0.22 256.67K tok/s 109.1 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1400/1525 loss 4.1941 |g| 0.23 271.21K tok/s 115.3 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1450/1525 loss 4.1664 |g| 0.22 252.67K tok/s 107.4 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1500/1525 loss 4.1431 |g| 0.18 259.26K tok/s 110.2 TFLOP/s escala None saltados 0 mem 25.5 GB
+[rec-s_lr0.02_completo] paso 1500 val es 4.0240 en 4.4486
+[rec-s_lr0.02_completo] paso 1525 val es 4.0193 en 4.4448
+[cuda:0] rec-s_lr0.02_completo: test es 4.1230 en 4.3134  (396s)
+fix20-s: 80,040,448 params · 1 rangos · reparto [80]M · 1525 pasos de 65,536 tokens · 0.54 GFLOP/token · modelo bf16, maestros fp32
+[fix20-s_lr0.02_completo] paso 50/1525 loss 17.0557 |g| 1.66 180.12K tok/s 97.8 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 100/1525 loss 8.8825 |g| 0.13 181.82K tok/s 98.7 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 150/1525 loss 7.3236 |g| 0.14 174.17K tok/s 94.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 200/1525 loss 6.4163 |g| 0.14 178.69K tok/s 97.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 250/1525 loss 5.9014 |g| 0.12 179.40K tok/s 97.4 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 300/1525 loss 5.6055 |g| 0.12 182.62K tok/s 99.2 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 350/1525 loss 5.3769 |g| 0.14 181.27K tok/s 98.4 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 400/1525 loss 5.2298 |g| 0.14 182.97K tok/s 99.4 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 450/1525 loss 5.0970 |g| 0.16 182.19K tok/s 98.9 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 500/1525 loss 4.9847 |g| 0.19 180.97K tok/s 98.3 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 500 val es 4.8494 en 5.1908
+[fix20-s_lr0.02_completo] paso 550/1525 loss 4.8721 |g| 0.17 178.64K tok/s 97.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 600/1525 loss 4.7797 |g| 0.17 179.70K tok/s 97.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 650/1525 loss 4.6881 |g| 0.19 179.92K tok/s 97.7 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 700/1525 loss 4.6107 |g| 0.20 180.23K tok/s 97.9 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 750/1525 loss 4.5622 |g| 0.22 179.42K tok/s 97.4 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 800/1525 loss 4.5104 |g| 0.21 181.45K tok/s 98.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 850/1525 loss 4.4547 |g| 0.23 179.89K tok/s 97.7 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 900/1525 loss 4.4257 |g| 0.21 179.00K tok/s 97.2 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 950/1525 loss 4.3784 |g| 0.22 180.62K tok/s 98.1 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1000/1525 loss 4.3486 |g| 0.21 180.18K tok/s 97.8 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1000 val es 4.2215 en 4.6431
+[fix20-s_lr0.02_completo] paso 1050/1525 loss 4.3026 |g| 0.26 180.48K tok/s 98.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1100/1525 loss 4.2943 |g| 0.24 181.43K tok/s 98.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1150/1525 loss 4.2482 |g| 0.24 180.87K tok/s 98.2 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1200/1525 loss 4.2321 |g| 0.23 182.03K tok/s 98.8 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1250/1525 loss 4.1997 |g| 0.20 173.68K tok/s 94.3 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1300/1525 loss 4.1813 |g| 0.19 174.08K tok/s 94.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1350/1525 loss 4.1341 |g| 0.17 182.16K tok/s 98.9 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1400/1525 loss 4.0794 |g| 0.14 180.65K tok/s 98.1 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1450/1525 loss 4.0521 |g| 0.15 181.16K tok/s 98.4 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1500/1525 loss 4.0297 |g| 0.12 183.34K tok/s 99.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix20-s_lr0.02_completo] paso 1500 val es 3.9038 en 4.3386
+[fix20-s_lr0.02_completo] paso 1525 val es 3.8982 en 4.3348
+[cuda:0] fix20-s_lr0.02_completo: test es 4.0193 en 4.1991  (557s)
+fix8-s: 42,082,816 params · 1 rangos · reparto [42]M · 1525 pasos de 65,536 tokens · 0.28 GFLOP/token · modelo bf16, maestros fp32
+[fix8-s_lr0.02_completo] paso 50/1525 loss 18.1447 |g| 1.75 360.08K tok/s 100.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 100/1525 loss 9.5920 |g| 0.17 365.66K tok/s 101.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 150/1525 loss 7.5143 |g| 0.19 365.98K tok/s 101.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 200/1525 loss 6.5708 |g| 0.17 363.86K tok/s 101.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 250/1525 loss 6.0314 |g| 0.15 362.36K tok/s 100.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 300/1525 loss 5.7413 |g| 0.15 358.46K tok/s 99.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 350/1525 loss 5.5182 |g| 0.15 347.47K tok/s 96.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 400/1525 loss 5.3755 |g| 0.16 360.20K tok/s 100.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 450/1525 loss 5.2459 |g| 0.17 365.46K tok/s 101.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 500/1525 loss 5.1399 |g| 0.20 361.35K tok/s 100.3 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 500 val es 5.0183 en 5.3391
+[fix8-s_lr0.02_completo] paso 550/1525 loss 5.0422 |g| 0.17 356.66K tok/s 99.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 600/1525 loss 4.9568 |g| 0.20 360.72K tok/s 100.1 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 650/1525 loss 4.8619 |g| 0.19 351.24K tok/s 97.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 700/1525 loss 4.7727 |g| 0.26 352.23K tok/s 97.8 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 750/1525 loss 4.7140 |g| 0.21 354.66K tok/s 98.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 800/1525 loss 4.6545 |g| 0.23 361.17K tok/s 100.3 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 850/1525 loss 4.5941 |g| 0.24 361.32K tok/s 100.3 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 900/1525 loss 4.5595 |g| 0.25 361.03K tok/s 100.2 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 950/1525 loss 4.5068 |g| 0.22 361.81K tok/s 100.4 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1000/1525 loss 4.4729 |g| 0.24 360.75K tok/s 100.1 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1000 val es 4.3607 en 4.7642
+[fix8-s_lr0.02_completo] paso 1050/1525 loss 4.4246 |g| 0.26 356.44K tok/s 99.0 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1100/1525 loss 4.4130 |g| 0.24 362.40K tok/s 100.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1150/1525 loss 4.3653 |g| 0.27 361.97K tok/s 100.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1200/1525 loss 4.3462 |g| 0.25 361.44K tok/s 100.3 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1250/1525 loss 4.3120 |g| 0.24 360.53K tok/s 100.1 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1300/1525 loss 4.2950 |g| 0.18 362.12K tok/s 100.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1350/1525 loss 4.2485 |g| 0.20 362.50K tok/s 100.6 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1400/1525 loss 4.1956 |g| 0.17 361.08K tok/s 100.2 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1450/1525 loss 4.1704 |g| 0.17 362.18K tok/s 100.5 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1500/1525 loss 4.1499 |g| 0.15 360.65K tok/s 100.1 TFLOP/s escala None saltados 0 mem 32.2 GB
+[fix8-s_lr0.02_completo] paso 1500 val es 4.0310 en 4.4544
+[fix8-s_lr0.02_completo] paso 1525 val es 4.0257 en 4.4508
+[cuda:0] fix8-s_lr0.02_completo: test es 4.1342 en 4.3236  (279s)
+## LM pequeño: recurrente contra pilas fijas (pérdida de prueba, nats/token)
+
+| modelo | params | GFLOP/token entreno | LR Muon | test es | test en | tok/s |
+|---|---|---|---|---|---|---|
+| rec-s | 42,082,816 | 0.43 | 0.02 | 4.1230 | 4.3134 | 255.7K |
+| fix20-s | 80,040,448 | 0.54 | 0.02 | 4.0193 | 4.1991 | 180.5K |
+| fix8-s | 42,082,816 | 0.28 | 0.02 | 4.1342 | 4.3236 | 361.1K |
+
+Pérdida de validación del recurrente según r (r̄ de entrenamiento = 4):
+
+| idioma | r=1 | r=2 | r=3 | r=4 | r=6 | r=8 | r=12 | r=16 | adaptativo |
+|---|---|---|---|---|---|---|---|---|---|
+| es | 4.0263 | 4.0199 | 4.0195 | 4.0195 | 4.0196 | 4.0196 | 4.0196 | 4.0196 | 4.0195 (r̄=3.3) |
+| en | 4.4552 | 4.4457 | 4.4449 | 4.4448 | 4.4447 | 4.4447 | 4.4447 | 4.4447 | 4.4447 (r̄=3.3) |
+
+✓ App completed. View run at 
+https://modal.com/apps/enpatorix/main/ap-9j6KwQXpfzhdCIHTBpux2M

@@ -1,0 +1,35 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-QsuP3lz4ku74561w0HIw4m
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+├── 🔨 Created function charlar.
+└── 🔨 Created function entrenar.
+{'torch': '2.10.0+cu128', 'gpu': None, 'cpus': 20}
+  identidad propia (es+en): es 360 convs / 0.0M tokens, en 190 convs / 0.0M tokens
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1AGenerating train split:   0%|          | 0/128575 [00:00<?, ? examples/s]
+[1AGenerating train split:  20%|██        | 26000/128575 [00:00<00:00, 251213.78 examples/s]
+[1AGenerating train split:  45%|████▌     | 58000/128575 [00:00<00:00, 285293.94 examples/s]
+[1AGenerating train split:  70%|██████▉   | 90000/128575 [00:00<00:00, 296988.22 examples/s]
+[1AGenerating train split:  96%|█████████▌| 123000/128575 [00:00<00:00, 306515.88 examples/s]
+[1AGenerating train split: 100%|██████████| 128575/128575 [00:00<00:00, 297759.66 examples/s]
+
+[1AGenerating validation split:   0%|          | 0/6599 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 6599/6599 [00:00<00:00, 221670.42 examples/s]
+  oasst2 (humano, es+en): es 3481 convs / 1.1M tokens, en 4442 convs / 1.9M tokens
+  aya humano (es): es 3692 convs / 0.4M tokens, en 0 convs / 0.0M tokens
+  aya humano (en): es 0 convs / 0.0M tokens, en 3890 convs / 0.6M tokens
+  wildchat real (es): es 10350 convs / 4.7M tokens, en 0 convs / 0.0M tokens
+  wildchat real (en): es 0 convs / 0.0M tokens, en 4139 convs / 2.1M tokens
+  soda cotidiano (en): es 0 convs / 0.0M tokens, en 18000 convs / 3.6M tokens
+  alpaca-es (es): es 15000 convs / 1.5M tokens, en 0 convs / 0.0M tokens
+  ⚠ roleplay realm (en): ImportError: To support decoding images, please install 'Pillow'.
+  roleplay realm (en): es 0 convs / 0.0M tokens, en 0 convs / 0.0M tokens
+  conversación humana Kaggle (en): es 0 convs / 0.0M tokens, en 730 convs / 0.0M tokens
+{"es": {"tokens_M": 7.7, "entrenables_pct": 77.0, "convs": 32883}, "en": {"tokens_M": 8.2, "entrenables_pct": 64.8, "convs": 31391}}
+listo en 7.8 min
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-QsuP3lz4ku74561w0HIw4m
