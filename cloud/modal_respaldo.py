@@ -24,7 +24,7 @@ from pathlib import Path
 
 import modal
 
-BUCKET = os.environ.get("NAVROS_BUCKET", "navros-respaldo")
+BUCKET = os.environ.get("NAVROS_BUCKET", "navros-respaldo-saasvareoz")
 IMPORTANTES = ("pesos_bf16.pt", "pesos_bf16.json", "manifest.json", "resultados.json",
                "charlas.json", "latest.json", "human_chat.txt", ".bin", ".msk")
 OPTIMIZADOR = ("opt_r0.pt", "model.pt")
