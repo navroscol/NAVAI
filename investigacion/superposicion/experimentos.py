@@ -34,9 +34,10 @@ def correr(modelo: str, tarea: str, chi: int = 16, semilla: int = 0, pasos: int 
     import modelos
     torch.set_num_threads(hilos)
     torch.manual_seed(semilla)
+    disp = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     rng = np.random.default_rng(semilla)
     secuencia = tarea.startswith("paso-")
-    m = modelos.construir(modelo, chi, secuencia)
+    m = modelos.construir(modelo, chi, secuencia).to(disp)
     if lr is None:
         lr = 1e-3 if modelo.startswith("tf-") else 1e-2
     opt = torch.optim.AdamW(m.parameters(), lr=lr, weight_decay=0.01, betas=(0.9, 0.98))
@@ -47,7 +48,7 @@ def correr(modelo: str, tarea: str, chi: int = 16, semilla: int = 0, pasos: int 
     for paso in range(pasos):
         L = int(rng.integers(3, L_train + 1))
         x, y = collatz.lote(tarea, rng, L, lote)
-        x, y = torch.from_numpy(x), torch.from_numpy(y)
+        x, y = torch.from_numpy(x).to(disp), torch.from_numpy(y).to(disp)
         logp = m(x)
         perdida = -logp.gather(-1, y.unsqueeze(-1)).mean()
         if hasattr(m, "parciales"):  # cabezas duales: cada cabeza debe ser competente por sí sola
@@ -64,7 +65,7 @@ def correr(modelo: str, tarea: str, chi: int = 16, semilla: int = 0, pasos: int 
                 ex = (pred == y).all(-1).float().mean().item() if secuencia else (pred == y).float().mean().item()
             h = dict(paso=paso, L=L, perdida=round(perdida.item(), 4), exacta=round(ex, 4), t=round(time.time() - t0, 1))
             if hasattr(m, "tasa"):
-                h["tasa_disparo"] = round(float(m.tasa), 4)
+                h["tasa_disparo"] = round(float(m.tasa.detach()), 4)
             historia.append(h)
             log(f"  {modelo} {tarea} χ={chi} s={semilla} " + " ".join(f"{k}={v}" for k, v in h.items()))
     m.eval()
@@ -73,7 +74,7 @@ def correr(modelo: str, tarea: str, chi: int = 16, semilla: int = 0, pasos: int 
     with torch.no_grad():
         for L in L_test:
             x, y = collatz.lote(tarea, rng_eval, L, n_eval)
-            x, y = torch.from_numpy(x), torch.from_numpy(y)
+            x, y = torch.from_numpy(x).to(disp), torch.from_numpy(y).to(disp)
             pred = m(x).argmax(-1)
             if secuencia:
                 evals[str(L)] = dict(exacta=(pred == y).all(-1).float().mean().item(),
@@ -103,6 +104,17 @@ def plan(nombre: str, semillas=(0, 1, 2)) -> list[dict]:
         for modelo in ["mps-complejo", "mps-fourier"]:
             for s in semillas:
                 cfgs.append(dict(modelo=modelo, tarea="paso-2", chi=32, semilla=s))
+    if nombre == "grande":  # para GPU/Modal: más ancho, más largo, más pasos; L_train=16, prueba hasta 48
+        for tarea in ["paso-1", "paso-2", "paso-3"]:
+            for modelo in ["mps-complejo", "mps-unitario", "mps-fourier", "mps-real", "tf-rope", "tf-abaco",
+                           "mps-dual-critica", "mps-dual-suma", "mps-espigas"]:
+                for s in semillas:
+                    cfgs.append(dict(modelo=modelo, tarea=tarea, chi=32, semilla=s, pasos=6000,
+                                     L_train=16, L_test=(16, 24, 32, 48)))
+        for modelo in ["mps-complejo", "mps-unitario", "tf-rope"]:
+            for s in semillas:
+                cfgs.append(dict(modelo=modelo, tarea="parada", chi=32, semilla=s, pasos=6000,
+                                 L_train=16, L_test=(16, 24, 32, 48)))
     if not cfgs:
         raise ValueError(nombre)
     return cfgs
@@ -117,7 +129,7 @@ def _trabajo(args):
     ruta = Path(carpeta) / (etiqueta(c) + ".json")
     if ruta.exists():
         return json.loads(ruta.read_text())
-    res = correr(**c, log=lambda s: None)
+    res = correr(**c, log=lambda s: None)  # noqa
     ruta.write_text(json.dumps(res, indent=1))
     print(f"listo {etiqueta(c)} {res['segundos']}s eval={ {k: round(v['exacta'], 3) for k, v in res['eval'].items()} }", flush=True)
     return res

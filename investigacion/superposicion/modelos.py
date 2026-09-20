@@ -96,7 +96,9 @@ class CapaMPS(nn.Module):
         for t in reversed(range(T)):
             R.append(_normaliza(torch.einsum("bac,bc->ba", Ax[:, t], R[-1])))
         R = R[::-1]  # R[t] = entorno derecho que empieza en la posición t
-        Lt = torch.stack(L[:T], dim=1)   # (B, T, χ): entorno izquierdo antes de t
+        # La lectura de la posición t vive en el enlace (t, t+1): entorno izquierdo que YA incluye x_t
+        # y entorno derecho a partir de t+1. Así cada bit de salida ve la secuencia entera.
+        Lt = torch.stack(L[1:], dim=1)   # (B, T, χ): entorno izquierdo hasta t inclusive
         Rt = torch.stack(R[1:], dim=1)   # (B, T, χ): entorno derecho después de t
         return torch.einsum("nta,cab,ntb->ntc", Lt, self.M, Rt)
 
@@ -289,8 +291,8 @@ def construir(nombre: str, chi: int, secuencia: bool) -> nn.Module:
         return ModeloDual(chi, "complejo", critica=False)
     if nombre.startswith("mps-"):
         return ModeloMPS(chi, nombre.split("-")[1], secuencia)
-    if nombre.startswith("tf-"):
-        return Transformer(64, 2, 4, nombre.split("-")[1], secuencia)
+    if nombre.startswith("tf-"):  # χ=16 → d=64 y 2 capas; χ=32 → d=128 y 4 capas
+        return Transformer(4 * chi, 2 if chi <= 16 else 4, 4, nombre.split("-")[1], secuencia)
     raise ValueError(nombre)
 
 
