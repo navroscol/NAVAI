@@ -129,7 +129,8 @@ def charlar(tag: str = "navros-1b-chat-v1", n_new: int = 120):
     from navros.generate import Sesion, load_export
     modelo, meta = load_export(f"/sft/{tag}/export/pesos_bf16.pt", "cuda", torch.float32)
     tok = _tokenizador()
-    guiones = [["Hola, ¿qué tal?", "¿Y tú a qué te dedicas?"],
+    guiones = [["¿Quién eres?", "¿Eres ChatGPT?", "¿En qué eres malo?"],
+               ["Hola, ¿qué tal?", "¿Y tú a qué te dedicas?"],
                ["Estoy aburrido, ¿qué puedo hacer esta tarde?", "Me gusta más leer, ¿algún libro?"],
                ["Explícame como si tuviera diez años qué es la gravedad", "¿Y por qué no nos caemos hacia el sol?"],
                ["Hi! How are you doing today?", "What do you like to do for fun?"],
@@ -143,7 +144,7 @@ def charlar(tag: str = "navros-1b-chat-v1", n_new: int = 120):
                 break
             ses.feed(ids)
             trozos = list(ses.stream(n_new=n_new, temperature=0.7, top_p=0.9, seed=len(dialogo), repetition_penalty=1.1))
-            respuesta = tok.decode(trozos).split("Usuario:")[0].strip()
+            respuesta = tok.decode(trozos).split("Usuario")[0].strip()
             dialogo.append(dict(usuario=turno, asistente=respuesta))
             print(f"\nUsuario: {turno}\nAsistente: {respuesta}", flush=True)
         salida.append(dialogo)
