@@ -64,8 +64,9 @@ def datos(tokens_per_lang: int = 1_500_000_000, part: int = 1, n_parts: int = 4,
     m = prepare(salida, target_tokens_per_lang=tokens_per_lang, time_budget_s=10 * 3600,
                 part=(part, n_parts), tokenizer_path=f"{REMOTE}/navros/assets/tokenizer_navros_32k.json",
                 log=lambda s: print(s, flush=True))
-    if part != 0:
-        assert eval_de, "una partición > 0 necesita val/test de otro corpus: pasa eval_de"
+    if part != 0 and not eval_de:
+        print("⚠ sin val/test: hay que copiarlos al corpus y parchear el manifest antes de entrenar", flush=True)
+    elif part != 0:
         origen = json.loads(Path(eval_de).read_text())
         base = Path(eval_de).parent
         for lang, v in origen["langs"].items():
