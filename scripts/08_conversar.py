@@ -75,7 +75,7 @@ def _seguro(texto):
     en UTF-8) o un marcador de turno partido («Usu…»). Sin esto salen «�» y colas falsas."""
     t = texto.rstrip("\ufffd")
     for marca in ("\nUsuario:", "Usuario:"):
-        for k in range(len(marca), 2, -1):
+        for k in range(len(marca), 0, -1):      # hasta una sola letra: la «U» suelta también sobra
             if t.endswith(marca[:k]):
                 return t[:-k]
     return t
