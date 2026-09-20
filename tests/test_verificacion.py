@@ -254,3 +254,25 @@ def test_sesion_interactiva_igual_que_generate():
     ses.feed(ids[:5])
     ses.feed(ids[5:])                      # alimentar en dos trozos no cambia el resultado
     assert list(ses.stream(n_new=12, temperature=0.0)) == esperado
+
+
+def test_sft_mascara_y_lectura(tmp_path):
+    """La pérdida del SFT solo cuenta lo que dice el asistente y el cambio de turno; el texto
+    de la persona se lee pero no se aprende. construir() → SftData devuelve esa misma máscara."""
+    from tokenizers import Tokenizer
+    from navros.sft import EOT, SftData, construir, tokenizar
+    tok = Tokenizer.from_file(str(Path(__file__).resolve().parents[1] / "navros/assets/tokenizer_navros_32k.json"))
+    turnos = [dict(rol="usuario", texto="hola"), dict(rol="asistente", texto="qué tal")]
+    ids, w = tokenizar(tok, turnos)
+    texto_entrenado = tok.decode([i for i, p in zip(ids, w) if p and i != EOT])
+    assert "qué tal" in texto_entrenado and "hola" not in texto_entrenado
+    assert ids[0] == EOT and w[0] == 0 and ids[-1] == EOT and w[-1] == 1   # aprende a terminar
+
+    fuente = lambda: ((l, [dict(rol="usuario", texto=f"pregunta {i}"), dict(rol="asistente", texto=f"respuesta {i}")])
+                      for l in ("es", "en") for i in range(300))
+    m = construir(tmp_path, tok, [("prueba", fuente)], eval_convs=5, log=lambda s: None)
+    assert m["langs"]["es"]["train"]["tokens"] > 0
+    d = SftData([str(tmp_path)], {"es": 0.5, "en": 0.5}, T=32, seed=0)
+    x, y, wm = d.batch(4)
+    assert x.shape == y.shape == wm.shape == (4, 32)
+    assert 0 < float(wm.mean()) < 1                                        # ni todo ni nada entra en la pérdida

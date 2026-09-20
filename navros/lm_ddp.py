@@ -159,6 +159,14 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print, on_save=None)
         opt.load_state_dict(so["opt"])
         opt.t = so["t"]
         say(f"reanudado desde {ck} en el paso {step}")
+    elif rc.init_from:                       # ajuste fino: pesos del modelo base, optimizador a cero
+        ex = torch.load(rc.init_from, map_location="cpu", weights_only=False)
+        faltan = set(masters) - set(ex["state"])
+        assert not faltan, f"el export no trae {sorted(faltan)[:3]}…"
+        with torch.no_grad():
+            for n, m in masters.items():
+                m.copy_(ex["state"][n].float())
+        say(f"partiendo de {rc.init_from} (paso {ex.get('step')} del modelo base)")
     publish()
 
     n_micro = rc.batch // (rc.micro * world)
@@ -209,11 +217,17 @@ def train_ddp(rc: LMRun, ns_dtype: str | None = "fp16", log=print, on_save=None)
         S = scaler.scale if scaler else 1.0
         tot = 0.0
         for i in range(n_micro):
-            xa, ya = data.batch(rc.micro * world)  # todos los rangos avanzan el mismo cursor
-            x = xa[rank * rc.micro:(rank + 1) * rc.micro].to(device, non_blocking=True)
-            y = ya[rank * rc.micro:(rank + 1) * rc.micro].to(device, non_blocking=True)
+            lote = data.batch(rc.micro * world)    # todos los rangos avanzan el mismo cursor
+            corte = slice(rank * rc.micro, (rank + 1) * rc.micro)
+            x = lote[0][corte].to(device, non_blocking=True)
+            y = lote[1][corte].to(device, non_blocking=True)
             logits = model(x, r=r, k=k)
-            loss = F.cross_entropy(logits.float().flatten(0, 1), y.flatten()) / n_micro
+            nll = F.cross_entropy(logits.float().flatten(0, 1), y.flatten(), reduction="none")
+            if len(lote) == 3:                     # SFT: solo cuentan los tokens del asistente
+                wm = lote[2][corte].to(device, non_blocking=True).flatten()
+                loss = (nll * wm).sum() / wm.sum().clamp(min=1.0) / n_micro
+            else:
+                loss = nll.mean() / n_micro
             (loss * S).backward()
             tot += float(loss.detach())
         # reducir cada gradiente (fp32) hacia su dueño y liberar el resto

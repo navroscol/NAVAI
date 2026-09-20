@@ -152,6 +152,9 @@ class SyntheticData:
 def make_data(rc):
     if rc.synthetic:
         return SyntheticData(32768, rc.langs, rc.T, rc.seed)
+    if rc.sft_dir:                      # conversaciones: el lote trae además la máscara de pérdida
+        from .sft import SftData
+        return SftData([rc.sft_dir], rc.langs, rc.T, rc.seed)
     return TokenData(rc.data_dirs or find_data_dirs(), rc.langs, rc.T, rc.seed)
 
 
@@ -185,6 +188,8 @@ class LMRun:
     synthetic: bool = False         # tokens aleatorios (benchmark de velocidad/memoria)
     spmd: bool = True               # XLA: repartir entre chips (False para un solo chip, p. ej. v5e-1)
     muon_buf: str = "fp32"          # precisión del momento de Muon: fp32 | bf16
+    sft_dir: str = ""               # conversaciones con máscara (navros/sft.py); vacío = preentrenamiento
+    init_from: str = ""             # export de pesos bf16 del que partir (ajuste fino)
     time_budget_s: float = 1e12
     log_every: int = 50
     tag: str = ""
@@ -206,17 +211,24 @@ def lr_mult(step, rc: LMRun):
 # ------------------------------------------------------------------------ evaluación
 @torch.no_grad()
 def eval_losses(model, xy, rc: LMRun, be, r=None):
+    """Media por token. Si el conjunto trae máscara (SFT), solo cuentan los tokens del asistente."""
     model.eval()
-    x, y = xy
-    tot, n = 0.0, 0
+    x, y, w = (xy if len(xy) == 3 else (xy[0], xy[1], None))
+    tot, n = 0.0, 0.0
     for i in range(0, len(x) - len(x) % rc.micro or len(x), rc.micro):
         xb, yb = be.shard_batch(x[i:i + rc.micro].to(be.device)), be.shard_batch(y[i:i + rc.micro].to(be.device))
         with be.autocast():
             logits = model(xb, r=r)
-        tot += float(F.cross_entropy(logits.float().flatten(0, 1), yb.flatten(), reduction="sum"))
-        n += yb.numel()
+        nll = F.cross_entropy(logits.float().flatten(0, 1), yb.flatten(), reduction="none")
+        if w is None:
+            tot += float(nll.sum())
+            n += yb.numel()
+        else:
+            wb = be.shard_batch(w[i:i + rc.micro].to(be.device)).flatten()
+            tot += float((nll * wb).sum())
+            n += float(wb.sum())
     model.train()
-    return tot / n
+    return tot / max(n, 1.0)
 
 
 @torch.no_grad()
