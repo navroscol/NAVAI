@@ -131,6 +131,22 @@ def roleplay_hf(limite=None):
                     return
 
 
+def aya(idioma_hf="Spanish", idioma="es", limite=None):
+    """CohereLabs/aya_dataset (Apache-2.0): pregunta y respuesta escritas por personas en 65
+    idiomas. Es la mejor fuente humana en español que encontré con licencia clara."""
+    n = 0
+    for r in _hf("CohereLabs/aya_dataset", split="train", streaming=True):
+        if r.get("language") != idioma_hf:
+            continue
+        c = limpio([dict(rol="usuario", texto=r.get("inputs") or ""),
+                    dict(rol="asistente", texto=r.get("targets") or "")])
+        if c:
+            yield idioma, c
+            n += 1
+            if limite and n >= limite:
+                return
+
+
 def conversacion_humana_csv(path, idioma="en"):
     """Kaggle projjal1/human-conversation-training-data (CC0): líneas «Human 1: …» / «Human 2: …»."""
     import csv
@@ -160,6 +176,7 @@ def plan(kaggle_dir=None, tope_magpie=60_000, tope_alpaca=30_000, tope_roleplay=
         ("oasst2 (humano, es+en)", lambda: oasst2()),
         ("smoltalk everyday (en)", lambda: mensajes_hf("HuggingFaceTB/smoltalk", "everyday-conversations")),
         ("smoltalk magpie (en)", lambda: mensajes_hf("HuggingFaceTB/smoltalk", "smol-magpie-ultra", limite=tope_magpie)),
+        ("aya humano (es)", lambda: aya("Spanish", "es")),
         ("alpaca-es (es)", lambda: instrucciones_hf("bertin-project/alpaca-spanish", "es", limite=tope_alpaca)),
         ("roleplay realm (en)", lambda: roleplay_hf(limite=tope_roleplay)),
     ]
