@@ -147,6 +147,44 @@ def aya(idioma_hf="Spanish", idioma="es", limite=None):
                 return
 
 
+def wildchat(idioma_hf="Spanish", idioma="es", limite=None, max_filas=400_000):
+    """allenai/WildChat-1M (ODC-BY): conversaciones reales de personas con un asistente. Se
+    descartan las marcadas como tóxicas o con datos personales censurados."""
+    n, vistas = 0, 0
+    for r in _hf("allenai/WildChat-1M", split="train", streaming=True):
+        vistas += 1
+        if vistas > max_filas:
+            return
+        if r.get("language") != idioma_hf or r.get("toxic") or r.get("redacted"):
+            continue
+        turnos = [dict(rol="usuario" if m.get("role") == "user" else "asistente", texto=m.get("content") or "")
+                  for m in r.get("conversation", []) if m.get("role") in ("user", "assistant")]
+        c = limpio(turnos)
+        if c:
+            yield idioma, c
+            n += 1
+            if limite and n >= limite:
+                return
+
+
+def soda(limite=None):
+    """allenai/soda (CC BY 4.0): diálogos sociales cotidianos entre dos personas; es la fuente
+    más parecida a «hablar como alguien normal» que encontré con licencia clara."""
+    n = 0
+    for r in _hf("allenai/soda", split="train", streaming=True):
+        hablantes, frases = r.get("speakers") or [], r.get("dialogue") or []
+        if len(hablantes) != len(frases) or len(frases) < 2:
+            continue
+        primero = hablantes[0]
+        turnos = [dict(rol="usuario" if h == primero else "asistente", texto=t) for h, t in zip(hablantes, frases)]
+        c = limpio(turnos)
+        if c:
+            yield "en", c
+            n += 1
+            if limite and n >= limite:
+                return
+
+
 def conversacion_humana_csv(path, idioma="en"):
     """Kaggle projjal1/human-conversation-training-data (CC0): líneas «Human 1: …» / «Human 2: …»."""
     import csv
@@ -170,13 +208,20 @@ def conversacion_humana_csv(path, idioma="en"):
         yield idioma, c
 
 
-def plan(kaggle_dir=None, tope_magpie=60_000, tope_alpaca=30_000, tope_roleplay=4_000):
-    """Fuentes con licencia clara, humanas primero. Cada entrada: (nombre, generador)."""
+def plan(kaggle_dir=None, tope_wild_es=20_000, tope_wild_en=8_000, tope_soda=40_000,
+         tope_alpaca=15_000, tope_roleplay=3_000):
+    """Fuentes elegidas por: turnos de verdad, licencia clara y español suficiente.
+
+    Se excluyen a propósito los datos generados con Llama (smoltalk), porque su licencia obliga a
+    poner «Llama» en el nombre de cualquier modelo entrenado con sus salidas.
+    """
     fuentes = [
         ("oasst2 (humano, es+en)", lambda: oasst2()),
-        ("smoltalk everyday (en)", lambda: mensajes_hf("HuggingFaceTB/smoltalk", "everyday-conversations")),
-        ("smoltalk magpie (en)", lambda: mensajes_hf("HuggingFaceTB/smoltalk", "smol-magpie-ultra", limite=tope_magpie)),
         ("aya humano (es)", lambda: aya("Spanish", "es")),
+        ("aya humano (en)", lambda: aya("English", "en")),
+        ("wildchat real (es)", lambda: wildchat("Spanish", "es", limite=tope_wild_es)),
+        ("wildchat real (en)", lambda: wildchat("English", "en", limite=tope_wild_en, max_filas=60_000)),
+        ("soda cotidiano (en)", lambda: soda(limite=tope_soda)),
         ("alpaca-es (es)", lambda: instrucciones_hf("bertin-project/alpaca-spanish", "es", limite=tope_alpaca)),
         ("roleplay realm (en)", lambda: roleplay_hf(limite=tope_roleplay)),
     ]
