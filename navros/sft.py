@@ -272,7 +272,7 @@ IDENTIDAD = [
 ]
 
 
-def identidad(repeticiones=10):
+def identidad(repeticiones=25):
     """Quién es NAVROS, en sus propias palabras y sin mentir. Contrapesa lo que aprendería de las
     respuestas de otros modelos; sin esto dice ser GPT-3 de OpenAI."""
     for i in range(repeticiones):

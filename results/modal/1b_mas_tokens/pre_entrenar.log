@@ -1,0 +1,296 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-p1OqkTT7KpyTfhTEshB1W6
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_pre.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+└── 🔨 Created function entrenar.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+pesos base verificados
+corpus copiado en 4s
+partiendo de /tmp/base_bf16.pt (paso 3623 del modelo base)
+navros-1b-fix: 1,048,651,776 params · 1 rangos · reparto [1049]M · 3051 pasos de 262,144 tokens · 6.52 GFLOP/token · modelo bf16, maestros fp32
+[navros-1b-mas-tokens] paso 10/3051 loss 3.1037 |g| 0.12 49.66K tok/s 323.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 20/3051 loss 3.0890 |g| 0.14 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 30/3051 loss 3.1076 |g| 0.13 50.13K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 40/3051 loss 3.1013 |g| 0.12 50.03K tok/s 326.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 50/3051 loss 3.1011 |g| 0.13 50.07K tok/s 326.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 60/3051 loss 3.0951 |g| 0.13 50.02K tok/s 326.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 70/3051 loss 3.0880 |g| 0.13 48.56K tok/s 316.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 80/3051 loss 3.1003 |g| 0.13 50.12K tok/s 326.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 90/3051 loss 3.0860 |g| 0.13 50.10K tok/s 326.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 100/3051 loss 3.1015 |g| 0.15 49.77K tok/s 324.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 110/3051 loss 3.1020 |g| 0.14 49.73K tok/s 324.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 120/3051 loss 3.0953 |g| 0.14 50.14K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 130/3051 loss 3.0991 |g| 0.15 50.12K tok/s 326.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 140/3051 loss 3.0954 |g| 0.15 50.10K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 150/3051 loss 3.1058 |g| 0.14 50.15K tok/s 326.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 160/3051 loss 3.0952 |g| 0.15 50.13K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 170/3051 loss 3.0969 |g| 0.13 50.14K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 180/3051 loss 3.0991 |g| 0.15 50.13K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 190/3051 loss 3.1091 |g| 0.14 50.16K tok/s 326.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 200/3051 loss 3.1057 |g| 0.14 50.16K tok/s 327.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 200 val es 3.0089 en 3.4691
+[navros-1b-mas-tokens] paso 210/3051 loss 3.1080 |g| 0.14 49.35K tok/s 321.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 220/3051 loss 3.1032 |g| 0.15 50.15K tok/s 326.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 230/3051 loss 3.1139 |g| 0.15 50.13K tok/s 326.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 240/3051 loss 3.0940 |g| 0.15 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 250/3051 loss 3.1056 |g| 0.14 50.04K tok/s 326.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 260/3051 loss 3.0935 |g| 0.15 50.08K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 270/3051 loss 3.1001 |g| 0.13 50.12K tok/s 326.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 280/3051 loss 3.0982 |g| 0.15 50.12K tok/s 326.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 290/3051 loss 3.0954 |g| 0.14 26.98K tok/s 175.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 300/3051 loss 3.0981 |g| 0.15 50.16K tok/s 327.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 310/3051 loss 3.0907 |g| 0.14 50.04K tok/s 326.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 320/3051 loss 3.0916 |g| 0.16 50.02K tok/s 326.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 330/3051 loss 3.0981 |g| 0.15 50.06K tok/s 326.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 340/3051 loss 3.0905 |g| 0.14 50.03K tok/s 326.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 350/3051 loss 3.0886 |g| 0.15 50.10K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 360/3051 loss 3.0968 |g| 0.14 50.01K tok/s 326.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 370/3051 loss 3.0770 |g| 0.14 50.06K tok/s 326.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 380/3051 loss 3.1027 |g| 0.14 50.08K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 390/3051 loss 3.0913 |g| 0.14 50.06K tok/s 326.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 400/3051 loss 3.0981 |g| 0.15 50.01K tok/s 326.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 400 val es 3.0114 en 3.4623
+[navros-1b-mas-tokens] paso 410/3051 loss 3.0845 |g| 0.15 49.21K tok/s 320.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 420/3051 loss 3.0933 |g| 0.14 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 430/3051 loss 3.0774 |g| 0.15 50.07K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 440/3051 loss 3.0806 |g| 0.13 50.14K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 450/3051 loss 3.0769 |g| 0.15 50.10K tok/s 326.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 460/3051 loss 3.0880 |g| 0.14 50.07K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 470/3051 loss 3.0830 |g| 0.15 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 480/3051 loss 3.0758 |g| 0.14 50.07K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 490/3051 loss 3.0698 |g| 0.15 50.05K tok/s 326.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 500/3051 loss 3.0874 |g| 0.15 50.08K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 510/3051 loss 3.0816 |g| 0.14 50.12K tok/s 326.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 520/3051 loss 3.0793 |g| 0.14 50.08K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 530/3051 loss 3.0741 |g| 0.14 50.13K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 540/3051 loss 3.0784 |g| 0.14 50.05K tok/s 326.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 550/3051 loss 3.0820 |g| 0.14 50.11K tok/s 326.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 560/3051 loss 3.0741 |g| 0.15 50.10K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 570/3051 loss 3.0601 |g| 0.14 50.15K tok/s 326.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 580/3051 loss 3.0810 |g| 0.15 28.55K tok/s 186.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 590/3051 loss 3.0696 |g| 0.14 50.35K tok/s 328.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 600/3051 loss 3.0718 |g| 0.15 50.30K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 600 val es 2.9968 en 3.4526
+[navros-1b-mas-tokens] paso 610/3051 loss 3.0684 |g| 0.14 48.49K tok/s 316.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 620/3051 loss 3.0646 |g| 0.16 49.97K tok/s 325.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 630/3051 loss 3.0823 |g| 0.14 50.00K tok/s 325.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 640/3051 loss 3.0676 |g| 0.14 50.07K tok/s 326.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 650/3051 loss 3.0648 |g| 0.14 50.29K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 660/3051 loss 3.0780 |g| 0.14 50.30K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 670/3051 loss 3.0661 |g| 0.15 50.24K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 680/3051 loss 3.0674 |g| 0.14 50.19K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 690/3051 loss 3.0659 |g| 0.14 50.16K tok/s 326.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 700/3051 loss 3.0642 |g| 0.15 50.12K tok/s 326.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 710/3051 loss 3.0565 |g| 0.14 50.10K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 720/3051 loss 3.0693 |g| 0.15 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 730/3051 loss 3.0581 |g| 0.15 50.11K tok/s 326.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 740/3051 loss 3.0802 |g| 0.14 50.11K tok/s 326.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 750/3051 loss 3.0797 |g| 0.15 50.11K tok/s 326.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 760/3051 loss 3.0444 |g| 0.15 50.11K tok/s 326.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 770/3051 loss 3.0799 |g| 0.14 50.13K tok/s 326.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 780/3051 loss 3.0614 |g| 0.15 50.07K tok/s 326.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 790/3051 loss 3.0592 |g| 0.13 50.10K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 800/3051 loss 3.0553 |g| 0.14 50.08K tok/s 326.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 800 val es 2.9939 en 3.4408
+[navros-1b-mas-tokens] paso 810/3051 loss 3.0654 |g| 0.14 49.25K tok/s 321.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 820/3051 loss 3.0553 |g| 0.14 50.05K tok/s 326.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 830/3051 loss 3.0604 |g| 0.15 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 840/3051 loss 3.0683 |g| 0.16 50.11K tok/s 326.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 850/3051 loss 3.0669 |g| 0.15 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 860/3051 loss 3.0545 |g| 0.15 50.09K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 870/3051 loss 3.0435 |g| 0.15 28.35K tok/s 184.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 880/3051 loss 3.0670 |g| 0.14 50.22K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 890/3051 loss 3.0579 |g| 0.14 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 900/3051 loss 3.0762 |g| 0.14 50.14K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 910/3051 loss 3.0711 |g| 0.16 50.30K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 920/3051 loss 3.0535 |g| 0.15 48.98K tok/s 319.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 930/3051 loss 3.0595 |g| 0.14 50.18K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 940/3051 loss 3.0613 |g| 0.14 50.10K tok/s 326.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 950/3051 loss 3.0572 |g| 0.15 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 960/3051 loss 3.0532 |g| 0.15 50.28K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 970/3051 loss 3.0517 |g| 0.14 49.25K tok/s 321.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 980/3051 loss 3.0661 |g| 0.14 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 990/3051 loss 3.0488 |g| 0.13 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1000/3051 loss 3.0520 |g| 0.14 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1000 val es 2.9897 en 3.4284
+[navros-1b-mas-tokens] paso 1010/3051 loss 3.0593 |g| 0.15 49.42K tok/s 322.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1020/3051 loss 3.0489 |g| 0.15 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1030/3051 loss 3.0548 |g| 0.13 50.28K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1040/3051 loss 3.0400 |g| 0.14 50.30K tok/s 327.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1050/3051 loss 3.0507 |g| 0.16 50.22K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1060/3051 loss 3.0623 |g| 0.14 50.28K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1070/3051 loss 3.0509 |g| 0.14 50.16K tok/s 327.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1080/3051 loss 3.0468 |g| 0.15 50.27K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1090/3051 loss 3.0386 |g| 0.15 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1100/3051 loss 3.0505 |g| 0.15 50.27K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1110/3051 loss 3.0417 |g| 0.15 50.27K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1120/3051 loss 3.0261 |g| 0.15 50.18K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1130/3051 loss 3.0420 |g| 0.16 50.29K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1140/3051 loss 3.0456 |g| 0.14 50.28K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1150/3051 loss 3.0492 |g| 0.15 27.40K tok/s 178.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1160/3051 loss 3.0497 |g| 0.15 50.34K tok/s 328.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1170/3051 loss 3.0469 |g| 0.14 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1180/3051 loss 3.0491 |g| 0.15 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1190/3051 loss 3.0513 |g| 0.15 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1200/3051 loss 3.0335 |g| 0.14 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1200 val es 2.9864 en 3.4200
+[navros-1b-mas-tokens] paso 1210/3051 loss 3.0478 |g| 0.15 49.42K tok/s 322.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1220/3051 loss 3.0351 |g| 0.14 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1230/3051 loss 3.0499 |g| 0.14 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1240/3051 loss 3.0489 |g| 0.15 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1250/3051 loss 3.0424 |g| 0.15 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1260/3051 loss 3.0377 |g| 0.14 50.24K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1270/3051 loss 3.0392 |g| 0.16 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1280/3051 loss 3.0405 |g| 0.15 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1290/3051 loss 3.0333 |g| 0.14 50.21K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1300/3051 loss 3.0530 |g| 0.15 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1310/3051 loss 3.0406 |g| 0.15 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1320/3051 loss 3.0365 |g| 0.14 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1330/3051 loss 3.0502 |g| 0.16 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1340/3051 loss 3.0383 |g| 0.14 50.27K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1350/3051 loss 3.0356 |g| 0.16 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1360/3051 loss 3.0196 |g| 0.14 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1370/3051 loss 3.0369 |g| 0.16 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1380/3051 loss 3.0239 |g| 0.17 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1390/3051 loss 3.0255 |g| 0.15 50.19K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1400/3051 loss 3.0239 |g| 0.15 50.22K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1400 val es 2.9751 en 3.4135
+[navros-1b-mas-tokens] paso 1410/3051 loss 3.0343 |g| 0.15 49.44K tok/s 322.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1420/3051 loss 3.0350 |g| 0.14 50.21K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1430/3051 loss 3.0433 |g| 0.14 50.21K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1440/3051 loss 3.0273 |g| 0.14 26.80K tok/s 174.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1450/3051 loss 3.0249 |g| 0.16 50.32K tok/s 328.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1460/3051 loss 3.0375 |g| 0.16 50.29K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1470/3051 loss 3.0319 |g| 0.16 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1480/3051 loss 3.0337 |g| 0.15 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1490/3051 loss 3.0487 |g| 0.15 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1500/3051 loss 3.0217 |g| 0.15 50.28K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1510/3051 loss 3.0113 |g| 0.14 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1520/3051 loss 3.0122 |g| 0.15 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1530/3051 loss 3.0372 |g| 0.15 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1540/3051 loss 3.0280 |g| 0.15 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1550/3051 loss 3.0398 |g| 0.14 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1560/3051 loss 3.0351 |g| 0.16 50.29K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1570/3051 loss 3.0219 |g| 0.16 50.19K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1580/3051 loss 3.0219 |g| 0.15 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1590/3051 loss 3.0158 |g| 0.15 50.27K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1600/3051 loss 3.0312 |g| 0.16 50.24K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1600 val es 2.9690 en 3.4033
+[navros-1b-mas-tokens] paso 1610/3051 loss 3.0167 |g| 0.19 49.42K tok/s 322.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1620/3051 loss 3.0326 |g| 0.15 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1630/3051 loss 3.0357 |g| 0.15 50.24K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1640/3051 loss 3.0237 |g| 0.15 50.19K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1650/3051 loss 3.0182 |g| 0.14 50.24K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1660/3051 loss 3.0127 |g| 0.16 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1670/3051 loss 3.0140 |g| 0.16 50.25K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1680/3051 loss 3.0238 |g| 0.15 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1690/3051 loss 3.0178 |g| 0.14 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1700/3051 loss 3.0375 |g| 0.16 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1710/3051 loss 3.0151 |g| 0.15 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1720/3051 loss 3.0157 |g| 0.14 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1730/3051 loss 3.0226 |g| 0.15 29.01K tok/s 189.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1740/3051 loss 3.0271 |g| 0.15 50.27K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1750/3051 loss 3.0183 |g| 0.15 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1760/3051 loss 3.0196 |g| 0.14 50.22K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1770/3051 loss 3.0176 |g| 0.15 50.28K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1780/3051 loss 3.0105 |g| 0.15 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1790/3051 loss 3.0219 |g| 0.14 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1800/3051 loss 3.0280 |g| 0.15 50.17K tok/s 327.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1800 val es 2.9635 en 3.3978
+[navros-1b-mas-tokens] paso 1810/3051 loss 3.0078 |g| 0.14 49.29K tok/s 321.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1820/3051 loss 3.0045 |g| 0.15 50.05K tok/s 326.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1830/3051 loss 3.0092 |g| 0.14 50.17K tok/s 327.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1840/3051 loss 3.0186 |g| 0.16 50.18K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1850/3051 loss 3.0149 |g| 0.16 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1860/3051 loss 3.0141 |g| 0.15 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1870/3051 loss 3.0003 |g| 0.15 50.21K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1880/3051 loss 3.0137 |g| 0.15 50.18K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1890/3051 loss 3.0154 |g| 0.14 50.18K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1900/3051 loss 3.0211 |g| 0.15 50.21K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1910/3051 loss 3.0056 |g| 0.15 50.17K tok/s 327.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1920/3051 loss 3.0217 |g| 0.16 50.19K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1930/3051 loss 3.0043 |g| 0.15 50.14K tok/s 326.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1940/3051 loss 3.0251 |g| 0.15 50.17K tok/s 327.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1950/3051 loss 3.0021 |g| 0.15 50.18K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1960/3051 loss 3.0110 |g| 0.15 50.18K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1970/3051 loss 2.9991 |g| 0.14 50.22K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1980/3051 loss 3.0001 |g| 0.16 50.22K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 1990/3051 loss 3.0031 |g| 0.15 50.21K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2000/3051 loss 3.0083 |g| 0.16 50.17K tok/s 327.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2000 val es 2.9568 en 3.3930
+[navros-1b-mas-tokens] paso 2010/3051 loss 2.9967 |g| 0.14 49.42K tok/s 322.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2020/3051 loss 2.9989 |g| 0.14 26.57K tok/s 173.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2030/3051 loss 3.0155 |g| 0.14 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2040/3051 loss 3.0119 |g| 0.14 50.21K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2050/3051 loss 2.9972 |g| 0.15 50.19K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2060/3051 loss 3.0194 |g| 0.15 50.21K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2070/3051 loss 3.0016 |g| 0.16 50.22K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2080/3051 loss 3.0027 |g| 0.14 50.16K tok/s 326.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2090/3051 loss 3.0066 |g| 0.14 50.19K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2100/3051 loss 3.0042 |g| 0.14 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2110/3051 loss 3.0113 |g| 0.15 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2120/3051 loss 3.0060 |g| 0.15 50.22K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2130/3051 loss 3.0009 |g| 0.14 50.23K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2140/3051 loss 3.0014 |g| 0.15 50.19K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2150/3051 loss 2.9997 |g| 0.15 50.21K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2160/3051 loss 2.9954 |g| 0.15 50.15K tok/s 326.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2170/3051 loss 2.9974 |g| 0.15 50.21K tok/s 327.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2180/3051 loss 3.0044 |g| 0.15 50.20K tok/s 327.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2190/3051 loss 2.9994 |g| 0.16 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2200/3051 loss 2.9949 |g| 0.13 50.25K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2200 val es 2.9522 en 3.3856
+[navros-1b-mas-tokens] paso 2210/3051 loss 3.0060 |g| 0.15 49.44K tok/s 322.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2220/3051 loss 3.0068 |g| 0.14 50.26K tok/s 327.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2230/3051 loss 3.0001 |g| 0.14 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2240/3051 loss 2.9936 |g| 0.15 50.24K tok/s 327.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2250/3051 loss 3.0074 |g| 0.15 50.30K tok/s 327.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2260/3051 loss 2.9993 |g| 0.15 50.34K tok/s 328.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2270/3051 loss 3.0027 |g| 0.14 50.33K tok/s 328.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2280/3051 loss 3.0080 |g| 0.15 50.16K tok/s 326.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2290/3051 loss 2.9949 |g| 0.15 49.34K tok/s 321.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2300/3051 loss 3.0001 |g| 0.14 27.05K tok/s 176.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2310/3051 loss 2.9891 |g| 0.17 49.70K tok/s 324.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2320/3051 loss 2.9911 |g| 0.16 50.34K tok/s 328.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2330/3051 loss 3.0114 |g| 0.13 50.33K tok/s 328.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2340/3051 loss 2.9938 |g| 0.17 50.32K tok/s 328.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2350/3051 loss 2.9892 |g| 0.14 50.31K tok/s 327.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2360/3051 loss 2.9909 |g| 0.14 50.24K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2370/3051 loss 2.9923 |g| 0.14 49.78K tok/s 324.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2380/3051 loss 2.9764 |g| 0.15 49.50K tok/s 322.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2390/3051 loss 2.9863 |g| 0.14 50.33K tok/s 328.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2400/3051 loss 2.9870 |g| 0.15 50.30K tok/s 327.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2400 val es 2.9393 en 3.3716
+[navros-1b-mas-tokens] paso 2410/3051 loss 2.9846 |g| 0.14 49.51K tok/s 322.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2420/3051 loss 2.9665 |g| 0.14 50.32K tok/s 328.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2430/3051 loss 2.9822 |g| 0.14 50.29K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2440/3051 loss 2.9826 |g| 0.13 50.31K tok/s 327.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2450/3051 loss 2.9925 |g| 0.14 49.81K tok/s 324.6 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2460/3051 loss 2.9800 |g| 0.14 50.36K tok/s 328.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2470/3051 loss 2.9849 |g| 0.14 50.18K tok/s 327.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2480/3051 loss 2.9619 |g| 0.14 50.29K tok/s 327.8 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2490/3051 loss 2.9769 |g| 0.14 50.27K tok/s 327.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2500/3051 loss 2.9793 |g| 0.13 50.32K tok/s 328.0 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2510/3051 loss 2.9775 |g| 0.15 50.38K tok/s 328.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2520/3051 loss 2.9793 |g| 0.13 50.39K tok/s 328.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2530/3051 loss 2.9674 |g| 0.13 50.25K tok/s 327.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2540/3051 loss 2.9734 |g| 0.14 49.43K tok/s 322.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2550/3051 loss 2.9878 |g| 0.14 50.31K tok/s 327.9 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2560/3051 loss 2.9716 |g| 0.14 50.38K tok/s 328.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2570/3051 loss 2.9525 |g| 0.14 50.40K tok/s 328.5 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2580/3051 loss 2.9856 |g| 0.14 50.38K tok/s 328.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2590/3051 loss 2.9587 |g| 0.14 26.73K tok/s 174.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2600/3051 loss 2.9633 |g| 0.14 50.43K tok/s 328.7 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2600 val es 2.9217 en 3.3528
+[navros-1b-mas-tokens] paso 2610/3051 loss 2.9660 |g| 0.14 49.56K tok/s 323.1 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2620/3051 loss 2.9699 |g| 0.13 50.36K tok/s 328.2 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2630/3051 loss 2.9620 |g| 0.14 50.38K tok/s 328.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2640/3051 loss 2.9590 |g| 0.13 50.37K tok/s 328.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2650/3051 loss 2.9454 |g| 0.13 50.38K tok/s 328.4 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2660/3051 loss 2.9699 |g| 0.14 50.37K tok/s 328.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+[navros-1b-mas-tokens] paso 2670/3051 loss 2.9714 |g| 0.13 50.37K tok/s 328.3 TFLOP/s escala None saltados 0 mem 32.0 GB
+presupuesto de tiempo agotado: checkpoint y salida
+EXPORT {"step": 2678, "finished": false, "val": null, "test": null, "tokens_vistos": 702021632, "sha256": "ea57202d68777239f6d59a6571192d0017a6be9ad2df27533be21ee786f19771"}
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-p1OqkTT7KpyTfhTEshB1W6

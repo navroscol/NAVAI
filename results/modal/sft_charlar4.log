@@ -1,0 +1,64 @@
+✓ Initialized. View run at 
+https://modal.com/apps/heraclutes/main/ap-CZqYSrK5p0G9N8pWNArscF
+✓ Created objects.
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/cloud/modal_sft.py
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/scripts
+├── 🔨 Created mount /Users/alvarez/Desktop/NAVROS-AI/navros
+├── 🔨 Created function datos.
+├── 🔨 Created function entrenar.
+└── 🔨 Created function charlar.
+{'torch': '2.10.0+cu128', 'gpu': 'NVIDIA H100 80GB HBM3', 'cpus': 20}
+
+Usuario: ¿Quién eres?
+Asistente: Soy un programa de computadora, no una aplicación.
+
+Usuario: ¿Eres ChatGPT?
+Asistente: No soy un programa de computadora, pero puedo decirte que soy un programa de computadora y no una aplicación. No tengo habilidades o conocimientos técnicos específicos para el tema en cuestión.
+
+Usuario: ¿En qué eres malo?
+Asistente: Me equivoco bastante con las matemáticas, no tengo habilidades de razonamiento lógico o pensamiento crítico. Sin embargo, puedo darte algunos consejos sobre cómo mejorar tu rendimiento académico en matemáticas.
+
+Usuario: Hola, ¿qué tal?
+Asistente: ¡Hola! Soy una inteligencia artificial y estoy aquí para ayudarte en lo que necesites. Por favor, proporcióname el peso que te pones para calcular cuánto te costará.
+
+Usuario: ¿Y tú a qué te dedicas?
+Asistente: Soy un modelo de lenguaje y soy capaz de generar texto con millones de parámetros. ¿Hay algo específico que necesites mejorar en el idioma español?
+
+Usuario: Estoy aburrido, ¿qué puedo hacer esta tarde?
+Asistente: Lo siento, pero no es posible estar completamente presente en la reunión. Si tienes alguna pregunta o necesitas información sobre un tema específico, no dudes en preguntarme. Estoy aquí para ayudarte y guiarte mejor.
+
+Usuario: Me gusta más leer, ¿algún libro?
+Asistente: Sí, he leído mucho de libros. Aquí hay algunas opciones que puedes considerar:
+
+1. "El día que el viento se llevó mi corazón" - Robert Frost
+2. "El viejo y el mar" - Ayn Rand
+3. "La vida de las estrellas" - J.D. Salinger
+4. "Las profundidades del tiempo" - David Hockney
+5. "El hombre que soñó" - Daniel Berenson
+6. "Tres verdades invisibles" - A. Scott Fitzgerald
+7. "Los secretos de la
+
+Usuario: Explícame como si tuviera diez años qué es la gravedad
+Asistente: La gravedad, también conocida como fuerza de gravedad, es una fuerza que actúa sobre el cuerpo y el espacio. Esta fuerza se caracteriza por ser atraída hacia el centro del universo, lo que le otorga una fuerza de atracción constante y que a menudo se describe como una fuerza repulsiva. La gravedad también tiene una forma de partícula, lo que significa que su movimiento es impulsado por fuerzas gravitatorias.
+
+Cuando un objeto con una masa igual a la aceleración de la luz experimenta un empuje orbital, el peso total de los objetos en su órbita alrededor del planeta es mucho mayor que el de
+
+Usuario: ¿Y por qué no nos caemos hacia el sol?
+Asistente: La gravedad es una fuerza fundamental que actúa sobre el planeta Tierra, incluso en ausencia de su propia gravedad. Es la responsable de la dinámica y interacción gravitatoria entre los planetas y otros objetos en nuestro Sistema Solar.
+
+En resumen, la gravedad es una fuerza que actúa sobre el planeta debido a su movimiento, pero a medida que pasa el tiempo y las fuerzas gravitatorias, se convierte en una fuerza extremadamente fuerte. Esta fuerza es esencial para mantener la estabilidad de la vida en la Tierra y para mantener el equilibrio en la Tierra.
+
+Usuario: Hi! How are you doing today?
+Asistente: I'm doing well, thank you. I've been busy with work and school and just got back from my day off.
+
+Usuario: What do you like to do for fun?
+Asistente: I like to read and spend time with my friends. It's also great to catch up with friends and family. Plus, there's always something new to do.
+
+Usuario: I had a rough day at work.
+Asistente: You were in the office, no one was working.
+
+Usuario: Thanks, that helps.
+Asistente: No problem, it will be $100.
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/heraclutes/main/ap-CZqYSrK5p0G9N8pWNArscF

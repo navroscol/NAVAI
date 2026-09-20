@@ -1,0 +1,23 @@
+[21:36] == cadena nocturna ==
+[21:36] esperando el corpus (ap-8K1bHhyt3NGpX6wFdRfr0x)
+[21:40] corpus listo: {"es": {"train_B": 1.500730266, "bpt": 4.350742283727302}, "en": {"train_B": 1.501853579, "bpt": 4.224549238757572}}
+[21:40] gasto acumulado: 4.81 $
+[21:40] lanzando preentrenamiento continuado
+[21:41] app ap-e6i7tlt7QixxF95CEIVpEg
+[21:46] ABORTO: el preentrenamiento no dejó pesos
+[21:47] == cadena nocturna ==
+[21:47] corpus listo: {"es": {"train_B": 1.500730266, "bpt": 4.350742283727302}, "en": {"train_B": 1.501853579, "bpt": 4.224549238757572}}
+[21:47] gasto acumulado: 5.07 $
+[21:47] lanzando preentrenamiento continuado
+[21:49] app ap-p1OqkTT7KpyTfhTEshB1W6
+[01:50] preentrenamiento hecho: EXPORT {"step": 2678, "finished": false, "val": null, "test": null, "tokens_vistos": 702021632, "sha256": "ea57202d68777239f6d59a6571192d0017a6be9ad2df27533be21ee786f19771"}
+https://github.com/navroscol/navros-ai/releases/tag/pesos-1b-mas-tokens-2678
+[01:53] release publicada: pesos-1b-mas-tokens-2678
+[01:53] gasto acumulado: 23.03 $
+[01:53] construyendo datos de chat v4
+[02:03] gasto acumulado: 23.02 $
+[02:03] ajustando el chat v4 sobre el modelo con más tokens
+[02:18] chat v4: EXPORT {"step": 484, "finished": true, "val": {"es": 1.974974349377309, "en": 2.240166869569787}, "test": {"es": 1.9395417535088646, "en": 2.0108505242374726}, "sha256": "e9bca100ab2a124ae7f7f13268de667741fe453e698e25e777bed49de51e85f7", "bytes": 2097351925}
+[02:18] gasto acumulado: 24.16 $
+[02:19] charlas guardadas en results/modal/sft_charlar4.log
+[02:19] == fin · gasto final: 24.23 $ ==
