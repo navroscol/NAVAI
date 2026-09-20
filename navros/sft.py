@@ -49,7 +49,8 @@ def tokenizar(tok, turnos):
 
 AJENAS = ("openai", "chatgpt", "gpt-3", "gpt-4", "anthropic", "claude", "gemini", "bard",
           "as an ai language model", "modelo de lenguaje desarrollado por", "desarrollado por google",
-          "microsoft", "copilot", "llama", "mistral")
+          "microsoft", "copilot", "llama", "mistral",
+          "open assistant", "openassistant", "oasst", "laion", "asistente abierto")
 
 
 def identidad_ajena(turnos):
@@ -264,7 +265,7 @@ def identidad(repeticiones=30):
                 yield idioma, [dict(rol="usuario", texto=pregunta), dict(rol="asistente", texto=respuesta)]
 
 
-def plan(kaggle_dir=None, tope_wild_es=20_000, tope_wild_en=8_000, tope_soda=40_000,
+def plan(kaggle_dir=None, tope_wild_es=20_000, tope_wild_en=6_000, tope_soda=18_000,
          tope_alpaca=15_000, tope_roleplay=3_000):
     """Fuentes elegidas por: turnos de verdad, licencia clara y español suficiente.
 
@@ -276,7 +277,7 @@ def plan(kaggle_dir=None, tope_wild_es=20_000, tope_wild_en=8_000, tope_soda=40_
         ("oasst2 (humano, es+en)", lambda: oasst2()),
         ("aya humano (es)", lambda: aya("Spanish", "es")),
         ("aya humano (en)", lambda: aya("English", "en")),
-        ("wildchat real (es)", lambda: wildchat("Spanish", "es", limite=tope_wild_es)),
+        ("wildchat real (es)", lambda: wildchat("Spanish", "es", limite=tope_wild_es, max_filas=900_000)),
         ("wildchat real (en)", lambda: wildchat("English", "en", limite=tope_wild_en, max_filas=60_000)),
         ("soda cotidiano (en)", lambda: soda(limite=tope_soda)),
         ("alpaca-es (es)", lambda: instrucciones_hf("bertin-project/alpaca-spanish", "es", limite=tope_alpaca)),

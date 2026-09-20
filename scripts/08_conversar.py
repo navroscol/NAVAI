@@ -23,6 +23,7 @@ ap.add_argument("--tokenizer", default=str(RAIZ / "navros/assets/tokenizer_navro
 ap.add_argument("--device", default="mps" if torch.backends.mps.is_available() else
                 ("cuda" if torch.cuda.is_available() else "cpu"))
 ap.add_argument("--dtype", default="fp32", choices=["fp32", "fp16", "bf16"])
+ap.add_argument("--chat", action="store_true", help="modelo ajustado a conversación: envuelve tu texto en la plantilla")
 a = ap.parse_args()
 
 t0 = time.time()
@@ -31,6 +32,8 @@ model, meta = load_export(a.pesos, a.device, dtype)
 tok = Tokenizer.from_file(a.tokenizer)
 ses = Sesion(model)
 cfg = dict(t=0.8, p=0.95, n=120, rep=1.1, semilla=0)
+if a.chat:
+    cfg.update(t=0.7, p=0.9)
 
 AYUDA = """
 Órdenes:
@@ -48,7 +51,8 @@ Ctrl-C corta la generación en curso y devuelve el control.
 
 print(f"\nNAVROS-1B · paso {meta['step']} · {sum(p.numel() for p in model.parameters()):,} parámetros"
       f" · {a.device} {a.dtype} · cargado en {time.time() - t0:.0f}s")
-print("Modelo base: continúa el texto que le des, no sigue instrucciones. /ayuda para las órdenes.")
+print("Modo conversación: escribe y te responde." if a.chat else
+      "Modelo base: continúa el texto que le des, no sigue instrucciones.", "/ayuda para las órdenes.")
 
 
 def generar():
@@ -61,6 +65,10 @@ def generar():
                               seed=cfg["semilla"], repetition_penalty=cfg["rep"]):
             nuevos.append(tid)
             texto = tok.decode(nuevos)          # se decodifica entero: un carácter puede ocupar varios tokens
+            corte = min([texto.index(m) for m in ("Usuario:", "\nUsuario") if m in texto], default=-1)
+            if a.chat and corte >= 0:           # ha devuelto el turno: aquí se calla
+                print(texto[len(texto_previo):corte], end="", flush=True)
+                break
             print(texto[len(texto_previo):], end="", flush=True)
             texto_previo = texto
             n += 1
@@ -113,12 +121,13 @@ while True:
         if ses.libre < 8:
             print("contexto lleno: /nuevo para empezar de cero")
             continue
-        ids = ([EOT] if ses.pos == 0 else []) + tok.encode(linea).ids   # <|eot|> = inicio de documento
+        texto = f"Usuario: {linea}\nAsistente: " if a.chat else linea
+        ids = ([EOT] if ses.pos == 0 else []) + tok.encode(texto).ids   # <|eot|> = inicio de documento
         if len(ids) > ses.libre:
             print("ese texto no cabe en el contexto restante: /nuevo")
             continue
         ses.feed(ids)
-        print(linea, end="", flush=True)
+        print(linea if not a.chat else "", end="", flush=True)
     generar()
     if ses.libre < 8:
         print("  ⟨contexto lleno: /nuevo para empezar de cero⟩")
