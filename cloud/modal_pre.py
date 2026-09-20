@@ -51,13 +51,32 @@ def _sha(path, block=1 << 24):
 
 
 @app.function(cpu=8, memory=16384, timeout=12 * 3600, volumes={"/data": vol})
-def datos(tokens_per_lang: int = 1_500_000_000, part: int = 1, n_parts: int = 4, salida: str = "/data/corpus_p1"):
-    """Corpus bilingüe nuevo con el tokenizador del repo. part=1 evita el texto que ya vio."""
+def datos(tokens_per_lang: int = 1_500_000_000, part: int = 1, n_parts: int = 4, salida: str = "/data/corpus_p1",
+          eval_de: str = ""):
+    """Corpus bilingüe nuevo con el tokenizador del repo. part=1 evita el texto que ya vio.
+
+    `prepare` solo crea val y test en la partición 0, así que para las demás hay que traerlos de
+    otro corpus con `eval_de` (ruta a su manifest.json). Usar los mismos conjuntos que el modelo
+    base tiene además la ventaja de que las pérdidas son comparables entre corridas."""
     _setup()
+    import shutil
     from navros.dataprep import prepare
     m = prepare(salida, target_tokens_per_lang=tokens_per_lang, time_budget_s=10 * 3600,
                 part=(part, n_parts), tokenizer_path=f"{REMOTE}/navros/assets/tokenizer_navros_32k.json",
                 log=lambda s: print(s, flush=True))
+    if part != 0:
+        assert eval_de, "una partición > 0 necesita val/test de otro corpus: pasa eval_de"
+        origen = json.loads(Path(eval_de).read_text())
+        base = Path(eval_de).parent
+        for lang, v in origen["langs"].items():
+            for split in ("val", "test"):
+                dst = Path(salida) / v[split]["file"]
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(base / v[split]["file"], dst)
+                m["langs"][lang][split] = v[split]
+        m["eval_de"] = eval_de
+        (Path(salida) / "manifest.json").write_text(json.dumps(m, indent=1, ensure_ascii=False))
+        print(f"val/test copiados de {eval_de}", flush=True)
     vol.commit()
     return {l: v["train"]["tokens"] for l, v in m["langs"].items()}
 
