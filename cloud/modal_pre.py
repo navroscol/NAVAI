@@ -21,9 +21,10 @@ import modal
 
 ROOT = Path(__file__).resolve().parents[1]
 REMOTE = "/root/navros-ai"
+# último modelo publicado: 1.750M tokens vistos (950M del base + 800M del primer tramo)
 BASE_URL = ("https://github.com/navroscol/navros-ai/releases/download/"
-            "pesos-1b-fix-paso-03623/pesos_bf16.pt")
-BASE_SHA = "a370c6bec0e9e8e1f2bc960bc70f926a19b86e917c0f69301de256299cac246a"
+            "pesos-1b-mas-tokens-3051/pesos_mas_tokens.pt")
+BASE_SHA = "c0d6f8f9528d2e4cb756145ccc23715d5d5540e7d08d346be67b45b27b01c535"
 
 image = (
     modal.Image.debian_slim(python_version="3.12")
@@ -85,7 +86,8 @@ def datos(tokens_per_lang: int = 1_500_000_000, part: int = 1, n_parts: int = 4,
 @app.function(gpu="H100", cpu=4, memory=32768, timeout=12 * 3600, volumes={"/data": vol},
               retries=modal.Retries(max_retries=2, initial_delay=10.0))
 def entrenar(horas: float = 4.0, total_tokens: int = 800_000_000, lr_muon: float = 0.01,
-             micro: int = 8, tag: str = "navros-1b-mas-tokens", datos_dir: str = "/data/corpus_p1"):
+             micro: int = 8, tag: str = "navros-1b-mas-tokens", datos_dir: str = "/data/corpus_p1",
+             base_url: str = "", base_sha: str = ""):
     """Sigue entrenando el 1B con texto nuevo. Reanuda solo si ya hay checkpoint de este tag."""
     _setup()
     import shutil
@@ -93,10 +95,11 @@ def entrenar(horas: float = 4.0, total_tokens: int = 800_000_000, lr_muon: float
     from navros.lm import LMRun
     from navros.lm_ddp import train_ddp
 
+    url, sha = base_url or BASE_URL, base_sha or BASE_SHA
     base = "/tmp/base_bf16.pt"
     if not os.path.exists(base):
-        subprocess.run(["curl", "-sSL", "--retry", "10", "--retry-all-errors", "-o", base, BASE_URL], check=True)
-        assert _sha(base) == BASE_SHA, "los pesos base no coinciden con el SHA-256 publicado"
+        subprocess.run(["curl", "-sSL", "--retry", "10", "--retry-all-errors", "-o", base, url], check=True)
+        assert _sha(base) == sha, "los pesos de partida no coinciden con el SHA-256 publicado"
         print("pesos base verificados", flush=True)
 
     local = "/tmp/corpus"                      # copia local: el Volume es de red y aquí hay lectura aleatoria
