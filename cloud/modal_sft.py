@@ -72,8 +72,9 @@ def datos(salida: str = "/sft/datos"):
 
 @app.function(gpu="H100", cpu=4, memory=32768, timeout=6 * 3600, volumes={"/sft": vol},
               retries=modal.Retries(max_retries=2, initial_delay=10.0))
-def entrenar(epocas: float = 2.0, horas: float = 1.0, lr_muon: float = 0.004, micro: int = 8,
-             batch: int = 64, tag: str = "navros-1b-chat-v1", datos_dir: str = "/sft/datos"):
+def entrenar(epocas: float = 3.0, horas: float = 1.0, lr_muon: float = 0.004, micro: int = 8,
+             batch: int = 64, tag: str = "navros-1b-chat-v1", datos_dir: str = "/sft/datos",
+             peso_es: float = 0.0):
     """Ajuste fino sobre conversaciones, partiendo de los pesos publicados del modelo base."""
     _setup()
     import torch
@@ -90,8 +91,9 @@ def entrenar(epocas: float = 2.0, horas: float = 1.0, lr_muon: float = 0.004, mi
     m = json.loads((Path(datos_dir) / "manifest.json").read_text())
     tokens_dataset = sum(v["train"]["tokens"] for v in m["langs"].values())
     total = int(epocas * tokens_dataset)
-    peso_es = m["langs"]["es"]["train"]["tokens"] / tokens_dataset      # mezcla según lo que hay
-    print(f"conjunto: {tokens_dataset/1e6:.1f}M tokens ({100*peso_es:.0f}% es) · "
+    natural = m["langs"]["es"]["train"]["tokens"] / tokens_dataset     # proporción real del conjunto
+    peso_es = peso_es or natural                                       # 0 = respetar esa proporción
+    print(f"conjunto: {tokens_dataset/1e6:.1f}M tokens ({100*natural:.0f}% es) · lotes con {100*peso_es:.0f}% es · "
           f"{epocas} épocas = {total/1e6:.1f}M tokens", flush=True)
 
     rc = LMRun(preset="navros-1b-fix", sft_dir=datos_dir, init_from=base,
