@@ -70,33 +70,43 @@ print("Modo conversación: escribe y te responde." if a.chat else
       "Modelo base: continúa el texto que le des, no sigue instrucciones.", "/ayuda para las órdenes.")
 
 
+def _seguro(texto):
+    """Recorta la cola que todavía puede cambiar: un carácter a medias (varios tokens por letra
+    en UTF-8) o un marcador de turno partido («Usu…»). Sin esto salen «�» y colas falsas."""
+    t = texto.rstrip("\ufffd")
+    for marca in ("\nUsuario:", "Usuario:"):
+        for k in range(len(marca), 2, -1):
+            if t.endswith(marca[:k]):
+                return t[:-k]
+    return t
+
+
 def generar():
     """Imprime la continuación según se genera. Devuelve el texto de la respuesta."""
     n, t0 = 0, time.time()
-    texto_previo, texto, nuevos = "", "", []
+    impreso, texto, nuevos = "", "", []
     try:
         for tid in ses.stream(n_new=cfg["n"], temperature=cfg["t"], top_p=cfg["p"],
                               seed=cfg["semilla"], repetition_penalty=cfg["rep"]):
             nuevos.append(tid)
-            texto = tok.decode(nuevos)          # se decodifica entero: un carácter puede ocupar varios tokens
-            corte = min([texto.index(m) for m in ("Usuario:", "\nUsuario") if m in texto], default=-1)
-            if a.chat and corte >= 0 and n >= 2:   # ha devuelto el turno: aquí se calla
-                texto = texto[:corte]
-                print(texto[len(texto_previo):], end="", flush=True)
-                break
-            print(texto[len(texto_previo):], end="", flush=True)
-            texto_previo = texto
             n += 1
+            texto = tok.decode(nuevos)
+            corte = min([texto.index(m) for m in ("Usuario:", "\nUsuario") if m in texto], default=-1)
+            if a.chat and corte >= 0 and n >= 3:      # ha devuelto el turno: aquí se calla
+                texto = texto[:corte]
+                break
+            visible = _seguro(texto)
+            if len(visible) > len(impreso):
+                print(visible[len(impreso):], end="", flush=True)
+                impreso = visible
     except KeyboardInterrupt:
         print("  ⟨cortado⟩", end="")
+    texto = _seguro(texto).rstrip() if a.chat else texto
+    if len(texto) > len(impreso):
+        print(texto[len(impreso):], end="", flush=True)
     dt = time.time() - t0
     print(f"\n  ⟨{n} tokens en {dt:.1f}s · {n / max(dt, 1e-9):.1f} tok/s · contexto {ses.pos}/{ses.max_len}⟩")
     cfg["semilla"] += 1                          # cada tirada, distinta
-    if a.chat:                                   # marcador de turno a medias («Usu…») al final
-        for k in range(len("\nUsuario:"), 2, -1):
-            if texto.endswith("\nUsuario:"[:k]) or texto.endswith("Usuario:"[:k]):
-                texto = texto[:-k]
-                break
     return texto.strip()
 
 
