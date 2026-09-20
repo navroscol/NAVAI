@@ -33,6 +33,7 @@ image = (
 )
 app = modal.App("navros-sft", image=image)
 vol = modal.Volume.from_name("navros-sft", create_if_missing=True)
+data_vol = modal.Volume.from_name("navros-data", create_if_missing=True)   # pesos del preentrenamiento
 
 
 def _setup():
@@ -70,19 +71,22 @@ def datos(salida: str = "/sft/datos"):
     return {l: dict(tokens=v["train"]["tokens"], convs=v["conversaciones"]) for l, v in m["langs"].items()}
 
 
-@app.function(gpu="H100", cpu=4, memory=32768, timeout=6 * 3600, volumes={"/sft": vol},
+@app.function(gpu="H100", cpu=4, memory=32768, timeout=6 * 3600, volumes={"/sft": vol, "/data": data_vol},
               retries=modal.Retries(max_retries=2, initial_delay=10.0))
 def entrenar(epocas: float = 3.0, horas: float = 1.0, lr_muon: float = 0.004, micro: int = 8,
              batch: int = 64, tag: str = "navros-1b-chat-v1", datos_dir: str = "/sft/datos",
-             peso_es: float = 0.0):
+             peso_es: float = 0.0, base_path: str = ""):
     """Ajuste fino sobre conversaciones, partiendo de los pesos publicados del modelo base."""
     _setup()
     import torch
     from navros.lm import LMRun
     from navros.lm_ddp import train_ddp
 
-    base = "/tmp/base_bf16.pt"
-    if not os.path.exists(base):
+    base = base_path or "/tmp/base_bf16.pt"
+    if base_path:                                   # p. ej. el export del preentrenamiento continuado
+        assert os.path.exists(base), f"no existe {base}"
+        print(f"pesos de partida: {base}", flush=True)
+    elif not os.path.exists(base):
         t0 = time.time()
         subprocess.run(["curl", "-sSL", "--retry", "10", "--retry-all-errors", "-o", base, BASE_URL], check=True)
         assert _sha(base) == BASE_SHA, "los pesos base no coinciden con el SHA-256 publicado"
