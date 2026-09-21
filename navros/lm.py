@@ -42,6 +42,9 @@ def lm_preset(name: str, vocab: int = 32768) -> NavrosConfig:
         # NAVROS-1B (TPU v5e-8): 18 capas únicas, núcleo de 8 iterado
         "navros-1b": dict(d=2048, n_heads=16, ffn=6144, n_pre=4, n_core=8, n_blocks=1, n_coda=6, r_mean=4, k_bptt=2, r_max=16),
         "navros-1b-fix": dict(d=2048, n_heads=16, ffn=6144, n_pre=18, n_core=0),
+        # Phi-4-mini portado (cuerpo de 32 capas, embedding nueva de 32K): ver navros/porte_phi.py
+        "phi4mini": dict(d=3072, n_heads=24, ffn=8192, n_pre=32, n_core=0, rope_frac=0.75, norm_eps=1e-5,
+                         res_scale=1.0, logit_scale_fixed=1.0, rope_mscale=1.1902380714238083),
         # humo
         "tiny":     dict(d=64, n_heads=2, n_pre=1, n_core=1, n_blocks=1, n_coda=1, r_mean=3, k_bptt=2, r_max=6),
     }[name]

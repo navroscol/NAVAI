@@ -30,6 +30,11 @@ class NavrosConfig:
     causal: bool = False
     rope: bool = True
     rope_theta: float = 10000.0
+    rope_frac: float = 1.0       # fracción de head_dim que rota (Phi-4-mini: 0,75); el resto pasa sin rotar
+    rope_factors: tuple = ()     # LongRoPE: divisor por frecuencia (vacío = 1 en todas)
+    rope_mscale: float = 1.0     # LongRoPE: cos y sin se multiplican por esto
+    res_scale: float = 0.0       # 0 = 1/√(2L) en las ramas residuales; >0 = ese valor (modelos portados: 1)
+    logit_scale_fixed: float = 0.0  # 0 = 1/√d; >0 = ese valor (modelos portados: 1)
     abacus: int = 0              # tamaño de la tabla ábaco (0 = sin ábaco)
     norm_eps: float = 1e-6
     # recurrencia (solo si n_blocks == 1 y n_core > 0)
@@ -43,6 +48,8 @@ class NavrosConfig:
             self.ffn = max(32, int(round(8 * self.d / 3 / 32)) * 32)
         assert self.d % self.n_heads == 0
         assert (self.d // self.n_heads) % 2 == 0, "RoPE necesita head_dim par"
+        assert 0 < self.rope_frac <= 1 and self.rotary_dim % 2 == 0, "rope_frac·head_dim debe ser par"
+        assert not self.rope_factors or len(self.rope_factors) == self.rotary_dim // 2, "rope_factors: uno por frecuencia"
         assert self.n_core == 0 or self.n_blocks >= 1
 
     # --- derivados -------------------------------------------------------
@@ -51,12 +58,18 @@ class NavrosConfig:
         return self.d // self.n_heads
 
     @property
+    def rotary_dim(self) -> int:
+        return int(self.head_dim * self.rope_frac) // 2 * 2
+
+    @property
     def recurrent(self) -> bool:
         return self.n_core > 0 and self.n_blocks == 1
 
     @property
     def scale_stack(self) -> float:
         """1/√(2L) para las ramas residuales de preludio y coda."""
+        if self.res_scale > 0:
+            return self.res_scale
         L = self.n_pre + self.n_coda
         return 1.0 / math.sqrt(2 * L) if L > 0 else 1.0
 
@@ -69,7 +82,7 @@ class NavrosConfig:
     @property
     def logit_scale(self) -> float:
         """Pesos atados: emb ~ N(0,1) entra con rms 1 y los logits salen con std ~1."""
-        return 1.0 / math.sqrt(self.d)
+        return self.logit_scale_fixed if self.logit_scale_fixed > 0 else 1.0 / math.sqrt(self.d)
 
     def n_params(self) -> int:
         d, f = self.d, self.ffn

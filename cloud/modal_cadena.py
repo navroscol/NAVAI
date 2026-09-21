@@ -23,7 +23,10 @@ Diseño:
     en los siguientes. Si el corpus se agota, el cursor da la vuelta (repite datos) sin intervención.
   - Dentro del workspace, el checkpoint periódico va al Volume (rápido, y sirve para reanudar si
     Modal reinicia el contenedor: `retries`). Al terminar el tramo se sube a GCS, y solo entonces.
-  - El primer tramo parte de los pesos publicados (`--base-url`, `--base-sha`) con optimizador a cero.
+  - El primer tramo parte de los pesos publicados (`--base-url`, `--base-sha`) o de un export del bucket
+    (`--base-gcs base/<archivo>.pt`, p. ej. Phi-4-mini portado por cloud/modal_porte_phi.py) con
+    optimizador a cero. El preset y la etiqueta se eligen con --preset/--tag o con las variables
+    NAVROS_PRESET / NAVROS_TAG (también para `estado`). Una cadena = un preset + una etiqueta.
 
 Requisitos por workspace (los hace la persona, no este código): el secreto `gcs-navros` con la
 clave `SERVICE_ACCOUNT_JSON` (misma cuenta de servicio y bucket que cloud/modal_respaldo.py).
@@ -45,8 +48,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REMOTE = "/root/navros-ai"
 BUCKET = os.environ.get("NAVROS_BUCKET", "navros-respaldo-saasvareoz")
 CADENA = "/gcs/navros-cadena"          # raíz de la cadena dentro del bucket
-TAG = "navros-1b-cadena"               # etiqueta común: sin ella el entrenador no reanuda
-PRESET = "navros-1b-fix"
+TAG = os.environ.get("NAVROS_TAG", "navros-1b-cadena")   # etiqueta común: sin ella el entrenador no reanuda
+PRESET = os.environ.get("NAVROS_PRESET", "navros-1b-fix")  # "phi4mini" para el cuerpo de Phi-4-mini portado
 TOTAL_TOKENS = 52_000_000_000          # 52.000M: ~55 tramos de 950M
 DECAY_FRAC = 0.10                      # decaimiento en los últimos ~5 tramos
 LR_MUON = 0.01                         # como el preentrenamiento continuado (cloud/modal_pre.py)
@@ -174,15 +177,19 @@ def estado():
 # ----------------------------------------------------------------------------- tramo
 @app.function(gpu="H100", cpu=4, memory=32768, timeout=int((HORAS + 1.5) * 3600),
               volumes={"/ckpt": ckpt_vol, "/gcs": gcs}, retries=modal.Retries(max_retries=3, initial_delay=10.0))
-def tramo(horas: float = HORAS, base_url: str = "", base_sha: str = "", total_tokens: int = TOTAL_TOKENS,
-          micro: int = 8):
-    """Un tramo: baja corpus y checkpoint, entrena `horas`, sube el checkpoint y los pesos a GCS."""
+def tramo(horas: float = HORAS, base_url: str = "", base_sha: str = "", base_gcs: str = "",
+          total_tokens: int = TOTAL_TOKENS, micro: int = 8, preset: str = PRESET, tag: str = TAG,
+          grad_ckpt: bool = False):
+    """Un tramo: baja corpus y checkpoint, entrena `horas`, sube el checkpoint y los pesos a GCS.
+    Primer tramo: --base-url/--base-sha (release de GitHub) o --base-gcs base/<archivo>.pt (export en el bucket,
+    p. ej. el de cloud/modal_porte_phi.py). Para Phi-4-mini portado: --preset phi4mini --micro 4."""
     _setup()
     import torch
     from navros.lm import LMRun
     from navros.lm_ddp import train_ddp
     raiz = Path(CADENA)
-    ck_gcs, ck_local = raiz / "ckpt" / TAG, Path(f"/ckpt/{TAG}")
+    TAG_, PRESET_ = tag, preset
+    ck_gcs, ck_local = raiz / "ckpt" / TAG_, Path(f"/ckpt/{TAG_}")
     # el reloj del tramo vive en el Volume: si Modal reinicia el contenedor, el reintento NO vuelve a
     # empezar de cero las `horas` (eso duplicaría el gasto), sino que sigue con lo que quede
     reloj = ck_local / "inicio.json"
@@ -222,8 +229,15 @@ def tramo(horas: float = HORAS, base_url: str = "", base_sha: str = "", total_to
         for f in ("latest.json", "model.pt", "opt_r0.pt"):
             _copia(ck_gcs / f, ck_local / f, f"↓ {f}")
         ckpt_vol.commit()
+    elif base_gcs:
+        init_from = "/tmp/base_bf16.pt"
+        _copia(raiz / base_gcs, Path(init_from), f"↓ base {base_gcs}")
+        meta = json.loads((raiz / base_gcs).with_suffix(".json").read_text()) if (raiz / base_gcs).with_suffix(".json").exists() else {}
+        if meta.get("sha256"):
+            assert _sha(init_from) == meta["sha256"], "la base de GCS no coincide con su SHA-256"
+        print(f"primer tramo: base {base_gcs} verificada, optimizador a cero", flush=True)
     else:
-        assert base_url and base_sha, "primer tramo: hacen falta --base-url y --base-sha de los pesos publicados"
+        assert base_url and base_sha, "primer tramo: hacen falta --base-url y --base-sha, o --base-gcs"
         init_from = "/tmp/base_bf16.pt"
         subprocess.run(["curl", "-sSL", "--retry", "10", "--retry-all-errors", "-o", init_from, base_url], check=True)
         assert _sha(init_from) == base_sha, "los pesos base no coinciden con el SHA-256 dado"
@@ -233,11 +247,11 @@ def tramo(horas: float = HORAS, base_url: str = "", base_sha: str = "", total_to
     # 3) entrenar: el tiempo útil descuenta lo que ya se ha gastado en copias
     restante = horas * 3600 - (time.time() - t_ini)
     assert restante > 600 or (ck_local / "latest.json").exists(), "queda menos de 10 min y no hay nada que subir"
-    rc = LMRun(preset=PRESET, data_dirs=dirs, init_from=init_from, T=1024, batch=256, micro=micro,
+    rc = LMRun(preset=PRESET_, data_dirs=dirs, init_from=init_from, T=1024, batch=256, micro=micro,
                tokens=total_tokens, lr_muon=LR_MUON, lr_adam=LR_MUON / 20, warmup=200, decay_frac=DECAY_FRAC,
-               precision="bf16", device="cuda", muon_buf="fp32", grad_ckpt=False,
+               precision="bf16", device="cuda", muon_buf="fp32", grad_ckpt=grad_ckpt,
                eval_every=500, eval_seq=64, r_eval=(1,), log_every=20,
-               ckpt_dir=str(ck_local), ckpt_every_min=30, time_budget_s=restante, tag=TAG)
+               ckpt_dir=str(ck_local), ckpt_every_min=30, time_budget_s=restante, tag=TAG_)
     res = train_ddp(rc, ns_dtype="bf16", log=lambda s: print(s, flush=True), on_save=ckpt_vol.commit)
 
     # 4) subir checkpoint (con optimizador) y pesos bf16 a GCS
@@ -247,7 +261,7 @@ def tramo(horas: float = HORAS, base_url: str = "", base_sha: str = "", total_to
     sd = {n: t.to(torch.bfloat16) for n, t in so["masters"].items()}
     exp = raiz / "export" / f"paso_{res['step']:06d}"
     exp.mkdir(parents=True, exist_ok=True)
-    torch.save(dict(step=res["step"], preset=PRESET, tag=TAG, vocab=32768, state=sd), exp / "pesos_bf16.tmp")
+    torch.save(dict(step=res["step"], preset=PRESET_, tag=TAG_, vocab=32768, state=sd), exp / "pesos_bf16.tmp")
     os.replace(exp / "pesos_bf16.tmp", exp / "pesos_bf16.pt")
     info = dict(evento="tramo", paso=res["step"], terminado=res["finished"], tokens_vistos=res["step"] * 256 * 1024,
                 val=res.get("val"), test=res.get("test"), horas=round((time.time() - t_ini) / 3600, 2),

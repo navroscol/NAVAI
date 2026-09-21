@@ -10,7 +10,7 @@ import torch
 import torch.nn.functional as F
 
 from .lm import lm_preset
-from .pt.model import Navros, apply_rope, rmsnorm, rope_tables
+from .pt.model import Navros, apply_rope, rmsnorm, rope_from_cfg
 
 EOT = 0
 
@@ -59,7 +59,7 @@ def step(model: Navros, tokens, caches, pos0):
     cfg = model.cfg
     assert not cfg.n_core and not cfg.abacus, "la caché KV solo cubre modelos sin núcleo ni ábaco"
     x = model.emb[tokens]
-    cos, sin = rope_tables(tokens.shape[1], cfg.head_dim, cfg.rope_theta, x.device, x.dtype, offset=pos0)
+    cos, sin = rope_from_cfg(cfg, tokens.shape[1], x.device, x.dtype, offset=pos0)
     for layer, cache in zip(list(model.pre) + list(model.coda), caches):
         x = _layer_step(layer, x, cos, sin, cache)
     return (rmsnorm(x, model.norm_f, cfg.norm_eps) @ model.emb.T) * cfg.logit_scale

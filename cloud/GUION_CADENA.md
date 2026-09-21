@@ -101,3 +101,10 @@ No hay que hacer nada distinto: cuando `tokens_vistos` pasa de 46.800M el LR dec
 | "primer tramo: hacen falta --base-url" en un workspace que no es el primero | el checkpoint no se subió (el tramo anterior murió antes del paso 4) | volver al workspace anterior y relanzar `tramo`: reanuda del Volume y sube |
 | el coste del workspace supera 30 $ | `--horas` alto o copias lentas | bajar `--horas` a 4,5 en el siguiente |
 | val sube en vez de bajar durante varios tramos | LR 0,01 demasiado alto para esta fase | no hay ajuste en caliente sin romper la continuidad; parar, decidir, y si acaso empezar una cadena nueva desde el último export con `LR_MUON` menor |
+
+## Variante: cadena sobre el cuerpo de Phi-4-mini (MIT) con nuestro tokenizador
+
+Ver `investigacion/porte_phi4mini.md`. En resumen: primero `modal run cloud/modal_porte_phi.py`
+(una vez, CPU), y después la misma cadena con `NAVROS_PRESET=phi4mini NAVROS_TAG=navros-phi4mini-cadena`
+y, en el primer tramo, `--base-gcs base/phi_4_mini_instruct_navros32k.pt --micro 4 --total-tokens 14000000000`.
+Es una cadena distinta de la del 1B: otra etiqueta, otro preset, el mismo corpus.

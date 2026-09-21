@@ -23,25 +23,43 @@ def rmsnorm(x, g, eps):
     return y * g if g is not None else y
 
 
-def rope_tables(T, head_dim, theta, device, dtype, offset=0):
-    half = head_dim // 2
+def _rope_freqs(rotary_dim, theta, factors=None):
+    half = rotary_dim // 2
     freqs = theta ** (-torch.arange(half, dtype=torch.float64) / half)
+    if factors:
+        freqs = freqs / torch.tensor(factors, dtype=torch.float64)   # LongRoPE: divisor por frecuencia
+    return freqs
+
+
+def rope_tables(T, head_dim, theta, device, dtype, offset=0, rotary_dim=None, factors=None, mscale=1.0):
+    freqs = _rope_freqs(rotary_dim or head_dim, theta, factors)
     ang = torch.outer(torch.arange(offset, offset + T, dtype=torch.float64), freqs)
-    return ang.cos().to(device, dtype), ang.sin().to(device, dtype)
+    return (ang.cos() * mscale).to(device, dtype), (ang.sin() * mscale).to(device, dtype)
 
 
-def rope_tables_pos(pos, head_dim, theta, dtype):
-    """pos: (B,T) enteros. Devuelve cos, sin de forma (B,1,T,hd/2)."""
-    half = head_dim // 2
-    freqs = (theta ** (-torch.arange(half, dtype=torch.float64) / half)).to(pos.device)
+def rope_tables_pos(pos, head_dim, theta, dtype, rotary_dim=None, factors=None, mscale=1.0):
+    """pos: (B,T) enteros. Devuelve cos, sin de forma (B,1,T,rd/2)."""
+    freqs = _rope_freqs(rotary_dim or head_dim, theta, factors).to(pos.device)
     ang = pos[..., None].double() * freqs
-    return ang.cos()[:, None].to(dtype), ang.sin()[:, None].to(dtype)
+    return (ang.cos() * mscale)[:, None].to(dtype), (ang.sin() * mscale)[:, None].to(dtype)
+
+
+def rope_from_cfg(cfg, T, device, dtype, offset=0, pos=None):
+    """Tablas RoPE con todos los ajustes de la configuración (fracción rotada, LongRoPE)."""
+    extra = dict(rotary_dim=cfg.rotary_dim, factors=cfg.rope_factors or None, mscale=cfg.rope_mscale)
+    if pos is not None:
+        return rope_tables_pos(pos, cfg.head_dim, cfg.rope_theta, dtype, **extra)
+    return rope_tables(T, cfg.head_dim, cfg.rope_theta, device, dtype, offset=offset, **extra)
 
 
 def apply_rope(x, cos, sin):
-    half = x.shape[-1] // 2
-    x1, x2 = x[..., :half], x[..., half:]
-    return torch.cat([x1 * cos - x2 * sin, x1 * sin + x2 * cos], dim=-1)
+    """Rota las primeras 2·len(cos) dimensiones de cada cabeza; el resto (si lo hay) pasa sin rotar."""
+    rd = 2 * cos.shape[-1]
+    xr, resto = x[..., :rd], x[..., rd:]
+    half = rd // 2
+    x1, x2 = xr[..., :half], xr[..., half:]
+    out = torch.cat([x1 * cos - x2 * sin, x1 * sin + x2 * cos], dim=-1)
+    return out if resto.shape[-1] == 0 else torch.cat([out, resto], dim=-1)
 
 
 class Layer(nn.Module):
@@ -153,10 +171,8 @@ class Navros(nn.Module):
             x = x + self.abaco[abacus]
         if not cfg.rope:
             rope = None
-        elif pos is not None:
-            rope = rope_tables_pos(pos, cfg.head_dim, cfg.rope_theta, x.dtype)
         else:
-            rope = rope_tables(T, cfg.head_dim, cfg.rope_theta, x.device, x.dtype)
+            rope = rope_from_cfg(cfg, T, x.device, x.dtype, pos=pos)
         mask = self._mask(B, T, valid, x.device)
         for layer in self.pre:
             x = self._layer(layer, x, rope, mask)
