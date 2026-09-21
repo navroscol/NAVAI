@@ -175,19 +175,21 @@ class CompuertaEspigas(nn.Module):
 
 
 class ModeloMPSEspigas(nn.Module):
-    """Dos capas MPS con una compuerta de espigas entre ambas."""
+    """Dos capas MPS con una compuerta de espigas entre ambas. Con `compuerta=False` es el control:
+    las mismas dos capas sin compuerta (la señal pasa entera)."""
 
-    def __init__(self, chi: int, variante: str, d_oculto: int = 8):
+    def __init__(self, chi: int, variante: str, d_oculto: int = 8, compuerta: bool = True):
         super().__init__()
         self.capa1 = CapaMPS(chi, d_oculto, variante)
-        self.espigas = CompuertaEspigas(2 * d_oculto)
+        self.espigas = CompuertaEspigas(2 * d_oculto) if compuerta else None
         self.capa2 = CapaMPS(chi, 2, variante, entrada_continua=True, d_entrada=2 * d_oculto)
-        self.tasa = torch.tensor(0.0)
+        self.tasa = torch.tensor(1.0)
 
     def forward(self, x):
         s = self.capa1(x)
         f = torch.cat([s.real, s.imag], dim=-1) if s.is_complex() else torch.cat([s, s * 0], -1)
-        f, self.tasa = self.espigas(f)
+        if self.espigas is not None:
+            f, self.tasa = self.espigas(f)
         return born(self.capa2(f))
 
 
@@ -285,6 +287,8 @@ class Transformer(nn.Module):
 def construir(nombre: str, chi: int, secuencia: bool) -> nn.Module:
     if nombre.startswith("mps-espigas"):
         return ModeloMPSEspigas(chi, "complejo")
+    if nombre == "mps-2capas":  # control: dos capas sin compuerta
+        return ModeloMPSEspigas(chi, "complejo", compuerta=False)
     if nombre == "mps-dual-critica":
         return ModeloDual(chi, "complejo", critica=True)
     if nombre == "mps-dual-suma":

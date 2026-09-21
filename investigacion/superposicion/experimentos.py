@@ -108,6 +108,23 @@ def plan(nombre: str, semillas=(0, 1, 2)) -> list[dict]:
         for modelo in ["mps-dual-critica", "mps-dual-suma", "mps-espigas"]:
             for s in semillas:
                 cfgs.append(dict(modelo=modelo, tarea="paso-3", chi=16, semilla=s))
+    if nombre == "profundidad":  # ¿el 100 % en paso-3 era de la profundidad o del silencio?
+        for modelo in ["mps-complejo", "mps-2capas", "mps-espigas"]:
+            for s in semillas:
+                cfgs.append(dict(modelo=modelo, tarea="paso-3", chi=16, semilla=s))
+    if nombre == "escala":  # escala ordinal: mayor k resuelto exacto y general por cada χ
+        for chi in (8, 16, 32, 64):
+            for k in range(1, 7):
+                for s in semillas:
+                    cfgs.append(dict(modelo="mps-complejo", tarea=f"paso-{k}", chi=chi, semilla=s))
+        for chi in (16, 32):  # Transformer d=64 y d=128 como referencia
+            for k in range(1, 7):
+                for s in semillas:
+                    cfgs.append(dict(modelo="tf-rope", tarea=f"paso-{k}", chi=chi, semilla=s))
+    if nombre == "escala-local":  # versión reducida para una CPU: 1 semilla, χ ≤ 32, k ≤ 5
+        for chi in (8, 16, 32):
+            for k in range(1, 6):
+                cfgs.append(dict(modelo="mps-complejo", tarea=f"paso-{k}", chi=chi, semilla=0))
     if nombre == "grande":  # para GPU/Modal: más ancho, más largo, más pasos; L_train=16, prueba hasta 48
         for tarea in ["paso-1", "paso-2", "paso-3"]:
             for modelo in ["mps-complejo", "mps-unitario", "mps-fourier", "mps-real", "tf-rope", "tf-abaco",
