@@ -16,6 +16,11 @@ Face) y hay que comprobarlas antes de portar.
 | **Phi-3.5-mini-instruct** (Microsoft) | 3,8B | MIT | sí (multilingüe) | d=3072, 32 capas, 32 cabezas **sin GQA**, RoPE completo, SwiGLU, sin sesgos, vocab 32.064; embeddings **no** atados | bajo: solo la cabeza de salida separada | **el más compatible con licencia MIT** |
 | **Phi-4-mini-instruct** (Microsoft) | 3,8B | MIT | sí (23 idiomas) | d=3072, 32 capas, GQA (24/8), RoPE parcial, vocab 200K | medio: expandir KV, RoPE parcial, embedding de 600M | viable, más trabajo |
 | **DeepSeek-R1-Distill-Qwen-1.5B** | 1,5B | MIT (base Qwen2.5, Apache 2.0) | sí (Qwen2.5 es multilingüe) | Qwen2: GQA (12/2), **sesgos en QKV**, vocab 152K | medio: añadir sesgos o absorberlos, expandir KV | viable; es un ajuste de razonamiento, no una base limpia |
+| **Motif-2.6B v1.1-LC** (Motif Technologies) | 2,6B | MIT (la v1.0 es Apache 2.0) | por comprobar (entrenado desde cero, inglés y coreano principalmente) | Differential Attention y PolyNorm en vez de atención y RMSNorm estándar | alto: hay que implementar las dos capas en `navros/pt/model.py` | MIT y tamaño ideal, pero arquitectura distinta |
+| **MiMo-7B-Base** (Xiaomi) | 7B | MIT | por comprobar (25T tokens, orientado a razonamiento) | 36 capas, d=4096, FFN 11008, Llama-like con cabezas MTP extra | medio: quitar MTP, expandir KV si hay GQA | MIT, pero 7B: maestros fp32 no caben en una H100 (112 GB); haría falta bf16 o 2 GPUs |
+| DeepSeek-R1-Distill-Qwen-7B | 7B | MIT (base Qwen2.5) | sí | Qwen2 (sesgos QKV, GQA) | medio | igual que el de 1,5B, pero 7B |
+| Seed-Coder-8B-Base (ByteDance) | 8B | MIT | código | Llama-like | bajo-medio | solo código; 8B |
+| GLM-4-9B-0414 (Zhipu) | 9B | MIT | sí | GLM (atención y norma propias) | alto | MIT, pero 9B y arquitectura propia |
 | Phi-4 (Microsoft) | 14B | MIT | sí | Phi-3 grande, sin GQA | bajo | no cabe en una H100 con maestros fp32 (224 GB) |
 | Qwen3-1.7B-Base | 1,7B | Apache 2.0 | sí | d=2048, 16 cabezas, FFN 6144 (**la misma forma que navros-1b-fix**), 28 capas, GQA 8, QK-norm, vocab 152K | medio: QK-norm y expandir KV | el mejor por forma y tamaño, pero no es MIT |
 | SmolLM2-1.7B | 1,7B | Apache 2.0 | flojo (inglés) | d=2048, 24 capas, 32 cabezas sin GQA, vocab 49K, atados | muy bajo | porte casi directo; le falta español |
@@ -24,6 +29,7 @@ Face) y hay que comprobarlas antes de portar.
 | Devstral 2 (Mistral) | 123B | MIT modificada (sin uso si la empresa factura > 20 M$/mes) | sí | — | — | demasiado grande |
 | Codestral 22B v0.1 (Mistral) | 22B | **Mistral Non-Production**: sin uso comercial | — | — | — | no; Codestral 2 (2026) sí es Apache 2.0, pero 22B |
 | Llama 3.2 1B/3B (Meta) | 1B / 3B | Licencia Llama (no MIT) | sí | GQA | medio | licencia propia, no permisiva del todo |
+| Youtu-LLM-2B-Base (Tencent) | 2B | licencia propia "youtu-llm" | — | — | — | descartado por licencia |
 
 ## Lo que cambia respecto a "partir de cero"
 
@@ -46,6 +52,16 @@ datos sintéticos generados con NIM. Un workspace de 30 $ para la prueba.
 Si el objetivo es el modelo propio desde cero y la investigación de arquitectura: seguir con la
 cadena del 1B y no mezclar.
 
+## Resumen de lo estrictamente MIT y ≤ 4B (lo que cabe en la cadena de una H100)
+
+1. **Phi-3.5-mini-instruct**, 3,8B: el único con licencia MIT, español y la misma forma de bloque
+   que NAVROS (sin GQA, RoPE completo, SwiGLU, sin sesgos, vocab 32K). Es un modelo de instrucción,
+   no una base limpia; el preentrenamiento continuado lo tolera.
+2. **Phi-4-mini-instruct / Phi-4-mini-reasoning**, 3,8B: MIT, español, más moderno; GQA, RoPE parcial
+   y vocab de 200K exigen tres adaptaciones en el código.
+3. **DeepSeek-R1-Distill-Qwen-1.5B**: MIT, la única opción MIT por debajo de 2B; sesgos QKV y GQA.
+4. **Motif-2.6B v1.1-LC**: MIT y desde cero, pero con atención y normalización no estándar.
+
 ## Fuentes
 
 - Phi-4-mini-instruct, MIT, idiomas: https://huggingface.co/microsoft/Phi-4-mini-instruct
@@ -55,3 +71,9 @@ cadena del 1B y no mezclar.
 - Codestral 22B (MNPL): https://mistral.ai/news/codestral/ ; Codestral 2 Apache 2.0: https://aitooltier.com/tools/codestral
 - Devstral 2 (MIT modificada) y Devstral Small 2 (Apache 2.0): https://huggingface.co/mistralai/Devstral-2-123B-Instruct-2512 , https://simonwillison.net/2025/Dec/9/devstral-2/
 - Qwen3-1.7B-Base, Apache 2.0: https://huggingface.co/Qwen/Qwen3-1.7B-Base
+- Phi-4-mini-reasoning, MIT, misma arquitectura que Phi-4-mini (vocab 200K, GQA, embeddings compartidos): https://huggingface.co/microsoft/Phi-4-mini-reasoning , https://arxiv.org/pdf/2503.01743
+- Motif-2.6B (Apache 2.0) y v1.1-LC (MIT); arquitectura con Differential Attention y PolyNorm: https://huggingface.co/Motif-Technologies/Motif-2.6B , https://huggingface.co/Motif-Technologies/Motif-2.6b-v1.1-LC , https://arxiv.org/abs/2508.09148
+- MiMo-7B-Base, MIT, 36 capas, d=4096: https://huggingface.co/XiaomiMiMo/MiMo-7B-Base , https://github.com/XiaomiMiMo/MiMo
+- Seed-Coder-8B-Base, MIT: https://huggingface.co/ByteDance-Seed/Seed-Coder-8B-Base
+- GLM-4-9B-0414, MIT: https://huggingface.co/zai-org/GLM-4-9B-0414
+- Youtu-LLM-2B-Base, licencia propia: https://huggingface.co/tencent/Youtu-LLM-2B-Base
