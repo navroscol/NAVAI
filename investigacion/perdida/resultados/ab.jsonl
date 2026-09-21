@@ -1,0 +1,6 @@
+{"nombre": "base", "val": 2.828105330467224, "test": 2.5693989992141724, "pasos": 366, "seg": 384, "semilla": 0}
+{"nombre": "wd", "val": 2.7907949686050415, "test": 2.536991834640503, "pasos": 366, "seg": 369, "semilla": 0}
+{"nombre": "lr2x", "val": 2.6372296810150146, "test": 2.429970145225525, "pasos": 366, "seg": 375, "semilla": 0}
+{"nombre": "lrhalf", "val": 3.2740882635116577, "test": 2.8803021907806396, "pasos": 366, "seg": 361, "semilla": 0}
+{"nombre": "T2x", "val": 2.8286145329475403, "test": 2.477986693382263, "pasos": 366, "seg": 413, "semilla": 0}
+{"nombre": "prom(media de 8 ckpt)", "val": 2.840977430343628, "test": 2.572731137275696, "pasos": 366, "seg": 376, "semilla": 0}

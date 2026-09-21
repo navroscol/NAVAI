@@ -13,6 +13,8 @@ Variantes:
   wd     igual + weight decay 0,1 en las matrices (Muon)          [candidato: Liu et al. 2025, Muon escalable]
   lr2x   igual con lr 0,04                                        [el barrido del 1B eligió el borde superior]
   lrhalf igual con lr 0,01                                        [por si el borde era ruido]
+  lr4x   igual con lr 0,08                                        [¿dónde está el óptimo?]
+  wd_lr2x wd 0,1 y lr 0,04 a la vez                               [¿se suman?]
   T2x    igual con T=512 y la mitad de secuencias (mismos tokens) [más contexto por predicción]
   prom   base sin decaimiento + promedio de los últimos checkpoints [Hägele et al. 2024: el promedio
          sustituye al decaimiento]; se evalúa el promedio y también el último checkpoint sin promediar
@@ -105,6 +107,10 @@ if __name__ == "__main__":
                 r = correr(v, a.tokens, lr=0.04, seed=s, log=quiet)
             elif v == "lrhalf":
                 r = correr(v, a.tokens, lr=0.01, seed=s, log=quiet)
+            elif v == "lr4x":
+                r = correr(v, a.tokens, lr=0.08, seed=s, log=quiet)
+            elif v == "wd_lr2x":
+                r = correr(v, a.tokens, lr=0.04, wd=0.1, seed=s, log=quiet)
             elif v == "T2x":
                 r = correr(v, a.tokens, T=512, batch=32, seed=s, log=quiet)
             elif v == "prom":
