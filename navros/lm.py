@@ -45,6 +45,9 @@ def lm_preset(name: str, vocab: int = 32768) -> NavrosConfig:
         # Phi-4-mini portado (cuerpo de 32 capas, embedding nueva de 32K): ver navros/porte_phi.py
         "phi4mini": dict(d=3072, n_heads=24, ffn=8192, n_pre=32, n_core=0, rope_frac=0.75, norm_eps=1e-5,
                          res_scale=1.0, logit_scale_fixed=1.0, rope_mscale=1.1902380714238083),
+        # lo mismo con la rejilla: atención lineal con estado matricial en 3 de cada 4 capas (softmax en 0, 4, 8, ...)
+        "phi4mini-rejilla": dict(d=3072, n_heads=24, ffn=8192, n_pre=32, n_core=0, rope_frac=0.75, norm_eps=1e-5,
+                                 res_scale=1.0, logit_scale_fixed=1.0, rope_mscale=1.1902380714238083, grid_every=4),
         # humo
         "tiny":     dict(d=64, n_heads=2, n_pre=1, n_core=1, n_blocks=1, n_coda=1, r_mean=3, k_bptt=2, r_max=6),
     }[name]

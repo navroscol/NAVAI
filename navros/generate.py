@@ -10,7 +10,7 @@ import torch
 import torch.nn.functional as F
 
 from .lm import lm_preset
-from .pt.model import Navros, apply_rope, rmsnorm, rope_from_cfg
+from .pt.model import Navros, apply_rope, atencion_rejilla, rmsnorm, rope_from_cfg
 
 EOT = 0
 
@@ -36,6 +36,11 @@ def _layer_step(layer, x, cos, sin, cache):
     u = rmsnorm(x, layer.g1, cfg.norm_eps)
     q, k, v = split(u @ layer.wq.T), split(u @ layer.wk.T), split(u @ layer.wv.T)
     q, k = apply_rope(q, cos, sin), apply_rope(k, cos, sin)
+    if layer.grid:  # rejilla: el estado es una matriz por cabeza (S) y un vector (z), no la lista de claves
+        o, cache["S"], cache["z"] = atencion_rejilla(q, k, v, cfg.grid_feature, cache.get("S"), cache.get("z"))
+        x = x + layer.scale * (o.transpose(1, 2).reshape(B, T, d) @ layer.wo.T)
+        u = rmsnorm(x, layer.g2, cfg.norm_eps)
+        return x + layer.scale * ((F.silu(u @ layer.w1.T) * (u @ layer.w3.T)) @ layer.w2.T)
     P = 0
     if cache.get("k") is not None:
         P = cache["k"].shape[2]

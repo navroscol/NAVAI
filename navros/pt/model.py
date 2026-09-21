@@ -62,13 +62,40 @@ def apply_rope(x, cos, sin):
     return out if resto.shape[-1] == 0 else torch.cat([out, resto], dim=-1)
 
 
-class Layer(nn.Module):
-    """Pre-norma, sin sesgos: y = x + s·Attn(norm(x)); z = y + s·SwiGLU(norm(y))."""
+def rasgos_rejilla(x, kind="elu"):
+    """Mapa de rasgos positivo de la atención lineal. Escala 1/hd^¼ en q y k para que φ(q)·φ(k)
+    tenga el mismo orden que q·k/√hd de la softmax."""
+    x = x / x.shape[-1] ** 0.25
+    return F.elu(x) + 1 if kind == "elu" else F.relu(x)
 
-    def __init__(self, cfg: NavrosConfig, scale: float):
+
+def atencion_rejilla(q, k, v, kind="elu", S=None, z=None, eps=1e-6):
+    """Atención lineal causal con estado matricial ("rejilla"): S_t = S_{t-1} + φ(k_t) v_tᵀ, z_t = z_{t-1} + φ(k_t),
+    o_t = φ(q_t) S_t / (φ(q_t)·z_t). Forma cuadrática enmascarada dentro del bloque (exacta, O(T²) como la
+    softmax) más la aportación del estado previo (S, z) si lo hay. Devuelve o y el estado actualizado."""
+    qf, kf = rasgos_rejilla(q, kind), rasgos_rejilla(k, kind)          # (B,H,T,hd)
+    T = q.shape[2]
+    A = qf @ kf.transpose(-1, -2)                                        # (B,H,T,T)
+    A = A.masked_fill(~torch.ones(T, T, dtype=torch.bool, device=q.device).tril(), 0.0)
+    num = A @ v                                                          # (B,H,T,hd)
+    den = A.sum(-1, keepdim=True)                                        # (B,H,T,1)
+    if S is not None:
+        num = num + qf @ S                                               # φ(q_t) S_prev
+        den = den + (qf * z[:, :, None, :]).sum(-1, keepdim=True)        # φ(q_t)·z_prev
+    o = num / (den + eps)
+    S_new = (kf.transpose(-1, -2) @ v) + (S if S is not None else 0)     # (B,H,hd,hd)
+    z_new = kf.sum(2) + (z if z is not None else 0)                      # (B,H,hd)
+    return o, S_new, z_new
+
+
+class Layer(nn.Module):
+    """Pre-norma, sin sesgos: y = x + s·Attn(norm(x)); z = y + s·SwiGLU(norm(y)).
+    Con `grid=True` la atención es la rejilla (lineal con estado matricial) en vez de softmax."""
+
+    def __init__(self, cfg: NavrosConfig, scale: float, grid: bool = False):
         super().__init__()
         d, f = cfg.d, cfg.ffn
-        self.cfg, self.scale = cfg, scale
+        self.cfg, self.scale, self.grid = cfg, scale, grid
         self.g1 = nn.Parameter(torch.ones(d))
         self.wq = nn.Parameter(torch.empty(d, d))
         self.wk = nn.Parameter(torch.empty(d, d))
@@ -87,7 +114,10 @@ class Layer(nn.Module):
         if rope is not None:
             q, k = apply_rope(q, *rope), apply_rope(k, *rope)
         causal = isinstance(mask, str)  # "causal": máscara triangular implícita (kernels eficientes)
-        if manual:
+        if self.grid:
+            assert causal or mask is None, "la rejilla es causal; no admite máscaras arbitrarias"
+            o, _, _ = atencion_rejilla(q, k, v, self.cfg.grid_feature)
+        elif manual:
             s = (q @ k.transpose(-1, -2)) / math.sqrt(d // H)
             if causal:
                 s = s.masked_fill(~torch.ones(T, T, dtype=torch.bool, device=u.device).tril(), float("-inf"))
@@ -114,10 +144,11 @@ class Navros(nn.Module):
         self.emb = nn.Parameter(torch.empty(cfg.vocab, cfg.d))
         if cfg.abacus:
             self.abaco = nn.Parameter(torch.empty(cfg.abacus, cfg.d))
-        self.pre = nn.ModuleList(Layer(cfg, cfg.scale_stack) for _ in range(cfg.n_pre))
+        self.pre = nn.ModuleList(Layer(cfg, cfg.scale_stack, cfg.es_rejilla(i)) for i in range(cfg.n_pre))
         nb = cfg.n_blocks if cfg.n_core else 0
+        assert not (cfg.grid_every and cfg.n_core), "la rejilla solo está implementada en la pila fija (preludio y coda)"
         self.core = nn.ModuleList(nn.ModuleList(Layer(cfg, cfg.scale_core) for _ in range(cfg.n_core)) for _ in range(nb))
-        self.coda = nn.ModuleList(Layer(cfg, cfg.scale_stack) for _ in range(cfg.n_coda))
+        self.coda = nn.ModuleList(Layer(cfg, cfg.scale_stack, cfg.es_rejilla(cfg.n_pre + j)) for j in range(cfg.n_coda))
         self.norm_f = nn.Parameter(torch.ones(cfg.d))
         self.manual_attn = False
         self.ckpt_fn = None   # p. ej. torch.utils.checkpoint.checkpoint: recomputa cada capa en el backward

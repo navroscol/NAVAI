@@ -96,6 +96,7 @@ class NavrosNP:
             x = x + P["abaco"][batch["abacus"]]
         assert cfg.rope_frac == 1.0 and not cfg.rope_factors and cfg.rope_mscale == 1.0, \
             "el oráculo NumPy no implementa RoPE parcial ni LongRoPE (solo el port PyTorch)"
+        assert cfg.grid_every == 0, "el oráculo NumPy no implementa la rejilla (solo el port PyTorch)"
         if not cfg.rope:
             rope = None
         elif batch.get("pos") is not None:

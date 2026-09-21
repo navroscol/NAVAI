@@ -35,6 +35,9 @@ class NavrosConfig:
     rope_mscale: float = 1.0     # LongRoPE: cos y sin se multiplican por esto
     res_scale: float = 0.0       # 0 = 1/√(2L) en las ramas residuales; >0 = ese valor (modelos portados: 1)
     logit_scale_fixed: float = 0.0  # 0 = 1/√d; >0 = ese valor (modelos portados: 1)
+    grid_every: int = 0          # rejilla: 0 = toda la atención es softmax; k>0 = softmax en las capas i % k == 0
+                                 # y atención lineal con estado matricial (Σ φ(k)·vᵀ) en las demás
+    grid_feature: str = "elu"    # mapa de rasgos de la rejilla: elu (elu(x)+1) | relu
     abacus: int = 0              # tamaño de la tabla ábaco (0 = sin ábaco)
     norm_eps: float = 1e-6
     # recurrencia (solo si n_blocks == 1 y n_core > 0)
@@ -83,6 +86,10 @@ class NavrosConfig:
     def logit_scale(self) -> float:
         """Pesos atados: emb ~ N(0,1) entra con rms 1 y los logits salen con std ~1."""
         return self.logit_scale_fixed if self.logit_scale_fixed > 0 else 1.0 / math.sqrt(self.d)
+
+    def es_rejilla(self, i: int) -> bool:
+        """¿La capa i-ésima de la pila (preludio y coda numeradas seguidas) usa la rejilla?"""
+        return self.grid_every > 0 and i % self.grid_every != 0
 
     def n_params(self) -> int:
         d, f = self.d, self.ffn

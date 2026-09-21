@@ -56,6 +56,33 @@ Lo que hay que mirar en el primer tramo:
   250M tokens por tramo de 5 h. Los 55 tramos dan ~14.000M tokens, no 52.000M: hay que poner
   `--total-tokens 14000000000` en el primer tramo para que el decaimiento caiga donde toca.
 
+## La rejilla sobre el cuerpo de Phi-4-mini (experimental)
+
+Preset `phi4mini-rejilla`: en 24 de las 32 capas la atención softmax se sustituye por **atención
+lineal con estado matricial**, que es la rejilla del estudio de superposición llevada a la
+secuencia: el estado de cada cabeza es la matriz S_t = Σ_{s≤t} φ(k_s)·v_sᵀ (128×128, una suma de
+productos exteriores clave·valor) y la lectura es o_t = φ(q_t)·S_t / (φ(q_t)·z_t), con
+φ(x) = elu(x)+1. Las 8 capas restantes (0, 4, 8, …, 28) conservan la softmax para la recuperación
+exacta, como recomendaba §11.3 del informe. Se reutilizan las proyecciones Q, K, V y O de Phi tal
+cual: no hay parámetros nuevos, cambia la operación.
+
+- Entrenamiento: forma cuadrática enmascarada, mismo coste que la softmax a T=1024 (`atencion_rejilla`).
+- Generación: estado S y z por capa en la caché, en vez de la lista de claves y valores; memoria
+  constante con la longitud. `tests/test_rejilla.py` comprueba que la forma cuadrática es la
+  recurrencia, que el estado previo equivale a la secuencia entera, que la caché coincide con el
+  forward completo y la causalidad.
+- Se lanza con la misma base exportada: `NAVROS_PRESET=phi4mini-rejilla NAVROS_TAG=navros-phi4mini-rejilla`
+  y los mismos comandos de la cadena. Es otra cadena (otra etiqueta).
+
+Qué esperar, dicho claro: al cambiar la operación de 24 capas, el cuerpo de Phi deja de "saber"
+en esas capas hasta que el entrenamiento las reajuste; la pérdida inicial será mucho más alta que
+en `phi4mini` y la pregunta del experimento es si en los mismos tramos la alcanza. La literatura
+que convierte modelos softmax en lineales (LoLCATs, "Mamba in the Llama", a verificar) lo hace con
+destilación de la atención antes del ajuste; aquí se parte directamente al preentrenamiento
+continuado. Lo que se puede afirmar con este código: la rejilla es exacta como recurrencia, no
+añade parámetros, y su inferencia no crece con el contexto. Lo que no: que iguale la perplejidad
+de `phi4mini`. Correr los dos presets en paralelo, un workspace cada uno, es la comparación.
+
 ## Lo que no está probado
 
 Nada de esto ha corrido en Modal ni ha visto los pesos reales: desde esta sesión no se llega a
