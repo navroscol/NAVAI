@@ -227,6 +227,9 @@ a igual cómputo.
 
 ## 9. Superposición de conceptos: ¿caben más en un estado bidimensional?
 
+> Corregido en §10: la fragilidad del vector real a n = 144 y su peor pérdida en el régimen denso eran
+> del LR (1e-2), no de la geometría. Se deja el texto original como registro.
+
 Segunda prueba, pedida tras el banco de Collatz: medir la superposición directamente sobre las
 representaciones, no sobre tareas. Es el modelo de juguete de Elhage et al. (m rasgos dispersos
 comprimidos en n números reales y reconstruidos con ReLU), con tres geometrías del estado a igual
@@ -287,6 +290,49 @@ Defectos del propio experimento, para no sobreleer:
 Lo que queda del candidato tras esta prueba: **la rejilla (estado como matriz, conceptos como
 productos exteriores) es la única forma "bidimensional" que sale bien parada**, por interferencia
 mínima, parámetros por concepto y robustez; no por capacidad. La fase, tal como se probó, no.
+
+## 10. Superposición de conceptos, ronda 2: las tres pruebas pendientes
+
+Mismo cuaderno con tres añadidos (`kaggle_conceptos2.ipynb`, tablas en
+`resultados/conceptos2_kaggle.md`): k conceptos activos elegidos solo entre los 32 importantes; rejilla
+de rango r con r = √n/2 para igualar los n parámetros por concepto del vector (`matriz-r4` a n = 64,
+`matriz-r6` a n = 144); y el vector real con LR 1e-3 (`real-lr3`).
+
+Lo que cambia respecto a §9, y hay que corregir allí:
+
+- **La fragilidad del vector real a n = 144 era del optimizador, no de la geometría.** Con LR 1e-3
+  el vector real es el mejor modelo del barrido en todo: pérdida 0,000 en los 21 regímenes,
+  interferencia uniforme de 0,04 a 0,06, error **exactamente cero** con hasta 8 conceptos
+  importantes activos a la vez, y el menor error entre todos los rasgos (0,331 con k = 1). La
+  ventaja de las geometrías bidimensionales en el régimen denso de §9 también desaparece: era
+  el mismo artefacto (LR 1e-2 demasiado alto para n ≥ 64). Lo que sí queda de §9 es más modesto:
+  las lecturas por módulo y bilineal **toleran un LR 10× peor** sin degenerar. Es robustez al
+  ajuste, no capacidad.
+- **Entre los conceptos importantes no hay interferencia medible en ninguna geometría real.** El
+  error con k importantes activos es plano en k para real, real-lr3 y las tres rejillas, a n = 64 y
+  a n = 144: el valor constante (0,01 a 0,2) es el sesgo positivo de los rasgos no representados,
+  que emiten una constante pase lo que pase, no interferencia. Solo el complejo por módulo crece
+  con k (0,051 → 0,591 a n = 64). Pero ojo: 32 conceptos importantes caben ortogonales en 64 o
+  144 dimensiones, así que la prueba no fuerza superposición **entre los importantes**. Para
+  hacerlo hay que aplanar la importancia (0,98^i) o declarar importantes 2n rasgos. Sigue
+  pendiente.
+- **La rejilla a igual número de parámetros se comporta como el vector.** `matriz-r6` a n = 144
+  representa el 100 % de los rasgos en el régimen denso, con interferencias de 0,1 a 0,7 y pérdidas
+  iguales a las del vector con LR alto. El rango es un mando: rango 1 da la interferencia mínima,
+  6× menos parámetros y pocos conceptos; rango √n/2 recupera la capacidad del vector y sus
+  problemas. No hay almuerzo gratis; hay una familia intermedia que no existía en el vector.
+- **En cobertura (error entre todos los rasgos), la rejilla de rango alto gana por poco:** 0,297
+  contra 0,331 con k = 1 a n = 144 y 0,266 contra 0,347 por concepto añadido. El complejo es el
+  peor en todas las condiciones.
+
+Conclusión de la línea de conceptos, con los datos de las dos rondas: **ninguna geometría
+bidimensional guarda más conceptos dispersos en el mismo recurso que un vector real bien
+ajustado**. La fase por módulo perjudica. La rejilla de productos exteriores es una
+parametrización legítima que cambia interferencia por capacidad con un mando (el rango) y
+resiste mal ajuste, y eso es todo lo que se puede afirmar. La pregunta original ("varios
+significados a la vez en el mismo token") no se responde con capacidad estática; el sitio donde
+sí apareció algo fue en la dinámica (§4 y §5: el estado MPS como superposición de estados de
+autómata), y ahí conviene volver.
 
 ## 7. Referencias que hay que verificar con fuentes propias
 
