@@ -12,15 +12,33 @@ Phi-4-mini (MIT), embedding y preentrenamiento continuado propios". El README de
 | atención: GQA con 8 cabezas KV | 8 KV | se repiten a 24 (exacto); pasan a entrenarse por separado |
 | RoPE: parcial (96 de 128 dims) con LongRoPE (factores cortos, mscale 1,19) | sí | añadido al modelo: `rope_frac`, `rope_factors`, `rope_mscale` |
 | escalas: sin escala en ramas residuales ni en logits | 1 y 1 | `res_scale=1`, `logit_scale_fixed=1` |
-| embedding: 200.064 × 3072, compartida entrada/salida | 614M | **nueva** de 32.768 × 3072 (100M), inicializada por trasplante: cada token nuestro = media de las embeddings de Phi de los tokens en que Phi parte su texto |
+| embedding: 200.064 × 3072, compartida entrada/salida | 614M | **nueva** de 32.768 × 3072 (100M), inicializada por **trasplante OMP** (arXiv 2506.06607) con NAVROS-1B como donante; la media de subtokens queda como alternativa (`--metodo media`) |
 | tokenizador | o200k (200K) | **el nuestro** (32K), sin cambios en el corpus |
 
 Parámetros del modelo resultante: 3,72B (con las cabezas KV expandidas), preset `phi4mini`.
 
+## El trasplante de embedding: OMP (Goddard y Fernandes Neto, arXiv 2506.06607)
+
+El método necesita un donante que ya use el tokenizador destino: NAVROS-1B (2.600M tokens) lo es.
+
+1. **Compartidos**: tokens nuestros cuyo texto es exactamente un token de Phi. Se copian de Phi tal cual.
+2. **Nuevos**: para cada uno, OMP aproxima su embedding **en el espacio de NAVROS-1B** como
+   combinación de k = 64 embeddings de NAVROS-1B de tokens compartidos (selección voraz con átomos
+   normalizados, coeficientes por mínimos cuadrados sobre el soporte).
+3. Esos mismos coeficientes se aplican a los embeddings **de Phi** de los mismos tokens compartidos.
+   Sin gradientes. El script imprime cuántos compartidos hay y el error relativo del OMP en el
+   espacio del donante (lo único medible antes de entrenar).
+
+Verificado en local con `--autotest`: OMP recupera una combinación 5-dispersa con error 2e-7 y la
+transferencia de coeficientes a otro espacio es exacta. Lo que no está verificado: el número de
+compartidos entre nuestro BPE y o200k (esperable: varios miles) y el error del OMP real; ambos
+salen en el registro del porte. El artículo compara contra mean-init, WECHSEL, FOCUS y ZETT y OMP
+gana en conservación sin entrenar; las cifras del artículo son para otros pares de modelos.
+
 ## Archivos
 
-- `navros/porte_phi.py`: mapeo de pesos, trasplante de embedding, export, y `--autotest` (referencia Phi-3
-  independiente: error 0 entre ambas implementaciones con GQA, RoPE parcial y LongRoPE).
+- `navros/porte_phi.py`: mapeo de pesos, trasplante OMP (y media), export, y `--autotest` (referencia Phi-3
+  independiente: error 0 entre ambas implementaciones con GQA, RoPE parcial y LongRoPE; recuperación OMP).
 - `navros/config.py`, `navros/pt/model.py`, `navros/generate.py`: RoPE parcial y LongRoPE, escalas
   configurables. Con los valores por defecto el comportamiento es el de siempre (las 20 pruebas del
   repositorio pasan). El oráculo NumPy no implementa RoPE parcial y lo dice con un assert.
@@ -31,16 +49,31 @@ Parámetros del modelo resultante: 3,72B (con las cabezas KV expandidas), preset
 ## Cómo se lanza (Modal)
 
 ```bash
-# 1) porte, una vez (CPU, ~15 min, < 1 $); deja base/phi_4_mini_instruct_navros32k.pt en el bucket
-modal run cloud/modal_porte_phi.py --modelo microsoft/Phi-4-mini-instruct
-#    (o --modelo microsoft/Phi-4-mini-reasoning: misma arquitectura)
+# 0) en cada workspace: el secreto del bucket
+modal secret create gcs-navros SERVICE_ACCOUNT_JSON="$(cat clave.json)"
 
-# 2) cadena con su propia etiqueta y preset (no mezclar con la del 1B)
+# 1) porte, una vez (CPU, ~30 min, ~1 $); deja base/phi_4_mini_instruct_navros32k.pt en el bucket.
+#    El donante es NAVROS-1B: la URL del archivo de la release pesos-1b-2600M de navros-ai.
+modal run cloud/modal_porte_phi.py --modelo microsoft/Phi-4-mini-instruct \
+    --donante-url https://github.com/navroscol/navros-ai/releases/download/pesos-1b-2600M/<archivo>.pt \
+    --donante-sha <sha256 del archivo>
+#    (o --modelo microsoft/Phi-4-mini-reasoning: misma arquitectura; sale base/phi_4_mini_reasoning_navros32k.pt)
+
+# 2) cadena A: cuerpo de Phi con atención softmax
 export NAVROS_PRESET=phi4mini NAVROS_TAG=navros-phi4mini-cadena
 modal run cloud/modal_cadena.py::estado
-modal run --detach cloud/modal_cadena.py::tramo --base-gcs base/phi_4_mini_instruct_navros32k.pt --micro 4
+modal run --detach cloud/modal_cadena.py::tramo --base-gcs base/phi_4_mini_instruct_navros32k.pt --micro 4 --total-tokens 14000000000
+#    tramos siguientes (un workspace cada uno, mismas variables): modal run --detach cloud/modal_cadena.py::tramo --micro 4
+
+# 3) cadena B: lo mismo con la rejilla (otro workspace, otra etiqueta; misma base)
+export NAVROS_PRESET=phi4mini-rejilla NAVROS_TAG=navros-phi4mini-rejilla
+modal run cloud/modal_cadena.py::estado
+modal run --detach cloud/modal_cadena.py::tramo --base-gcs base/phi_4_mini_instruct_navros32k.pt --micro 4 --total-tokens 14000000000
 #    tramos siguientes: modal run --detach cloud/modal_cadena.py::tramo --micro 4
 ```
+
+Las dos cadenas comparten el corpus del bucket (`corpus/p0` obligatorio, ver `cloud/GUION_CADENA.md`)
+y no se estorban: distinta etiqueta, distinto checkpoint. Pueden correr a la vez en dos workspaces.
 
 Lo que hay que mirar en el primer tramo:
 

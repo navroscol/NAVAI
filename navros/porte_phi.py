@@ -2,9 +2,17 @@
 
 Qué se conserva: las 32 capas del cuerpo (atención, SwiGLU, normas) tal cual, con equivalencia
 exacta comprobada contra la implementación de referencia. Qué se sustituye: la embedding de
-200.064 filas por una de 32.768, inicializada por trasplante (cada token nuestro = media de las
-embeddings de Phi de los tokens de Phi en que se parte su texto). Con eso el modelo arranca
-"sabiendo" el cuerpo y aprende la embedding nueva en los primeros tramos de la cadena.
+200.064 filas por una de 32.768, inicializada por trasplante. Dos métodos:
+
+  omp    (por defecto) Training-Free Tokenizer Transplantation via Orthogonal Matching Pursuit
+         (Goddard y Fernandes Neto, arXiv 2506.06607): hace falta un DONANTE que ya use nuestro
+         tokenizador, NAVROS-1B. Los tokens cuyo texto es un solo token en ambos vocabularios son
+         los COMPARTIDOS y se copian de Phi tal cual. Cada token no compartido se aproxima en el
+         espacio del donante como combinación k-dispersa (OMP) de los embeddings del donante de
+         los tokens compartidos, y esos mismos coeficientes se aplican a los embeddings de Phi de
+         esos tokens compartidos. Sin gradientes.
+  media  cada token nuestro = media de las embeddings de Phi de los tokens en que Phi parte su texto
+         (la referencia "mean-init" del artículo; peor según él).
 
 Correspondencia de pesos (HF Phi3ForCausalLM → NAVROS, preset "phi4mini"):
   model.embed_tokens.weight                      → emb            (solo para verificar; luego se trasplanta)
@@ -26,6 +34,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import time
 from pathlib import Path
 
 import torch
@@ -97,6 +106,75 @@ def trasplantar_embedding(emb_phi: torch.Tensor, tok_phi, tok_navros, eot_phi: i
         ids = ids.ids if hasattr(ids, "ids") else ids
         nueva[i] = emb_phi[ids].float().mean(0) if len(ids) else emb_phi[eot_phi].float()
     return nueva, sin_texto
+
+
+def _compartidos(tok_base, tok_objetivo, eot_base: int):
+    """Tokens del tokenizador objetivo (nuestro) cuyo texto es exactamente UN token del base (Phi).
+    Devuelve (ids_objetivo, ids_base) alineados."""
+    ids_o, ids_b = [], []
+    for i in range(tok_objetivo.get_vocab_size()):
+        texto = tok_objetivo.decode([i])
+        if i in (0, 1) or not texto:
+            continue
+        enc = tok_base.encode(texto, add_special_tokens=False)
+        enc = enc.ids if hasattr(enc, "ids") else enc
+        if len(enc) == 1 and enc[0] != eot_base:
+            ids_o.append(i)
+            ids_b.append(enc[0])
+    return torch.tensor(ids_o), torch.tensor(ids_b)
+
+
+@torch.no_grad()
+def omp(D: torch.Tensor, X: torch.Tensor, k: int, lote: int = 256):
+    """Orthogonal Matching Pursuit por lotes. D: (n, d) diccionario (filas = átomos); X: (m, d) objetivos.
+    Devuelve (indices (m, k), coeficientes (m, k)) tales que X ≈ Σ_j coef_j · D[indice_j].
+    La selección usa los átomos normalizados; los coeficientes se ajustan por mínimos cuadrados
+    sobre los átomos crudos del soporte (así se transfieren tal cual a otro espacio)."""
+    Dn = D / (D.norm(dim=1, keepdim=True) + 1e-8)
+    n, d = D.shape
+    k = min(k, n)
+    idx_out, coef_out = torch.zeros(X.shape[0], k, dtype=torch.long), torch.zeros(X.shape[0], k)
+    for a in range(0, X.shape[0], lote):
+        x = X[a:a + lote]                                   # (m, d)
+        m = x.shape[0]
+        r = x.clone()
+        sel = torch.zeros(m, 0, dtype=torch.long)
+        usado = torch.zeros(m, n, dtype=torch.bool)
+        for it in range(k):
+            corr = (r @ Dn.T).abs().masked_fill(usado, -1.0)  # (m, n)
+            j = corr.argmax(1)
+            usado[torch.arange(m), j] = True
+            sel = torch.cat([sel, j[:, None]], 1)              # (m, it+1)
+            A = D[sel]                                          # (m, it+1, d) átomos crudos del soporte
+            # mínimos cuadrados por objetivo: x ≈ c·A  →  c = lstsq(Aᵀ, x)
+            c = torch.linalg.lstsq(A.transpose(1, 2), x[:, :, None]).solution[:, :, 0]  # (m, it+1)
+            r = x - torch.einsum("mk,mkd->md", c, A)
+        idx_out[a:a + lote], coef_out[a:a + lote] = sel, c
+    return idx_out, coef_out
+
+
+@torch.no_grad()
+def trasplantar_omp(emb_base: torch.Tensor, tok_base, emb_donante: torch.Tensor, tok_objetivo, eot_base: int, k: int = 64):
+    """Embedding para el tokenizador objetivo en el espacio del modelo base (Phi), por OMP sobre el donante
+    (NAVROS-1B, que ya usa el tokenizador objetivo). Devuelve (embedding, informe)."""
+    V, d_b = tok_objetivo.get_vocab_size(), emb_base.shape[1]
+    assert emb_donante.shape[0] == V, "el donante debe usar exactamente el tokenizador objetivo"
+    ids_o, ids_b = _compartidos(tok_base, tok_objetivo, eot_base)
+    nueva = torch.zeros(V, d_b, dtype=torch.float32)
+    nueva[ids_o] = emb_base[ids_b].float()                     # compartidos: copia directa
+    nueva[0] = emb_base[eot_base].float()                      # eot ↔ <|endoftext|>
+    es_comp = torch.zeros(V, dtype=torch.bool); es_comp[ids_o] = True; es_comp[0] = True; es_comp[1] = True
+    nuevos = torch.nonzero(~es_comp)[:, 0]
+    Dd = emb_donante[ids_o].float()                            # diccionario en el espacio del donante
+    Db = emb_base[ids_b].float()                               # los mismos átomos en el espacio base
+    idx, coef = omp(Dd, emb_donante[nuevos].float(), k)
+    nueva[nuevos] = torch.einsum("mk,mkd->md", coef, Db[idx])  # mismos coeficientes, átomos del base
+    # calidad de la aproximación en el espacio del donante (lo único que se puede medir sin entrenar)
+    rec = torch.einsum("mk,mkd->md", coef, Dd[idx])
+    err = ((rec - emb_donante[nuevos].float()).norm(dim=1) / (emb_donante[nuevos].float().norm(dim=1) + 1e-8))
+    informe = dict(compartidos=int(len(ids_o)), nuevos=int(len(nuevos)), k=k,
+                   error_relativo_omp_medio=float(err.mean()), error_relativo_omp_p90=float(err.quantile(0.9)))
+    return nueva, informe
 
 
 def exportar(state: dict, cfg: NavrosConfig, salida: str, extra: dict | None = None) -> dict:
@@ -196,6 +274,22 @@ def autotest():
     print(f"autotest: rotary_dim={cfg.rotary_dim} mscale={cfg.rope_mscale:.4f} factores={cfg.rope_factors} "
           f"| error máximo entre referencia Phi3 y NAVROS portado: {err:.2e} (logits de magnitud {a.abs().max().item():.1f})")
     assert err < 1e-4, "el porte no es equivalente"
+    # OMP: recupera una combinación 5-dispersa exacta y transfiere los coeficientes a otro espacio
+    g = torch.Generator().manual_seed(3)
+    Dd = torch.randn(300, 32, generator=g)
+    W = torch.randn(300, 48, generator=g)
+    Db = Dd @ torch.randn(32, 48, generator=g)                       # átomos "base": mapa lineal del donante
+    coef_v = torch.zeros(7, 300)
+    for i in range(7):
+        coef_v[i, torch.randperm(300, generator=g)[:5]] = torch.randn(5, generator=g)
+    X = coef_v @ Dd
+    idx, coef = omp(Dd, X, k=5)
+    rec = torch.einsum("mk,mkd->md", coef, Dd[idx])
+    err_omp = ((rec - X).norm(dim=1) / X.norm(dim=1)).max().item()
+    trans = torch.einsum("mk,mkd->md", coef, Db[idx])
+    err_tr = ((trans - coef_v @ Db).norm(dim=1) / (coef_v @ Db).norm(dim=1)).max().item()
+    print(f"autotest OMP: error de recuperación {err_omp:.2e}, error de transferencia {err_tr:.2e}")
+    assert err_omp < 1e-4 and err_tr < 1e-4, "OMP no recupera la combinación dispersa"
     print("autotest ok")
 
 
@@ -207,6 +301,9 @@ def main():
     ap.add_argument("--tokenizer", default=str(Path(__file__).resolve().parent / "assets" / "tokenizer_navros_32k.json"))
     ap.add_argument("--salida", default="phi4mini_navros32k.pt")
     ap.add_argument("--verificar", type=int, default=2, help="secuencias para comparar con transformers (0 = no)")
+    ap.add_argument("--metodo", default="omp", choices=["omp", "media"])
+    ap.add_argument("--donante", default="", help="export de NAVROS-1B (pesos_bf16.pt con nuestro tokenizador): el donante del OMP")
+    ap.add_argument("--k", type=int, default=64, help="átomos por token en el OMP")
     a = ap.parse_args()
     if a.autotest:
         autotest()
@@ -242,13 +339,25 @@ def main():
     tok_nav = Tokenizer.from_file(a.tokenizer)
     eot_phi = hf.get("eos_token_id", 199999)
     eot_phi = eot_phi[0] if isinstance(eot_phi, list) else eot_phi
-    nueva, sin_texto = trasplantar_embedding(state["emb"], tok_phi, tok_nav, eot_phi)
-    print(f"embedding trasplantada: {tuple(nueva.shape)}, {sin_texto} tokens sin texto (copian eot); "
-          f"norma media Phi {state['emb'].float().norm(dim=1).mean():.4f} → nueva {nueva.norm(dim=1).mean():.4f}")
+    if a.metodo == "omp":
+        assert a.donante, "--metodo omp necesita --donante (export de NAVROS-1B)"
+        don = torch.load(a.donante, map_location="cpu", weights_only=False)
+        emb_don = don["state"]["emb"].float()
+        assert emb_don.shape[0] == tok_nav.get_vocab_size(), "el donante no usa nuestro tokenizador"
+        t0 = time.time()
+        nueva, informe = trasplantar_omp(state["emb"], tok_phi, emb_don, tok_nav, eot_phi, k=a.k)
+        informe["segundos"] = round(time.time() - t0)
+        print(f"trasplante OMP: {json.dumps(informe)}", flush=True)
+        detalle = dict(trasplante="omp", **informe, donante=a.donante, donante_paso=don.get("step"))
+    else:
+        nueva, sin_texto = trasplantar_embedding(state["emb"], tok_phi, tok_nav, eot_phi)
+        detalle = dict(trasplante="media de subtokens", sin_texto=sin_texto)
+    print(f"embedding trasplantada: {tuple(nueva.shape)}; norma media Phi {state['emb'].float().norm(dim=1).mean():.4f} "
+          f"→ nueva {nueva.norm(dim=1).mean():.4f}")
     cfg = config_desde_hf(hf, vocab=tok_nav.get_vocab_size())
     state["emb"] = nueva
     meta = exportar(state, cfg, a.salida, extra=dict(origen=hf.get("_name_or_path", a.hf), licencia_origen="MIT",
-                                                      tokenizador="navros_32k", trasplante="media de subtokens"))
+                                                      tokenizador="navros_32k", **detalle))
     print("EXPORT", json.dumps({k: v for k, v in meta.items() if k != "cfg"}))
 
 
