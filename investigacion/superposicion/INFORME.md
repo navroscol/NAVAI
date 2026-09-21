@@ -334,6 +334,113 @@ significados a la vez en el mismo token") no se responde con capacidad estática
 sí apareció algo fue en la dinámica (§4 y §5: el estado MPS como superposición de estados de
 autómata), y ahí conviene volver.
 
+## 11. Escala ordinal medida y proyección a 2B-40B
+
+### 11.1 La escala ordinal, medida en CPU (1 semilla)
+
+Mayor k tal que el MPS complejo de anchura χ resuelve T^k exacto en distribución y general a 32
+bits. Exactitud de secuencia completa 12 bits / 32 bits (%). Plan `escala-local`; el plan completo
+`escala` (χ hasta 64, k hasta 6, 3 semillas, con Transformer de referencia) está escrito para Modal.
+
+| χ | parámetros | T¹ | T² | T³ | T⁴ | T⁵ | mayor k exacto y general (≥ 99 % a 32 bits) |
+|---|---|---|---|---|---|---|---|
+| 8 | 672 | 100 / 100 | 100 / 100 | 72 / 40 | 71 / 2 | 29 / 2 | **2** |
+| 16 | 2,624 | 100 / 100 | 100 / 100 | 100 / 99 | 94 / 81 | 86 / 44 | **3** |
+| 32 | 10,368 | 100 / 100 | 100 / 100 | 100 / 100 | 100 / 100 | 96 / 73 | **4** |
+
+La escala existe y es limpia: cada duplicación de χ compra aproximadamente un paso más de
+composición exacta. Es coherente con la teoría: el autómata producto de k pasos de Collatz tiene
+del orden de 3^k estados de acarreo, y hace falta χ ≳ número de estados para representarlo; χ = 8
+cubre k = 2 (9 estados), χ = 16 no llega a k = 3 del todo (27 estados) pero casi, χ = 32 cubre k = 4
+(81 estados) sin error. Esa correspondencia es la propuesta de medida para el Problema 18: **la
+"inteligencia" de una arquitectura sobre esta familia es el mayor k que compone exacto y general,
+y crece con el logaritmo de su estado interno, no con sus parámetros**. El plan `escala` completo
+mide dónde se sitúa el Transformer en la misma escala (la predicción, por §4, es k = 0 fuera de
+distribución para todo d).
+
+### 11.2 Proyección a 2B-40B parámetros: tiempo, coste y pérdida
+
+No es una medida: es una extrapolación con dos anclas, lo medido en el README de este proyecto
+para el 1B en H100 (49K tokens/s, 320 TFLOP/s útiles, 24,3 $ por 5,5 h) y la ley de escala de
+Chinchilla calibrada con la pérdida real del 1B (predice 2,987 nats donde se midieron 3,040; se
+aplica ese desplazamiento). Código en `proyeccion.py`; tabla completa en `resultados/proyeccion.md`.
+
+Calibración: Chinchilla predice 2.987 nats para el 1B con 2.600M tokens; medido 3.040. Desplazamiento aplicado: +0.053 nats.
+
+Supuestos: H100 en Modal a 4,42 $/h (tarifa implícita en el README), 320 TFLOP/s útiles y 49K tok/s medidos con el 1B; 85 % de eficiencia al repartir entre GPUs; 16 bytes por parámetro en memoria (sin ZeRO); tokens = 20 × parámetros (Chinchilla). Pérdida en nats/token de prueba.
+
+## Coste y tiempo a tokens óptimos (D = 20 N)
+
+| parámetros | tokens | FLOP | horas de H100 | coste | memoria de entreno | GPUs mínimas (memoria) | días con 8×H100 | pérdida proyectada | perplejidad |
+|---|---|---|---|---|---|---|---|---|---|
+| 1B | 20B | 1.2e+20 | 104 | 541 $ | 16 GB | 1 | 0.6 | 2.63 | 13.9 |
+| 2B | 40B | 4.8e+20 | 417 | 2.166 $ | 32 GB | 1 | 2.6 | 2.46 | 11.8 |
+| 4B | 80B | 1.9e+21 | 1.667 | 8.663 $ | 64 GB | 1 | 10.2 | 2.33 | 10.3 |
+| 7B | 140B | 5.9e+21 | 5.104 | 26.531 $ | 112 GB | 2 | 31.3 | 2.24 | 9.4 |
+| 13B | 260B | 2.0e+22 | 17.604 | 91.504 $ | 208 GB | 3 | 107.9 | 2.15 | 8.6 |
+| 20B | 400B | 4.8e+22 | 41.667 | 216.578 $ | 320 GB | 5 | 255.3 | 2.10 | 8.2 |
+| 40B | 800B | 1.9e+23 | 166.667 | 866.310 $ | 640 GB | 10 | 817.0 | 2.03 | 7.7 |
+
+## Lo mismo con el presupuesto de tokens que ya se ha usado (2.600M) y con 10×
+
+| parámetros | tokens | horas de H100 | coste | pérdida proyectada |
+|---|---|---|---|---|
+| 1B | 2.6B | 14 | 70 $ | 3.05 |
+| 1B | 26.0B | 135 | 704 $ | 2.60 |
+| 2B | 2.6B | 27 | 141 $ | 2.97 |
+| 2B | 26.0B | 271 | 1.408 $ | 2.52 |
+| 7B | 2.6B | 95 | 493 $ | 2.87 |
+| 7B | 26.0B | 948 | 4.927 $ | 2.42 |
+| 40B | 2.6B | 542 | 2.816 $ | 2.79 |
+| 40B | 26.0B | 5.417 | 28.155 $ | 2.34 |
+
+## Qué da cada dólar
+
+- 2B a tokens óptimos: -0.58 nats respecto al 1B actual, por 29× el coste del último tramo de 2.600M tokens.
+- 7B a tokens óptimos: -0.80 nats respecto al 1B actual, por 359× el coste del último tramo de 2.600M tokens.
+- 40B a tokens óptimos: -1.01 nats respecto al 1B actual, por 11737× el coste del último tramo de 2.600M tokens.
+
+Kaggle (2×T4, 30 h/semana): el 1B con 950M tokens costó 5,5 h de H100, que son unas 60 a 80 h de T4; 2B a tokens óptimos serían del orden de 3.000 h de T4. No es una opción para nada por encima de lo actual.
+
+
+### 11.3 ¿Sería más inteligente a 2B-40B con el método bidimensional o de rejilla?
+
+La respuesta honesta, con los datos de este estudio, tiene tres partes.
+
+1. **La proyección de pérdida de arriba es para un Transformer; para la rejilla no hay ley de
+   escala propia medida aquí.** Lo único que se puede afirmar es lo que se midió: en superposición
+   estática de conceptos (§9 y §10) la rejilla no guarda más que un vector bien ajustado, así que
+   no hay razón medida para esperar mejor perplejidad a igual parámetros. Lo que sí tiene es
+   interferencia menor y tolerancia a mal ajuste; a gran escala, donde el LR se ajusta bien, esa
+   ventaja vale poco.
+2. **La propuesta a escala ya tiene parientes publicados y con nombre.** Una capa con estado
+   matricial que acumula productos exteriores k·vᵀ y lee con una consulta es exactamente la
+   atención lineal y sus descendientes (GLA, DeltaNet, RWKV-6/7, Mamba-2 en su forma de espacio de
+   estados); y el MPS con matrices dependientes del símbolo es una recurrencia lineal con
+   transición dependiente de la entrada, que es la familia Mamba/LRU. Según esa literatura, a
+   verificar con fuentes propias, a igual parámetros (1 a 7B) igualan la perplejidad del
+   Transformer con diferencias de pocas centésimas de nat, ganan en rendimiento y memoria con
+   contextos largos y en extrapolación de longitud, y pierden en recuperación exacta de
+   información del contexto (copiar, buscar una aguja). **Nada en este estudio contradice ese
+   cuadro, y el resultado de Collatz lo ilustra en pequeño: gana donde la tarea es un autómata,
+   no donde hay que memorizar.**
+3. **Por tanto, la apuesta racional no es "40B con rejilla" sino híbrida y barata de comprobar:**
+   entrenar dos modelos de 100 a 200M parámetros con el entrenador que ya existe (`navros/lm.py`),
+   uno con el bloque actual y otro con el bloque de rejilla en el lugar de la atención, al mismo
+   cómputo, y medir perplejidad en distribución y en secuencias 4× más largas que las de
+   entrenamiento. Cuesta menos de 20 $ de H100 y responde la pregunta que ninguna proyección
+   puede responder. Si la rejilla no pierde perplejidad y gana longitud, entonces el 2B con un
+   bloque híbrido (rejilla en la mayoría de capas, atención en unas pocas para la recuperación
+   exacta) tiene sentido, y su coste está en la tabla: unos 2.200 $ y 3 días con 8 H100 a tokens
+   óptimos.
+
+Sobre los tiempos de la tabla, en llano: el salto del 1B actual a un 2B a tokens óptimos son
+40.000M tokens, 15× los que se han usado hasta hoy, y 30× el coste del último tramo. 7B es
+26.000 $; 40B, casi 900.000 $ y meses con 8 GPUs. Kaggle no sirve para nada de esto. Y el 2B con
+los 2.600M tokens actuales (141 $) quedaría en 2,97 nats, peor que el 1B con tokens óptimos
+(541 $, 2,63): **con este presupuesto, el mejor uso del dinero son tokens para el 1B, no
+parámetros**.
+
 ## 7. Referencias que hay que verificar con fuentes propias
 
 Las cito de memoria; antes de apoyarse en ellas hay que comprobarlas.
